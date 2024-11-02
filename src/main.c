@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 23:12:23 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/02 16:06:38 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/02 20:22:59 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #define WINY 720
 #include <time.h>
 #include <stdio.h>
+
 
 typedef struct {
     double x, y, z;
@@ -31,6 +32,10 @@ typedef struct {
     Vector3 center;
     double radius;
 } Sphere;
+typedef struct {
+    Vector3 normal;
+    Vector3 point;
+} Plane;
 
 void	set_color(char *buffer, int endian, int color, int alpha)
 {
@@ -50,14 +55,15 @@ void	set_color(char *buffer, int endian, int color, int alpha)
 	}
 }
 
-int intersect_sphere(const Ray *ray, const Sphere *sphere, double *t) {
-    Vector3 oc = {ray->origin.x - sphere->center.x,
-                  ray->origin.y - sphere->center.y,
-                  ray->origin.z - sphere->center.z};
+int intersect_sphere(const Ray *ray, const Sphere *sphere,  double *t) {
+	Vector3 oc = {ray->origin.x - sphere->center.x,
+				ray->origin.y - sphere->center.y,
+				ray->origin.z - sphere->center.z};
 
-    double a = ray->direction.x * ray->direction.x +
-               ray->direction.y * ray->direction.y +
-               ray->direction.z * ray->direction.z;
+	double a = ray->direction.x * ray->direction.x +
+				ray->direction.y * ray->direction.y +
+				ray->direction.z * ray->direction.z;
+
     double b = 2.0 * (oc.x * ray->direction.x +
                       oc.y * ray->direction.y +
                       oc.z * ray->direction.z);
@@ -70,6 +76,28 @@ int intersect_sphere(const Ray *ray, const Sphere *sphere, double *t) {
         *t = (-b - sqrt(discriminant)) / (2.0 * a);
         return 1; // Hay intersección
     }
+}
+
+int intersect_plane(const Ray *ray, const Plane *plane, double *t) {
+    double denom = plane->normal.x * ray->direction.x +
+                   plane->normal.y * ray->direction.y +
+                   plane->normal.z * ray->direction.z;
+
+    if (fabs(denom) < 1e-6) {
+        return 0;
+    }
+
+    Vector3 p0l0 = {
+        plane->point.x - ray->origin.x,
+        plane->point.y - ray->origin.y,
+        plane->point.z - ray->origin.z
+    };
+
+    *t = (plane->normal.x * p0l0.x +
+          plane->normal.y * p0l0.y +
+          plane->normal.z * p0l0.z) / denom;
+
+    return (*t >= 0); // Si t es positivo, hay intersección en dirección del rayo
 }
 
 Ray generate_ray(int x, int y, int screen_width, int screen_height, Vector3 camera_pos) {
@@ -242,8 +270,8 @@ int mix_colors(int base_color, int current_color, double intensity) {
 }
 
 
-void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sphere sphere, Vector3 camera_pos) {
-    Vector3 light = {0, 1, 0};   // luz
+void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sphere sphere, Plane plane, Vector3 camera_pos) {
+    Vector3 light = {0, -1, 0};   // luz
     time_t start, end;
 	int color = 0x33cc55;
     start = clock();
@@ -251,13 +279,12 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 	double max_y = 0;
 	double min_x = 902;
 	double min_y = 0;
-    for (int y = 214; y < 507; ++y) {
-        for (int x = 379; x < 902; ++x) {
+    for (int y = 0; y < screen_height; ++y) {
+        for (int x = 0; x < screen_width; ++x) {
             Ray ray = generate_ray(x, y, screen_width, screen_height, camera_pos);
            	Ray rayslight = generate_ray(x, y, screen_width, screen_height, light);
             double t;
 			if (intersect_sphere(&ray, &sphere, &t)) {
-				//mlx_pixel_put(mlx, win, x, y, 0x1864AA);
 				Vector3 *hit_pt = hit_point(ray, t);
 				Vector3 *n_sphere = normal_sphere(*hit_pt, sphere);
 				Vector3 *l_dir = light_dir(*n_sphere, light, *hit_pt);
@@ -271,6 +298,10 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 				intensity = calculate_intensity(*n_sphere, *l_dir);
 				int new_color = mix_colors(0x33cc55, current_color, intensity);
 				mlx_pixel_put(mlx, win, x, y, new_color);
+			}
+			else if (intersect_plane(&ray, &plane, &t)) {
+				mlx_pixel_put(mlx, win, x, y, 0x33DD55);
+
 			}
         }
     }
@@ -298,10 +329,11 @@ int main()
 	color = mlx_get_color_value(mlx, color);
 	mlx_pixel_put(mlx, win, WINX ,WINY, color);
 	buffer = mlx_get_data_addr(img, &bitxpixel, &lines, &endian);
-    Sphere sphere = {{0, 0, 5}, 1};      // Esfera en Z = 5 con radio 1
     Vector3 camera_pos = {0, 0, 0};      // Cámara en el origen
+    Sphere sphere = {{0, 0, 5}, 1};      // Esfera en Z = 5 con radio 1
+    Plane plane = {{1, 1, 0}, {1, 1, 1}};  // Esfera en Z = 5 con radio 1
 
-    render_sphere(mlx, win, WINX, WINY, sphere, camera_pos);
+    render_sphere(mlx, win, WINX, WINY, sphere, plane, camera_pos);
 
 	//peint_plane(buffer, endian, lines,  color);
 	//mlx_put_image_to_window(mlx, win, 0, 1);
