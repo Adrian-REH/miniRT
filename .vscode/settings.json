@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"limits": "c",
+		"mlx.h": "c",
+		"mlx_opengl.h": "c"
+	}
+}
