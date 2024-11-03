@@ -14,62 +14,6 @@
 
 
 
-int	ft_round(double num)
-{
-	int	rounded;
-
-	rounded = (int)num;
-	if (num - rounded >= .5)
-		rounded++;
-	return (rounded);
-}
-int	gradient(int startcolor, int endcolor, int len, int pix)
-{
-	double	increment[3];
-	int		new[3];
-	int		newcolor;
-
-	increment[0] = (double)((endcolor >> 16) - \
-					(startcolor >> 16)) / (double)len;
-	increment[1] = (double)(((endcolor >> 8) & 0xFF) - \
-					((startcolor >> 8) & 0xFF)) / (double)len;
-	increment[2] = (double)((endcolor & 0xFF) - (startcolor & 0xFF)) \
-					/ (double)len;
-	new[0] = (startcolor >> 16) + ft_round(pix * increment[0]);
-	new[1] = ((startcolor >> 8) & 0xFF) + ft_round(pix * increment[1]);
-	new[2] = (startcolor & 0xFF) + ft_round(pix * increment[2]);
-	newcolor = (new[0] << 16) + (new[1] << 8) + new[2];
-	return (newcolor);
-}
-/* int	draw_line(Vector3 start, Vector3 end, void *win, void *mlx)
-{
-	Vector3	delta;
-	Vector3	pixel;
-	int		pixels;
-	int		len;
-	int color;
-	int init_color;
-	int end_color;
-
-	delta.x = end.x - start.x;
-	delta.y = end.y - start.y;
-	delta.z = end.z - start.z;
-	pixels = sqrt((delta.x * delta.x) + (delta.y * delta.y) + (delta.z * delta.z));
-	len = pixels;
-	delta.x /= pixels;
-	delta.y /= pixels;
-	pixel.x = start.x;
-	pixel.y = start.y;
-	while (pixels > 0)
-	{
-		//color = gradient(init_color, end_color, len, len - pixels);
-		mlx_pixel_put(mlx, win, pixel.x, pixel.y, 0xFFFFFF);
-		pixel.x += delta.x;
-		pixel.y += delta.y;
-		pixels = pixels - 1;
-	}
-	return (1);
-} */
 void	set_color(char *buffer, int endian, int color, int alpha)
 {
 	if (endian == 1)
@@ -132,6 +76,8 @@ int intersect_plane(const Ray *ray, const Plane *plane, double *t) {
 
 	return (*t >= 0); // Si t es positivo, hay intersección en dirección del rayo
 }
+
+
 double calculate_specular(Vector3 view_dir, Vector3 light_dir, Vector3 normal) {
 	Vector3 reflect_dir = {
 		-light_dir.x + 2 * normal.x * (normal.x * light_dir.x + normal.y * light_dir.y + normal.z * light_dir.z),
@@ -141,6 +87,7 @@ double calculate_specular(Vector3 view_dir, Vector3 light_dir, Vector3 normal) {
 	double spec = pow(fmax(0.0, reflect_dir.x * view_dir.x + reflect_dir.y * view_dir.y + reflect_dir.z * view_dir.z), 20);
 	return spec;
 }
+
 int mix_colors(int base_color, int current_color, double intensity) {
 	// Extraemos los componentes RGB del color base
 	int base_red = (base_color >> 16) & 0xFF;
@@ -179,6 +126,7 @@ double color_difference(int color1, int color2) {
 
 	return sqrt(pow(r2 - r1, 2) + pow(g2 - g1, 2) + pow(b2 - b1, 2));
 }
+
 int adjust_color(int base_color, double intensity) {
 	// Extraemos los componentes RGB del color base
 	int red = (base_color >> 16) & 0xFF;
@@ -198,6 +146,7 @@ int adjust_color(int base_color, double intensity) {
 	// Combinamos los componentes ajustados en un solo color hexadecimal
 	return (red << 16) | (green << 8) | blue;
 }
+
 void normalize(Vector3 *v) {
 	// Calcula la magnitud del vector
 	double magnitude = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
@@ -209,6 +158,7 @@ void normalize(Vector3 *v) {
 		v->z /= magnitude;
 	}
 }
+
 int adjust_gradient_color(int base_color, int background_color, double intensity, double alpha) {
 	// Extraemos los componentes RGB del color base
 	int base_red = (base_color >> 16) & 0xFF;
@@ -238,6 +188,7 @@ int adjust_gradient_color(int base_color, int background_color, double intensity
 	// Combinamos los componentes ajustados en un solo color hexadecimal
 	return (mixed_red << 16) | (mixed_green << 8) | mixed_blue;
 }
+
 Ray *generate_ray(int x, int y, int screen_width, int screen_height, Vector3 camera_pos) {
     Ray *ray = malloc(sizeof(Ray));
     ray->origin = camera_pos;
@@ -269,7 +220,6 @@ Ray *generate_ray(int x, int y, int screen_width, int screen_height, Vector3 cam
     return ray;
 }
 
-
 Vector3 *normal_sphere(Vector3 hit_point, Sphere sphere) {
 	Vector3 *normal = malloc(sizeof(Vector3));
 	normal->x = hit_point.x - sphere.center.x;
@@ -294,8 +244,6 @@ Vector3 *hit_point(Ray ray, double t){
 	hit_point->z = ray.origin.z + t * ray.direction.z;
 	return hit_point;
 }
-
-
 
 Vector3 *light_dir(Vector3 normal, Vector3 light, Vector3 hit_point) {
 	Vector3 *light_dir = malloc(sizeof(Vector3));
@@ -350,6 +298,7 @@ Vector3 *normalize_withpoint(Vector3 init, Vector3 end) {
 
     return direction;
 }
+
 void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sphere sphere, Plane *plans, Vector3 camera_pos) {
 	Vector3 light = {0, 30, 15}; // luz
    // normalize(&light);
@@ -625,30 +574,7 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 	double elapsed = (double)(end - start) / CLOCKS_PER_SEC * 1000; // Convertido a milisegundos
 	printf("Elapsed time: %.3f milliseconds\n", elapsed);
 }
-void draw_line(void *mlx, void *win, int x0, int y0, int x1, int y1, int color) {
-    int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-    int dy = abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
-    int err = (dx > dy ? dx : -dy) / 2, e2;
 
-    while (1) {
-        mlx_pixel_put(mlx, win, x0, y0, color);
-        if (x0 == x1 && y0 == y1) break;
-        e2 = err;
-        if (e2 > -dx) { err -= dy; x0 += sx; }
-        if (e2 < dy) { err += dx; y0 += sy; }
-    }
-}
-
-void draw_coordinate_system(void *mlx, void *win, int center_x, int center_y, int axis_length) {
-    // Eje X (rojo)
-    draw_line(mlx, win, center_x - axis_length, center_y, center_x + axis_length, center_y, 0xFF0000);
-    
-    // Eje Y (verde)
-    draw_line(mlx, win, center_x, center_y - axis_length, center_x, center_y + axis_length, 0x00FF00);
-    
-    // Eje Z (azul) - proyectado en 2D
-    draw_line(mlx, win, center_x, center_y, center_x + axis_length / 2, center_y - axis_length / 2, 0x0000FF);
-}
 int main()
 {
 	void *mlx;
@@ -682,7 +608,6 @@ int main()
 	normalize(&plans[3].normal);
 	normalize(&plans[4].normal);
 	render_sphere(mlx, win, WINX, WINY, sphere, plans, camera_pos);
-	draw_coordinate_system(mlx, win, WINX / 2, WINY / 2, 100);
 
 	mlx_loop(mlx);
 }
