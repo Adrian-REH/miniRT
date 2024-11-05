@@ -12,9 +12,6 @@
 
 #include "main.h"
 #include <float.h>
-#define SHININESS 0.002
-#define KS 0.01
-
 
 void	set_color(char *buffer, int endian, int color, int alpha)
 {
@@ -118,6 +115,8 @@ double calculate_specular(Vector3 view_dir, Vector3 light_dir, Vector3 normal) {
 }
 
 int mix_colors(int base_color, int current_color, double intensity) {
+	    intensity = fmax(0.0, fmin(1.0, intensity));
+
 	// Extraemos los componentes RGB del color base
 	int base_red = (base_color >> 16) & 0xFF;
 	int base_green = (base_color >> 8) & 0xFF;
@@ -305,8 +304,9 @@ Vector3 *camera_dir(Vector3 camera_pos, Vector3 hit_pt){
 }
 
 double calculate_intensity(Vector3 normal, Vector3 light_dir) {
-	double val = -(normal.x * light_dir.x + normal.y * light_dir.y + normal.z * light_dir.z);
-	
+//	double val = -(normal.x * light_dir.x + normal.y * light_dir.y + normal.z * light_dir.z);
+	double val = -dot(normal, light_dir);
+
 	return fmax(0, val);
 }
 
@@ -410,8 +410,83 @@ Vector3 *reflect(Vector3 L, Vector3 N) {
 	return reflection;
 }
 
-void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sphere sphere, Plane *plans, Vector3 camera_pos, char *buffer) {
-	Vector3 light = {4, -2, 3}; // luz
+double calculate_attenuation(double distance, double k_c, double k_l, double k_q) {
+    return 1.0 / (k_c + k_l * distance + k_q * distance * distance);
+}
+int  russian_roulette(double probability) {
+    double random_value = (double)rand() / RAND_MAX; // Número aleatorio entre 0 y 1
+    return random_value < probability;
+}
+int render_plane(Sphere sphere,Plane *plans, Vector3 camera_pos, Vector3 hit_pt, Vector3 light, int n_plane)
+{
+	double d;
+	int current_color = 0; // Color base de la esfera
+    int ambient_color = 0x555555; // Color gris para la luz ambiental
+	// Calcula la dirección de la cámara hacia el punto de impacto
+	Vector3 *cam_dir = normalize_withpoint(camera_pos, hit_pt);
+	// Calcula la intensidad de la luz con respecto a la cámara
+	double intensity = calculate_intensity(plans[n_plane].normal, *cam_dir);
+	// Mezcla el color base con la intensidad calculada para la dirección de la cámara
+	current_color = mix_colors(ambient_color, current_color, AMBIENT_INTENSITY);
+	Ray rayslight = {light, *normalize_withpoint(light, hit_pt)};
+	// Calcula la intersección del plano con el rayo de luz
+	if (intersect_plane(&rayslight, &plans[n_plane], &d)) // Agrega esta verificación
+	{
+		// Calcula el punto de impacto con el rayo de luz
+		if (!is_in_shadow(sphere, plans, 5, light, hit_pt))
+		{	// Calcula la dirección de la luz hacia el punto de impacto
+				double distance_light = distance(rayslight.origin, hit_pt);
+				double attenuation = calculate_attenuation(distance_light, 1, 0.01, 0.01);
+				double diffuse_intensity = calculate_intensity(plans[n_plane].normal, rayslight.direction);
+				diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
+				current_color = mix_colors(plans[n_plane].mater_prop.color[1], current_color, diffuse_intensity* attenuation);
+				// Calcula la intensidad de la luz con respecto a la dirección de la luz
+				// Mezcla el color resultante con la nueva intensidad
+				//attenuation = calculate_attenuation(distance_light, 1.0, 0.2, 0.05); // Aumentando k_q
+				double specular = specular_intensity(*reflect(rayslight.direction, plans[n_plane].normal), *cam_dir, SHININESS, KS);
+				current_color = mix_colors(0xFFFFFF, current_color, specular * attenuation);
+		}
+	}  // Libera memoria de hit_pt y cam_dir
+	free(cam_dir);
+	return current_color;
+}
+int render_sphere(Sphere sphere, Plane *plans, Vector3 camera_pos, Vector3 hit_pt, Vector3 light){
+	double d;
+	int current_color = 0; // Color base de la esfera
+    int ambient_color = 0x555555; // Color gris para la luz ambiental
+
+	Vector3 *n_sphere = normalize_withpoint( sphere.center, hit_pt);
+	Vector3 *cam_dir = normalize_withpoint(camera_pos, hit_pt );
+	double intensity = calculate_intensity(*n_sphere, *cam_dir);
+	double dist_camera = distance(camera_pos, hit_pt);
+	double attenuation = calculate_attenuation(dist_camera, 1, 0.5, 1);
+    current_color = mix_colors(ambient_color, current_color, AMBIENT_INTENSITY);
+
+	Ray rayslight = {light, *normalize_withpoint(light, hit_pt)};
+	// Calcula la intersección del plano con el rayo de luz
+	if (intersect_sphere(&rayslight, &sphere, &d)) // Agrega esta verificación
+	{
+       if (!is_in_shadow(sphere, plans, 5, light, hit_pt)) {
+            // Cálculo de la luz difusa
+			double distance_light = distance(rayslight.origin, hit_pt);
+			attenuation = calculate_attenuation(distance_light, 1, 0.01, 0.01);
+            double diffuse_intensity = calculate_intensity(*n_sphere, rayslight.direction);
+            diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1);
+            current_color = mix_colors(0xff0000, current_color, diffuse_intensity * attenuation);
+
+            // Cálculo de la luz especular
+            double specular = specular_intensity(*reflect(rayslight.direction, *n_sphere ), *cam_dir, SHININESS, KS);
+			//	attenuation = calculate_attenuation(distance_light, 1.0, 0.1, 0.01);
+            //specular = fmin(fmax(specular, 0.0), 1.0);
+            current_color = mix_colors(0xFFFFFF, current_color, specular * attenuation);
+        }
+	}  // Libera memoria de hit_pt y cam_dir
+	free(cam_dir);
+	return current_color;
+}
+
+void render(void *mlx, void *win, int screen_width, int screen_height, Sphere sphere, Plane *plans, Vector3 camera_pos, char *buffer) {
+	Vector3 light = {8, 0, 0.01}; // luz
    // normalize(&light);
 	time_t start, end;
 	double min_dist;
@@ -423,194 +498,26 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 			double t = 0;
 			double d = 0;
 			min_dist = 90000000;
-			if (intersect_plane(&ray, &plans[4], &t) && (t < min_dist))
+			int i = -1;
+			while (++i < 5)
 			{
-					min_dist = t;
-					// Calcula el punto de impacto con el rayo de la cámara
-					Vector3 *hit_pt = hit_point(ray, t);
-					// Calcula la dirección de la cámara hacia el punto de impacto
-					Vector3 *cam_dir = normalize_withpoint(camera_pos, *hit_pt);
-					// Calcula la intensidad de la luz con respecto a la cámara
-					double intensity = calculate_intensity(plans[4].normal, *cam_dir);
-					// Mezcla el color base con la intensidad calculada para la dirección de la cámara
-					int current_color = mix_colors(0x472b0a, 0, intensity);
-					Ray rayslight = {light, *normalize_withpoint(light, *hit_pt)};
-					// Calcula la intersección del plano con el rayo de luz
-					if (intersect_plane(&rayslight, &plans[4], &d) ) // Agrega esta verificación
-					{
-						// Calcula el punto de impacto con el rayo de luz
-						if (!is_in_shadow(sphere, plans, 5, light, *hit_pt))
-						{	// Calcula la dirección de la luz hacia el punto de impacto
-								// Calcula la intensidad de la luz con respecto a la dirección de la luz
-								intensity = calculate_intensity(plans[4].normal, rayslight.direction);
-								// Mezcla el color resultante con la nueva intensidad
-								if (intensity)
-									intensity += specular_intensity(*reflect(plans[4].normal, rayslight.direction), camera_pos, SHININESS, KS);
-								current_color = mix_colors(0xFFFFFF, current_color, intensity);
-						}
-					}  // Libera memoria de hit_pt y cam_dir
-					free(hit_pt);
-					free(cam_dir);
-					//mlx_pixel_put(mlx, win, x, y, current_color);
-					//pixel.color = mlx_get_color_value(mlx, pixel.color);
-					int mypixel = (y * WINX * 4) + (x * 4);
-					set_color(&buffer[mypixel], 0, current_color, 0);
-			}
-			
-			if (intersect_plane(&ray, &plans[3], &t) && (t < min_dist))
-			{
-					min_dist = t;
-					// Calcula el punto de impacto con el rayo de la cámara
-					Vector3 *hit_pt = hit_point(ray, t);
-					// Calcula la dirección de la cámara hacia el punto de impacto
-					Vector3 *cam_dir = normalize_withpoint(camera_pos, *hit_pt);
-					// Calcula la intensidad de la luz con respecto a la cámara
-					double intensity = calculate_intensity(plans[3].normal, *cam_dir);
-					// Mezcla el color base con la intensidad calculada para la dirección de la cámara
-					int current_color = mix_colors(0x4b353b, 0, intensity);
-					Ray rayslight = {light, *normalize_withpoint(light, *hit_pt)};
-					// Calcula la intersección del plano con el rayo de luz
-					if (intersect_plane(&rayslight, &plans[3], &d)) // Agrega esta verificación
-					{
-						// Calcula el punto de impacto con el rayo de luz
-						if (!is_in_shadow(sphere, plans, 5, light, *hit_pt))
-						{	// Calcula la dirección de la luz hacia el punto de impacto
-								// Calcula la intensidad de la luz con respecto a la dirección de la luz
-								intensity = calculate_intensity(plans[3].normal, rayslight.direction);
-								if (intensity)
-									intensity += specular_intensity(*reflect(plans[3].normal, rayslight.direction), camera_pos, SHININESS, KS);
-
-								// Mezcla el color resultante con la nueva intensidad
-								current_color = mix_colors(0xFFFFFF, current_color, intensity);
-						}
-					}  // Libera memoria de hit_pt y cam_dir
-					free(hit_pt);
-					free(cam_dir);
-					//mlx_pixel_put(mlx, win, x, y, current_color);
-					//pixel.color = mlx_get_color_value(mlx, pixel.color);
-					int mypixel = (y * WINX * 4) + (x * 4);
-					set_color(&buffer[mypixel], 0, current_color, 0);
-			}
-			
-			if (intersect_plane(&ray, &plans[0], &t) && (t < min_dist))
-			{
-					min_dist = t;
-					// Calcula el punto de impacto con el rayo de la cámara
-					Vector3 *hit_pt = hit_point(ray, t);
-					// Calcula la dirección de la cámara hacia el punto de impacto
-					Vector3 *cam_dir = normalize_withpoint(camera_pos, *hit_pt);
-					// Calcula la intensidad de la luz con respecto a la cámara
-					double intensity = calculate_intensity(plans[0].normal, *cam_dir);
-					// Mezcla el color base con la intensidad calculada para la dirección de la cámara
-					int current_color = mix_colors(0x010c32, 0, intensity);
-					Ray rayslight = {light, *normalize_withpoint(light, *hit_pt)};
-					// Calcula la intersección del plano con el rayo de luz
-					if (intersect_plane(&rayslight, &plans[0], &d)) // Agrega esta verificación
-					{
-						if (!is_in_shadow(sphere, plans, 5, light, *hit_pt) )
-						{	// Calcula la dirección de la luz hacia el punto de impacto
-								// Calcula la intensidad de la luz con respecto a la dirección de la luz
-								intensity = calculate_intensity(plans[0].normal, rayslight.direction);
-								if (intensity)
-									intensity += specular_intensity(*reflect(plans[0].normal, rayslight.direction), camera_pos, SHININESS, KS);
-
-								// Mezcla el color resultante con la nueva intensidad
-								//if (intensity)
-									//intensity += specular_intensity(*reflect(plans[4].normal, rayslight.direction), camera_pos, SHININESS, KS);
-								current_color = mix_colors(0xFFFFFF, current_color, intensity);
-						}
-					}  // Libera memoria de hit_pt y cam_dir
-					free(hit_pt);
-					free(cam_dir);
-				//mlx_pixel_put(mlx, win, x, y, current_color);
-				//pixel.color = mlx_get_color_value(mlx, pixel.color);
-				int mypixel = (y * WINX * 4) + (x * 4);
-				set_color(&buffer[mypixel], 0, current_color, 0);
-			}
-			if (intersect_plane(&ray, &plans[2], &t) && (t < min_dist))
-			{
-					min_dist = t;
-					Vector3 *hit_pt = hit_point(ray, t);
-					Vector3 *cam_dir = normalize_withpoint(camera_pos, *hit_pt);
-					double intensity = calculate_intensity(plans[2].normal, *cam_dir);
-					int current_color = mix_colors(0x0b3f34, 0, intensity);
-					
-					Ray rayslight = {light, *normalize_withpoint(light, *hit_pt)};
-
-					// Calcula la intersección del plano con el rayo de luz
-					if (intersect_plane(&rayslight, &plans[2], &d)) // Agrega esta verificación
-					{
-						if (!is_in_shadow(sphere, plans, 5, light, *hit_pt))
-						{	// Calcula la dirección de la luz hacia el punto de impacto
-								// Calcula la intensidad de la luz con respecto a la dirección de la luz
-								intensity = calculate_intensity(plans[2].normal, rayslight.direction);
-								if (intensity)
-									intensity += specular_intensity(*reflect(plans[2].normal, rayslight.direction), camera_pos, SHININESS, KS);
-								// Mezcla el color resultante con la nueva intensidad
-								current_color = mix_colors(0xFFFFFF, current_color, intensity);
-						}
-					}  // Libera memoria de hit_pt y cam_dir
-				//mlx_pixel_put(mlx, win, x, y, current_color);
-				//pixel.color = mlx_get_color_value(mlx, pixel.color);
-				free(hit_pt);
-				free(cam_dir);
-				int mypixel = (y * WINX * 4) + (x * 4);
-				set_color(&buffer[mypixel], 0, current_color, 0);
-			}
-			if (intersect_plane(&ray, &plans[1], &t) && (t < min_dist))
-			{
-				min_dist = t;
-				Vector3 *hit_pt = hit_point(ray, t);
-				Vector3 *cam_dir = normalize_withpoint(camera_pos, *hit_pt);
-				double intensity = calculate_intensity(plans[1].normal, *cam_dir);
-				int current_color = mix_colors(0x471b26, 0, intensity);
-				Ray rayslight = {light, *normalize_withpoint(light, *hit_pt)};
-
-				// Calcula la intersección del plano con el rayo de luz
-				if (intersect_plane(&rayslight, &plans[1], &d)) // Agrega esta verificación
+				if (intersect_plane(&ray, &plans[i], &t) && (t < min_dist))
 				{
-					if (!is_in_shadow(sphere, plans, 5, light, *hit_pt))
-					{	// Calcula la dirección de la luz hacia el punto de impacto
-							// Calcula la intensidad de la luz con respecto a la dirección de la luz
-							intensity = calculate_intensity(plans[1].normal, rayslight.direction);
-							if (intensity)
-								intensity += specular_intensity(*reflect(plans[1].normal, rayslight.direction), camera_pos, SHININESS, KS);
-							// Mezcla el color resultante con la nueva intensidad
-							current_color = mix_colors(0xFFFFFF, current_color, intensity);
-					}
-				}  // Libera memoria de hit_pt y cam_dir
-
-				free(hit_pt);
-				free(cam_dir);
-				//mlx_pixel_put(mlx, win, x, y, current_color);
-				//pixel.color = mlx_get_color_value(mlx, pixel.color);
-				int mypixel = (y * WINX * 4) + (x * 4);
-				set_color(&buffer[mypixel], 0, current_color, 0);
-			} 
+						min_dist = t;
+						// Calcula el punto de impacto con el rayo de la cámara
+						Vector3 *hit_pt = hit_point(ray, t);
+						int current_color = render_plane(sphere, plans, camera_pos, *hit_pt, light, i);
+						int mypixel = (y * WINX * 4) + (x * 4);
+						set_color(&buffer[mypixel], 0, current_color, 0);
+						free(hit_pt);
+				}
+			}
 			if (intersect_sphere(&ray, &sphere, &t) && (t < min_dist))
 			{
 				min_dist = t;
 				Vector3 *hit_pt = hit_point(ray, t);
-				Vector3 *n_sphere = normalize_withpoint( sphere.center, *hit_pt);
-				Vector3 *cam_dir = normalize_withpoint(camera_pos, *hit_pt );
-				double intensity = calculate_intensity(*n_sphere, *cam_dir);
-				int current_color = mix_colors(0x260b0b, 0, intensity);
-				
-				Ray rayslight = {light, *normalize_withpoint(light, *hit_pt)};
-				// Calcula la intersección del plano con el rayo de luz
-				if (intersect_sphere(&rayslight, &sphere, &d)) // Agrega esta verificación
-				{
-						// Calcula el punto de impacto con el rayo de luz
-						if (!is_in_shadow(sphere, plans, 5, light, *hit_pt))
-						{	// Calcula la dirección del centro al punto
-							intensity = calculate_intensity(*n_sphere, rayslight.direction);
-							if (intensity)
-								intensity += specular_intensity(*reflect(*n_sphere, rayslight.direction), camera_pos, SHININESS, KS);
-							current_color = mix_colors(0xFFFFFF, current_color, intensity);
-						}
-				}  // Libera memoria de hit_pt y cam_dir
+				int current_color = render_sphere(sphere, plans, camera_pos, *hit_pt, light);
 				free(hit_pt);
-				free(cam_dir);
 				//mlx_pixel_put(mlx, win, x, y, current_color);
 				//pixel.color = mlx_get_color_value(mlx, pixel.color);
 				int mypixel = (y * WINX * 4) + (x * 4);
@@ -638,25 +545,40 @@ int main()
 
 	color = 0xFFFFFF;
 	mlx = mlx_init();
-	win = mlx_new_window(mlx, WINX, WINY, "Draw line!");
+	win = mlx_new_window(mlx, WINX, WINY, "miniRT!");
 	img = mlx_new_image(mlx, WINX, WINY);
 	color = mlx_get_color_value(mlx, color);
 	mlx_pixel_put(mlx, win, WINX ,WINY, color);
 	buffer = mlx_get_data_addr(img, &bitxpixel, &lines, &endian);
-	Vector3 camera_pos = {0, 0, 8};      // Cámara en el origen
+	Vector3 camera_pos = {0, 0, 4};      // Cámara en el origen
 	Sphere sphere = {{0, 0, 2}, 1};      // Esfera en Z = 5 con radio 1
 	Plane *plans = malloc(sizeof(Plane) * 5);
 	plans[0] =  (Plane){{0, 0, 1}, {0, 0, -1}};
+	plans[0].mater_prop.color[0] = 0x010c32;
+	plans[0].mater_prop.color[1] = 0x003cff;
+	plans[0].mater_prop.color[2] = 0xFFFFFF;
 	plans[1] =  (Plane){{1, 0, 0}, {-10, 0, 0}};
+	plans[1].mater_prop.color[0] = 0x471b26;
+	plans[1].mater_prop.color[1] = 0xff001d;
+	plans[1].mater_prop.color[2] = 0xFFFFFF;
 	plans[2] =  (Plane){{-1, 0, 0}, {10, 0, 0}};
+	plans[2].mater_prop.color[0] = 0x0b3f34;
+	plans[2].mater_prop.color[1] = 0x00ffb5;
+	plans[2].mater_prop.color[2] = 0xFFFFFF;
 	plans[3] =  (Plane){{0, -1, 0}, {0, 5.5, 0}};
+	plans[3].mater_prop.color[0] = 0x4b353b;
+	plans[3].mater_prop.color[1] = 0xfc3001;
+	plans[3].mater_prop.color[2] = 0xFFFFFF;
 	plans[4] =  (Plane){{0, 1, 0}, {0, -5.5, 0}};
+	plans[4].mater_prop.color[0] = 0x472b0a;
+	plans[4].mater_prop.color[1] = 0x472b0a;
+	plans[4].mater_prop.color[2] = 0xFFFFFF;
 	normalize(&plans[0].normal);
 	normalize(&plans[1].normal);
 	normalize(&plans[2].normal);
 	normalize(&plans[3].normal);
 	normalize(&plans[4].normal);
-	render_sphere(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);
+	render(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);
 	free(plans);
 	mlx_put_image_to_window(mlx, win, img, 0, 0);
 	mlx_loop(mlx);
