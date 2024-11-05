@@ -12,7 +12,8 @@
 
 #include "main.h"
 #include <float.h>
-
+#define SHININESS 0.8
+#define KS 0.25
 
 
 void	set_color(char *buffer, int endian, int color, int alpha)
@@ -31,6 +32,26 @@ void	set_color(char *buffer, int endian, int color, int alpha)
 		buffer[2] = (color >> 16) & 0xFF;
 		buffer[3] = alpha;
 	}
+}
+void normalize(Vector3 *v) {
+	// Calcula la magnitud del vector
+	double magnitude = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+	
+	// Evita la división por cero
+	if (magnitude > 0) {
+		v->x /= magnitude;
+		v->y /= magnitude;
+		v->z /= magnitude;
+	}
+}
+double dot(Vector3 a, Vector3 b) {
+    return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+}
+
+double specular_intensity(Vector3 reflection, Vector3 view_dir, double shininess, double ks) {
+    double dot_product = dot(reflection, view_dir);
+    double intensity = pow(fmax(dot_product, 0.0), shininess) * ks;
+    return intensity;
 }
 
 int intersect_sphere(const Ray *ray, const Sphere *sphere,  double *t) {
@@ -154,17 +175,6 @@ int adjust_color(int base_color, double intensity) {
 	return (red << 16) | (green << 8) | blue;
 }
 
-void normalize(Vector3 *v) {
-	// Calcula la magnitud del vector
-	double magnitude = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
-	
-	// Evita la división por cero
-	if (magnitude > 0) {
-		v->x /= magnitude;
-		v->y /= magnitude;
-		v->z /= magnitude;
-	}
-}
 
 int adjust_gradient_color(int base_color, int background_color, double intensity, double alpha) {
 	// Extraemos los componentes RGB del color base
@@ -309,13 +319,16 @@ Vector3 *normalize_withpoint(Vector3 init, Vector3 end) {
 
     // Calcula la longitud del vector de dirección
     double length = sqrt(direction->x * direction->x + direction->y * direction->y + direction->z * direction->z);
-
     // Normaliza el vector de dirección si la longitud es mayor que 0
     if (length > 0) {
         direction->x /= length;
         direction->y /= length;
         direction->z /= length;
-    }
+    } else {
+        direction->x = 0;
+        direction->y = 0;
+        direction->z = 0;
+	}
 
     return direction;
 }
@@ -370,24 +383,34 @@ int is_in_shadow(Sphere sphere, Plane *planes, int plane_count, Vector3 light_po
     for (int i = 0; i < plane_count; ++i) {
         if (intersect_plane(&shadow_ray, &planes[i], &t)) {
             if (t > 0 && t < light_dist) {
-                return 1; // In shadow
+                return t; // In shadow
             }
         }
     } 
    // Check intersection with the sphere
     if (intersect_sphere(&shadow_ray, &sphere, &t)) {
         if (t > 0 && t < light_dist) {
-            return 1; // In shadow
+            return t; // In shadow
         }
     }
  
     return 0; // Not in shadow
 }
 
-
+Vector3 *reflect(Vector3 L, Vector3 N) {
+    double dot_product = dot(N, L); // N dot L
+    Vector3 *reflection = malloc(sizeof(Vector3));
+	*reflection =  (Vector3) {
+        2 * dot_product * N.x - L.x,
+        2 * dot_product * N.y - L.y,
+        2 * dot_product * N.z - L.z
+    };
+     normalize(reflection); // Normalize the reflected vector
+	return reflection;
+}
 
 void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sphere sphere, Plane *plans, Vector3 camera_pos) {
-	Vector3 light = {0, 0, 3.5}; // luz
+	Vector3 light = {0, 5, 3}; // luz
    // normalize(&light);
 	time_t start, end;
 	double min_dist = 8000000;
@@ -425,6 +448,7 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 								// Calcula la intensidad de la luz con respecto a la dirección de la luz
 								intensity = calculate_intensity(plans[4].normal, rayslight.direction);
 								// Mezcla el color resultante con la nueva intensidad
+								intensity += specular_intensity(*reflect(rayslight.direction, plans[4].normal), camera_pos, SHININESS, KS);
 								current_color = mix_colors(0x33cc55, current_color, intensity);
 						}
 					}  // Libera memoria de hit_pt y cam_dir
@@ -432,6 +456,7 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 					free(cam_dir);
 					mlx_pixel_put(mlx, win, x, y, current_color);
 			}
+			
 			if (intersect_plane(&ray, &plans[3], &t) && (t < min_dist))
 			{
 					min_dist = t;
@@ -452,6 +477,8 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 						{	// Calcula la dirección de la luz hacia el punto de impacto
 								// Calcula la intensidad de la luz con respecto a la dirección de la luz
 								intensity = calculate_intensity(plans[3].normal, rayslight.direction);
+								intensity += specular_intensity(*reflect(rayslight.direction, plans[3].normal), camera_pos, SHININESS, KS);
+
 								// Mezcla el color resultante con la nueva intensidad
 								current_color = mix_colors(0x33cc55, current_color, intensity);
 						}
@@ -460,6 +487,7 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 					free(cam_dir);
 					mlx_pixel_put(mlx, win, x, y, current_color);
 			}
+			
 			if (intersect_plane(&ray, &plans[0], &t) && (t < min_dist))
 			{
 					min_dist = t;
@@ -479,14 +507,16 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 						{	// Calcula la dirección de la luz hacia el punto de impacto
 								// Calcula la intensidad de la luz con respecto a la dirección de la luz
 								intensity = calculate_intensity(plans[0].normal, rayslight.direction);
+								intensity += specular_intensity(*reflect(rayslight.direction, plans[0].normal), camera_pos, SHININESS, KS);
 								// Mezcla el color resultante con la nueva intensidad
-								current_color = mix_colors(0x33cc55, current_color, intensity);
+								current_color = mix_colors(0x33cc55, 0xD89A0B, intensity);
 						}
 					}  // Libera memoria de hit_pt y cam_dir
 					free(hit_pt);
 					free(cam_dir);
 					mlx_pixel_put(mlx, win, x, y, current_color);
 			}
+			
 			if (intersect_plane(&ray, &plans[2], &t) && (t < min_dist))
 			{
 					min_dist = t;
@@ -504,7 +534,7 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 						{	// Calcula la dirección de la luz hacia el punto de impacto
 								// Calcula la intensidad de la luz con respecto a la dirección de la luz
 								intensity = calculate_intensity(plans[2].normal, rayslight.direction);
-								
+								intensity += specular_intensity(*reflect(rayslight.direction, plans[2].normal), camera_pos, SHININESS, KS);
 								// Mezcla el color resultante con la nueva intensidad
 								current_color = mix_colors(0x33cc55, current_color, intensity);
 								
@@ -517,7 +547,8 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 					free(hit_pt);
 					free(cam_dir);
 			}
-	 		if (intersect_plane(&ray, &plans[1], &t) && (t < min_dist))
+	 		
+			if (intersect_plane(&ray, &plans[1], &t) && (t < min_dist))
 			{
 				min_dist = t;
 				Vector3 *hit_pt = hit_point(ray, t);
@@ -533,6 +564,7 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 					{	// Calcula la dirección de la luz hacia el punto de impacto
 							// Calcula la intensidad de la luz con respecto a la dirección de la luz
 							intensity = calculate_intensity(plans[1].normal, rayslight.direction);
+							intensity += specular_intensity(*reflect(rayslight.direction, plans[1].normal), camera_pos, SHININESS, KS);
 							// Mezcla el color resultante con la nueva intensidad
 							current_color = mix_colors(0x33cc55, current_color, intensity);
 					}
@@ -561,6 +593,8 @@ void render_sphere(void *mlx, void *win, int screen_width, int screen_height, Sp
 						if (!is_in_shadow(sphere, plans, 5, light, *hit_pt))
 						{	// Calcula la dirección del centro al punto
 							intensity = calculate_intensity(*n_sphere, rayslight.direction);
+							if (intensity)
+								intensity += specular_intensity(*reflect(rayslight.direction, *n_sphere), camera_pos, SHININESS, KS);
 							current_color = mix_colors(0x33cc55, current_color, intensity);
 						}
 				}  // Libera memoria de hit_pt y cam_dir
