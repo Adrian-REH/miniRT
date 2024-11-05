@@ -14,6 +14,7 @@
 #define MAIN_H
 
 #include "../lib/minilibx-linux/mlx.h"
+#include "../lib/libft/libft.h"
 #include "../lib/minilibx_opengl/mlx_opengl.h"
 #include <math.h>
 #define WINX 854 
@@ -21,8 +22,8 @@
 # define X 0
 # define Y 1
 # define Z 2
-#define SHININESS 100
-#define KS 1
+#define SHININESS 50
+#define KS 0.8
 #define AMBIENT_INTENSITY 0.2 // Ajusta este valor según lo necesites
 
 # define L_A_S_KC 1.0
@@ -30,8 +31,8 @@
 # define L_A_S_KQ 0.001
 
 # define L_P_KC 1.0
-# define L_P_KL 0.2
-# define L_P_KQ 0.03
+# define L_P_KL 0
+# define L_P_KQ 0.01
 
 # define L_D_KC 1.0
 # define L_D_KL 0.0

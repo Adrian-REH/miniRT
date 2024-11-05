@@ -12,6 +12,7 @@
 
 #include "main.h"
 #include <float.h>
+#include <stdint.h>
 
 void	set_color(char *buffer, int endian, int color, int alpha)
 {
@@ -30,6 +31,26 @@ void	set_color(char *buffer, int endian, int color, int alpha)
 		buffer[3] = alpha;
 	}
 }
+
+int get_color(const char *buffer, int endian, int *alpha) {
+    int color = 0;
+
+    if (endian == 1) {
+        // Formato: ARGB
+        if (alpha)
+			*alpha = buffer[0]; // Valor alfa
+		if (buffer[1] && buffer[2] && buffer[3])
+			color = (buffer[1] << 16) | (buffer[2] << 8) | buffer[3]; // Color
+    } else {
+		if (alpha)
+			*alpha = buffer[3]; // Valor alfa
+		if (buffer[0] && buffer[1] && buffer[2])
+			color = (buffer[0] << 16) | (buffer[1] << 8) | buffer[2]; // Color
+    }
+
+    return color;
+}
+
 void normalize(Vector3 *v) {
 	// Calcula la magnitud del vector
 	double magnitude = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
@@ -232,7 +253,6 @@ Ray *generate_ray(int x, int y, int screen_width, int screen_height, Vector3 cam
         camera_pos.y + camera_direction.y * plane_distance + camera_right.y * px + camera_up.y * py,
         camera_pos.z + camera_direction.z * plane_distance + camera_right.z * px + camera_up.z * py
     };
-
     // Calcula la dirección del rayo desde la cámara al punto en el plano de proyección
     ray->direction.x = point_on_plane.x ;
     ray->direction.y = point_on_plane.y ;
@@ -398,6 +418,28 @@ int is_in_shadow(Sphere sphere, Plane *planes, int plane_count, Vector3 light_po
     return 0; // Not in shadow
 }
 
+double find_intersect(Sphere sphere, Plane *planes, int plane_count, Ray ray, double *t){
+
+ 
+     // Check intersection with all planes
+    for (int i = 0; i < plane_count; ++i) {
+        if (intersect_plane(&ray, &planes[i], t)) {
+            if (t > 0) {
+                return *t; // Intersect
+            }
+        }
+    } 
+   // Check intersection with the sphere
+    if (intersect_sphere(&ray, &sphere, t)) {
+        if (t > 0) {
+            return *t; // Intersect
+        }
+    }
+ 
+    return 0; // Not Intersect
+}
+
+
 Vector3 *reflect(Vector3 L, Vector3 N) {
     double dot_product = dot(N, L); // N dot L
     Vector3 *reflection = malloc(sizeof(Vector3));
@@ -417,7 +459,8 @@ int  russian_roulette(double probability) {
     double random_value = (double)rand() / RAND_MAX; // Número aleatorio entre 0 y 1
     return random_value < probability;
 }
-int render_plane(Sphere sphere,Plane *plans, Vector3 camera_pos, Vector3 hit_pt, Vector3 light, int n_plane)
+
+int render_plane(Sphere sphere, Plane *plans, Vector3 camera_pos, Vector3 hit_pt, Vector3 light, int n_plane, char *buffer, int x, int y)
 {
 	double d;
 	int current_color = 0; // Color base de la esfera
@@ -436,21 +479,21 @@ int render_plane(Sphere sphere,Plane *plans, Vector3 camera_pos, Vector3 hit_pt,
 		if (!is_in_shadow(sphere, plans, 5, light, hit_pt))
 		{	// Calcula la dirección de la luz hacia el punto de impacto
 				double distance_light = distance(rayslight.origin, hit_pt);
-				double attenuation = calculate_attenuation(distance_light, 1, 0.01, 0.01);
+				double attenuation = calculate_attenuation(distance_light, L_P_KC, L_P_KL, L_P_KQ);
 				double diffuse_intensity = calculate_intensity(plans[n_plane].normal, rayslight.direction);
 				diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
 				current_color = mix_colors(plans[n_plane].mater_prop.color[1], current_color, diffuse_intensity* attenuation);
 				// Calcula la intensidad de la luz con respecto a la dirección de la luz
-				// Mezcla el color resultante con la nueva intensidad
 				//attenuation = calculate_attenuation(distance_light, 1.0, 0.2, 0.05); // Aumentando k_q
-				double specular = specular_intensity(*reflect(rayslight.direction, plans[n_plane].normal), *cam_dir, SHININESS, KS);
+				Vector3 *reflect_dir = reflect(rayslight.direction, plans[n_plane].normal);
+				double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
 				current_color = mix_colors(0xFFFFFF, current_color, specular * attenuation);
 		}
 	}  // Libera memoria de hit_pt y cam_dir
 	free(cam_dir);
 	return current_color;
 }
-int render_sphere(Sphere sphere, Plane *plans, Vector3 camera_pos, Vector3 hit_pt, Vector3 light){
+int render_sphere(Sphere sphere, Plane *plans, Vector3 camera_pos, Vector3 hit_pt, Vector3 light, char * buffer, int y, int x){
 	double d;
 	int current_color = 0; // Color base de la esfera
     int ambient_color = 0x555555; // Color gris para la luz ambiental
@@ -459,7 +502,7 @@ int render_sphere(Sphere sphere, Plane *plans, Vector3 camera_pos, Vector3 hit_p
 	Vector3 *cam_dir = normalize_withpoint(camera_pos, hit_pt );
 	double intensity = calculate_intensity(*n_sphere, *cam_dir);
 	double dist_camera = distance(camera_pos, hit_pt);
-	double attenuation = calculate_attenuation(dist_camera, 1, 0.5, 1);
+	double attenuation = calculate_attenuation(dist_camera, L_P_KC, L_P_KL, L_P_KQ);
     current_color = mix_colors(ambient_color, current_color, AMBIENT_INTENSITY);
 
 	Ray rayslight = {light, *normalize_withpoint(light, hit_pt)};
@@ -469,30 +512,33 @@ int render_sphere(Sphere sphere, Plane *plans, Vector3 camera_pos, Vector3 hit_p
        if (!is_in_shadow(sphere, plans, 5, light, hit_pt)) {
             // Cálculo de la luz difusa
 			double distance_light = distance(rayslight.origin, hit_pt);
-			attenuation = calculate_attenuation(distance_light, 1, 0.01, 0.01);
+			attenuation = calculate_attenuation(distance_light, 1, 0.01, 0.03);
             double diffuse_intensity = calculate_intensity(*n_sphere, rayslight.direction);
             diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1);
-            current_color = mix_colors(0xff0000, current_color, diffuse_intensity * attenuation);
+            current_color = mix_colors(0xc61200, current_color, diffuse_intensity * attenuation);
+
+			Vector3 *reflect_dir = reflect(rayslight.direction, *n_sphere);
 
             // Cálculo de la luz especular
-            double specular = specular_intensity(*reflect(rayslight.direction, *n_sphere ), *cam_dir, SHININESS, KS);
+            double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
 			//	attenuation = calculate_attenuation(distance_light, 1.0, 0.1, 0.01);
             //specular = fmin(fmax(specular, 0.0), 1.0);
             current_color = mix_colors(0xFFFFFF, current_color, specular * attenuation);
         }
+	
 	}  // Libera memoria de hit_pt y cam_dir
 	free(cam_dir);
 	return current_color;
 }
 
 void render(void *mlx, void *win, int screen_width, int screen_height, Sphere sphere, Plane *plans, Vector3 camera_pos, char *buffer) {
-	Vector3 light = {8, 0, 0.01}; // luz
+	Vector3 light = {-8, 0, 1}; // luz
    // normalize(&light);
 	time_t start, end;
 	double min_dist;
 	start = clock();
 	for (int y = 0; y < screen_height; ++y) { //Esta es la coordenada de la pantalla
-		for (int x = 0; x < screen_width; ++x) {
+		for (int x = 0; x < screen_width ; ++x) {
 			//  Este es el haz que se lanza desde camara_pos hasta el punto de la
 			Ray ray = *generate_ray(x, y, WINX, WINY, camera_pos); 
 			double t = 0;
@@ -504,9 +550,8 @@ void render(void *mlx, void *win, int screen_width, int screen_height, Sphere sp
 				if (intersect_plane(&ray, &plans[i], &t) && (t < min_dist))
 				{
 						min_dist = t;
-						// Calcula el punto de impacto con el rayo de la cámara
 						Vector3 *hit_pt = hit_point(ray, t);
-						int current_color = render_plane(sphere, plans, camera_pos, *hit_pt, light, i);
+						int current_color = render_plane(sphere, plans, camera_pos, *hit_pt, light, i, buffer, x, y);
 						int mypixel = (y * WINX * 4) + (x * 4);
 						set_color(&buffer[mypixel], 0, current_color, 0);
 						free(hit_pt);
@@ -516,10 +561,8 @@ void render(void *mlx, void *win, int screen_width, int screen_height, Sphere sp
 			{
 				min_dist = t;
 				Vector3 *hit_pt = hit_point(ray, t);
-				int current_color = render_sphere(sphere, plans, camera_pos, *hit_pt, light);
+				int current_color = render_sphere(sphere, plans, camera_pos, *hit_pt, light, buffer, y, x);
 				free(hit_pt);
-				//mlx_pixel_put(mlx, win, x, y, current_color);
-				//pixel.color = mlx_get_color_value(mlx, pixel.color);
 				int mypixel = (y * WINX * 4) + (x * 4);
 				set_color(&buffer[mypixel], 0, current_color, 0);
 			}
@@ -550,7 +593,8 @@ int main()
 	color = mlx_get_color_value(mlx, color);
 	mlx_pixel_put(mlx, win, WINX ,WINY, color);
 	buffer = mlx_get_data_addr(img, &bitxpixel, &lines, &endian);
-	Vector3 camera_pos = {0, 0, 4};      // Cámara en el origen
+	mlx_put_image_to_window(mlx, win, img, 0, 0);
+	Vector3 camera_pos = {0, 0, 6};      // Cámara en el origen
 	Sphere sphere = {{0, 0, 2}, 1};      // Esfera en Z = 5 con radio 1
 	Plane *plans = malloc(sizeof(Plane) * 5);
 	plans[0] =  (Plane){{0, 0, 1}, {0, 0, -1}};
@@ -578,6 +622,7 @@ int main()
 	normalize(&plans[2].normal);
 	normalize(&plans[3].normal);
 	normalize(&plans[4].normal);
+	ft_memset(buffer, 0 ,((WINY - 1)* WINX * 4) + ((WINX - 1) * 4));
 	render(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);
 	free(plans);
 	mlx_put_image_to_window(mlx, win, img, 0, 0);
