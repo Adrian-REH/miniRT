@@ -21,9 +21,26 @@
 # define X 0
 # define Y 1
 # define Z 2
+# define MAX_TEXTURE_SIZE 2
+# define MAX_COLOR_SIZE 2
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+typedef struct {
+    double reflection;                 // Reflexión
+    double absorption;                 // Absorción
+    double transmission;               // Transmisión
+    double glossiness;                 // Brillo
+    double diffusion;                  // Difusión
+    double roughness;                  // Rugosidad
+    double iridescence;                // Iridescencia
+    double emission;                   // Emisión
+    double subsurface_scattering;      // SSS
+    char texture[MAX_TEXTURE_SIZE];    // Textura
+    double refraction_index;           // Índice de refracción
+    char color[MAX_COLOR_SIZE];        // Color
+} MaterialProperties;
 
 typedef struct {
 	double x, y, z;
@@ -37,11 +54,31 @@ typedef struct {
 typedef struct {
 	Vector3 center;
 	double radius;
+	Vector3 normal;
+	//MaterialProperties mater_prop;
 } Sphere;
 
 typedef struct {
 	Vector3 normal;
 	Vector3 point;
+	//MaterialProperties mater_prop;
 } Plane;
+
+typedef struct {
+	Vector3	point;
+	int		color;
+} Light;
+typedef struct {
+	Vector3	point;
+	int		color;
+} Color;
+
+typedef struct {
+	void	*mlx;
+	void	*win;
+	int		*buffer;
+	int		*img;
+} MlxData;
+
 
 #endif

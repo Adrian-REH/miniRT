@@ -5,6 +5,9 @@
 		"mlx_opengl.h": "c",
 		"mathmatrix.h": "c",
 		"main.h": "c",
-		"math.h": "c"
+		"math.h": "c",
+		"stdio.h": "c",
+		"time.h": "c",
+		"iterator": "c"
 	}
 }
