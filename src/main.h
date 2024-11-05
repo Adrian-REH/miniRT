@@ -39,6 +39,7 @@
 # define L_D_KQ 0.0
 
 # define MAX_TEXTURE_SIZE 5
+# define N_TYPE 5
 # define MAX_COLOR_SIZE 5
 #include <time.h>
 #include <stdio.h>
@@ -87,7 +88,9 @@ typedef struct t_materialProperties{
 typedef struct {
 	double x, y, z;
 } Vector3;
-
+typedef struct {
+	double x, y;
+} Vector2;
 typedef struct {
 	Vector3 origin;
 	Vector3 direction;
@@ -96,9 +99,16 @@ typedef struct {
 typedef struct {
 	Vector3 center;
 	double radius;
-	Vector3 normal;
-	struct t_materialProperties mater_prop;
+	int color;
 } Sphere;
+
+typedef struct {
+	Vector3 center;
+	Vector3 axis;
+	double diameter;
+	double height;
+	int	color;
+} Cylinder;
 
 typedef struct {
 	Vector3 normal;
@@ -107,21 +117,59 @@ typedef struct {
 } Plane;
 
 typedef struct {
-	Vector3	point;
-	int		color;
-} Light;
+	Vector3 *vertex;
+	Vector3 normal;
+	int	color;
+} Polygon;
 
 typedef struct {
 	Vector3	point;
 	int		color;
+	int		ratio;
+} Light;
+
+typedef struct {
+	Vector3	pos;
+	Vector3	dir;
+	Vector3	horizontal;
+	Vector3	vertical;
+	int fov;
+	double aspect_ratio;
+	double plane_distance;
+	double plane_half_width;
+	double plane_half_height;
+} Camera;
+
+typedef struct {
+	int		color_base;
+	int		back_ground;
 } Color;
+
+
+typedef struct
+{
+	char	*buffer;
+	int		bitxpixel;
+	void	*img;
+	int		lines;
+	int		endian;
+
+} Img;
 
 typedef struct {
 	void	*mlx;
 	void	*win;
-	int		*buffer;
-	int		*img;
-} MlxData;
+	Img		*img;
+	Camera *cameras;
+	Sphere *spheres;
+	Cylinder *cylinders;
+	Plane *planes;
+	Light *lights;
+	int n_lights;
+	int n_planes;
+	int n_cylinders;
+	int n_spheres;
+} Scene;
 
 
 #endif
