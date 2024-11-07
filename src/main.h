@@ -22,9 +22,9 @@
 # define X 0
 # define Y 1
 # define Z 2
-#define SHININESS 50
-#define KS 0.8
-#define AMBIENT_INTENSITY 0.2 // Ajusta este valor según lo necesites
+#define SHININESS 20
+#define KS 1
+#define AMBIENT_INTENSITY 0.1 // Ajusta este valor según lo necesites
 
 # define L_A_S_KC 1.0
 # define L_A_S_KL 0.07
@@ -70,6 +70,13 @@
 #define METAL_POLISHED_REFRACTION_INDEX 2.5 // Dependiendo del metal
 #define METAL_POLISHED_COLOR "silver"
 
+typedef enum { 
+	PLANE,
+	SPHERE,
+	CYLINDER,
+	POLYGON,
+};
+
 typedef struct t_materialProperties{
     double reflection;                 // Reflexión
     double absorption;                 // Absorción
@@ -87,10 +94,12 @@ typedef struct t_materialProperties{
 
 typedef struct {
 	double x, y, z;
+	int	color;
 } Vector3;
 typedef struct {
 	double x, y;
 } Vector2;
+
 typedef struct {
 	Vector3 origin;
 	Vector3 direction;
@@ -126,6 +135,7 @@ typedef struct {
 	Vector3	point;
 	int		color;
 	int		ratio;
+	Sphere sphere;
 } Light;
 
 typedef struct {

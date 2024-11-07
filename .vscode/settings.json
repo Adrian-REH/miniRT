@@ -9,6 +9,8 @@
 		"stdio.h": "c",
 		"time.h": "c",
 		"iterator": "c",
-		"float.h": "c"
+		"float.h": "c",
+		"random": "c",
+		"algorithm": "c"
 	}
 }
