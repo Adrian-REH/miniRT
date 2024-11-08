@@ -17,8 +17,8 @@
 #include "../lib/libft/libft.h"
 #include "../lib/minilibx_opengl/mlx_opengl.h"
 #include <math.h>
-#define WINX 854 
-#define WINY 480
+#define WINX 1280 
+#define WINY 720
 # define X 0
 # define Y 1
 # define Z 2
@@ -70,6 +70,15 @@
 #define METAL_POLISHED_REFRACTION_INDEX 2.5 // Dependiendo del metal
 #define METAL_POLISHED_COLOR "silver"
 
+#define ABS_R 0.01
+#define ABS_B 0.03
+#define ABS_G 0.02
+#define COL_T 5000 //Luz ligeramente calida
+#define INTSITY 0.8 // Material muy reflectante pero no perfecto
+#define REFLECT 0.95 // Intensidad de la luz
+
+
+
 typedef enum { 
 	PLANE,
 	SPHERE,
@@ -81,6 +90,16 @@ typedef enum {
 	G,
 	B
 };
+
+
+typedef struct {
+	double r;
+	double	g;
+	double b;
+	int	color;
+} Color;
+
+
 typedef struct t_materialProperties{
     double reflect;                    // Reflexión
     double absorption[3];              // Absorción
@@ -93,19 +112,13 @@ typedef struct t_materialProperties{
     char texture[MAX_TEXTURE_SIZE];    // Textura
     double refraction_index;           // Índice de refracción
     int color[MAX_COLOR_SIZE];        // Color
+	Color *vColor;
 } MaterialProperties;
 
 typedef struct {
 	double x, y, z;
 	int	color;
 } Vector3;
-
-typedef struct {
-	double r;
-	double	g;
-	double b;
-	int	color;
-} Color;
 
 typedef struct {
 	double x, y;
@@ -120,6 +133,7 @@ typedef struct {
 	Vector3 center;
 	double radius;
 	int color;
+	MaterialProperties mater_prop;
 } Sphere;
 
 typedef struct {

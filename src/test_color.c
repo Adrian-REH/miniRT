@@ -1,11 +1,4 @@
 #include "main.h"
-#define ABS_R 0.01
-#define ABS_B 0.03
-#define ABS_G 0.02
-#define COL_T 5000 //Luz ligeramente calida
-#define INTSITY 0.8 // Material muy reflectante pero no perfecto
-#define REFLECT 0.95 // Intensidad de la luz
-
 
 
 void normalize_color(Color *color) {
@@ -150,7 +143,7 @@ int main()
 	scene.img->img = mlx_new_image(scene.mlx, WINX, WINY);
 	scene.img->buffer = mlx_get_data_addr(scene.img->img, &(scene.img->bitxpixel), &(scene.img->lines), &(scene.img->endian));
 	Color color;
-	Color surface_color = {1.0, 0.5, 0.5, 0};  // Casi blanco
+	Color surface_color = {0.29, 0.26, 0.17};  // Casi blanco
 	surface_color.color =  colornormal_to_int(surface_color);
     Color light_color = {1.0, 1.0, 1.0, 0};    // Luz blanca
 	light_color.color = colornormal_to_int(light_color);
@@ -163,7 +156,7 @@ int main()
 		}
 	}
 
-	Color result = illuminate_surface(surface_color, light_color, INTSITY, REFLECT, COL_T, 1);
+	Color result = illuminate_surface(surface_color, light_color, 0.8, 0.9, 0);
 	for (int y = 0; y < WINY; ++y) {
 		for (int x = WINX/2; x < WINX ; ++x) {
 
