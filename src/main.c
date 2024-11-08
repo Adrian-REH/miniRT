@@ -15,6 +15,18 @@
 #include <stdint.h>
 #define EPSILON 1e-6 // Margen de tolerancia para precisión flotante
 
+Color *int_to_color(int src) {
+    Color *color = malloc(sizeof(Color));
+    if (color == NULL) {
+        return NULL;  // Manejo de error de asignación de memoria
+    }
+    color->r = ((src >> 16) & 0xFF) / 255.0;
+    color->g = ((src >> 8) & 0xFF) / 255.0;
+    color->b = (src & 0xFF) / 255.0;
+    color->color = src;
+    return color;
+}
+
 void	set_color(char *buffer, int endian, int color, int alpha)
 {
 	if (endian == 1)
@@ -230,6 +242,7 @@ int add_color(int base_color, int current_color) {
 	// Combinamos los componentes mezclados en un solo color hexadecimal
 	return (mixed_red << 16) | (mixed_green << 8) | mixed_blue;
 }
+
 // Función que calcula la diferencia de color
 double color_difference(int color1, int color2) {
 	int r1 = (color1 >> 16) & 0xFF;
@@ -300,6 +313,7 @@ void project_to_pixel(Vector3 hit_pt, Camera camera, int *x, int *y){
 	//hit_pt.y = ((*y + 0.5) / WINY - 0.5) * 2.0 * camera.plane_half_height;
 
 }
+
 Vector2 *convert_to_pixel(Vector3 point_on_plane, Camera camera) {
     Vector2 *pixel = malloc(sizeof(Vector2));
 
@@ -325,6 +339,7 @@ Vector2 *convert_to_pixel(Vector3 point_on_plane, Camera camera) {
 
     return pixel;
 }
+
 void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen_height, Vector2 *pxl) {
     // Vector desde la cámara al punto
     Vector3 to_point = {
@@ -580,6 +595,7 @@ Vector3 *reflect(Vector3 L, Vector3 N) {
 double calculate_attenuation(double distance, double k_c, double k_l, double k_q) {
 	return 1.0 / (k_c + k_l * distance + k_q * distance * distance);
 }
+
 int  russian_roulette(double probability) {
 	double random_value = (double)rand() / RAND_MAX; // Número aleatorio entre 0 y 1
 	return random_value < probability;
@@ -636,6 +652,7 @@ int render_sphere(Scene scene, Vector3 hit_pt, int y, int x){
 	// Calcula la intersección del plano con el rayo de luz
 	if (intersect_sphere(&rayslight, scene.spheres, &d)) // Agrega esta verificación
 	{
+		//Tengo que hacer reflejo y acumular el color.
 		if (!is_in_shadow(scene, 5, scene.lights->point, hit_pt)) {
 			// Cálculo de la luz difusa
 			double distance_light = distance(rayslight.origin, hit_pt);
@@ -649,41 +666,9 @@ int render_sphere(Scene scene, Vector3 hit_pt, int y, int x){
 			//	attenuation = calculate_attenuation(distance_light, 1.0, 0.1, 0.01);
 			//specular = fmin(fmax(specular, 0.0), 1.0);
 			current_color = mix_colors(0xFFFFFF, current_color, specular * attenuation);
-		
-
-
 			free(reflect_dir);
 		}
-/* 				Vector3 *reflect_dir = reflect(rayslight.direction, *n_sphere);
-
-			Ray rayreflect = { hit_pt, *reflect_dir};
-			for (int i = 0; i < 5; ++i) {
-				if (intersect_plane(&rayreflect, &scene.planes[i], &d)) {
-					if (d > 0) {
-						//calculo el punto de interseccion
-						Vector3 *reflect_dir_pln = reflect(*reflect_dir, scene.planes[i].normal);
-						double angl = dot(*reflect_dir_pln, scene.cameras->dir);
-							//refleja por ende pinto
-						Vector3 *pt_imp = hit_point( rayreflect, d);
-						int px_x = 0, px_y = 0;
-						point3D_to_pixel(*pt_imp, *scene.cameras, WINX, WINY, &px_x, &px_y);
-						if (px_x > 0 && px_y > 0 && px_x < WINX && px_y < WINY)
-						{
-							printf("VAL:%d, %d \n", px_x, px_y);
-							set_color(&scene.img->buffer[( (int)px_y * WINX * 4) + ((int)px_x* 4)], 0, current_color, 0);
-						}
-
-					}
-				}
-			}
-		// Check intersection with the sphere
-			if (intersect_sphere(&rayreflect, scene.spheres, &d)) {
-				if (d > 0) {
-
-				}
-			}
- */
-	}  // Libera memoria de hit_pt y cam_dir
+	}
 	free(cam_dir);
 	return current_color;
 }
@@ -691,6 +676,7 @@ int render_sphere(Scene scene, Vector3 hit_pt, int y, int x){
 double random_double() {
     return (double)rand() / RAND_MAX * 2.0 - 1.0;
 }
+
 // Genera un vector aleatorio dentro de una esfera unitaria
 Vector3 *random_in_unit_sphere() {
     Vector3 *p = malloc(sizeof(Vector3));
@@ -699,6 +685,7 @@ Vector3 *random_in_unit_sphere() {
     } while ((p->x * p->x + p->y * p->y + p->z * p->z) >= 1.0);
     return p;
 }
+
 Vector3 *random_in_hemisphere(Vector3 normal) {
     Vector3 *in_unit_sphere = random_in_unit_sphere();
     
@@ -938,10 +925,12 @@ void render(Scene scene)
 			double d = 0;
 			min_dist = 90000000;
 			int i = -1;
-			while (++i < 5)
-			{
-				if (intersect_plane(&ray, &scene.planes[i], &t) && (t < min_dist))
-				{
+			int type;
+			int id;
+			
+			type = find_nearest_obj(scene, &ray, &t, &id);
+			i = id;
+			if (type == PLANE){
 					//printf("plano: %d, pxl (%d, %d) | t: %f\n",i, x, y, t);
 					//if (i == 0)
 					//	continue;
@@ -950,18 +939,22 @@ void render(Scene scene)
 					int hit_color = 0;
 					Vector3 *hit_pt = hit_point(ray, t);
 					Vector3 *hit_rfc;
-					Vector3 *rfc = reflect(scene.planes[i].normal, ray.direction);
-					if (dot(ray.direction, *rfc ) < 0) // Esto esta del reves, si dot(u, v) < 0 significa que tienen signos opuestos que es en el caso de una reflexion
+					Vector3 *dir_pt = normalize_withpoint(scene.cameras->pos , *hit_pt);
+					if (dot(*dir_pt, scene.planes[i].normal ) < 0) // Esto esta del reves, si dot(u, v) < 0 significa que tienen signos opuestos que es en el caso de una reflexion
+						invnormal(&scene.planes[i].normal);
+					Vector3 *rfc = reflect(*dir_pt, scene.planes[i].normal);
+					if (dot(*dir_pt, *rfc ) < 0) // Esto esta del reves, si dot(u, v) < 0 significa que tienen signos opuestos que es en el caso de una reflexion
 						invnormal(rfc);
 					Ray rayrfc = {*hit_pt , *rfc};
 					int j = -1;
 					while (++j < 5)
 					{
-						if (intersect_plane(&rayrfc, &scene.planes[j], &t))
+						if (intersect_plane(&rayrfc, &scene.planes[j], &t) && t < md)
 						{
 							hit_rfc = hit_point(rayrfc, t);
 							if (!plane_solution_point(scene.planes[i], *hit_rfc))
 							{
+								md = t;
 								Vector2 px_rfc;
 								point3D_to_pixel(*hit_rfc, *scene.cameras, WINX, WINY, &px_rfc);
 								hit_color = get_color(&scene.img->buffer[idxpixel(px_rfc.x, px_rfc.y)], 0, NULL);
@@ -970,7 +963,7 @@ void render(Scene scene)
 								int current_pixel = 0;
 								current_pixel = get_color(&scene.img->buffer[mypixel], 0, &alpha);
 
-								current_pixel = mix_colors(hit_color, current_pixel, 0.2);
+								current_pixel = mix_colors(hit_color, current_pixel, 1);
 								set_color(&img->buffer[mypixel], 0, current_pixel, alpha);
 
 								//set_color(&img->buffer[idxpixel(px_rfc.x, px_rfc.y)], 0, hit_color, 0);//pinto de donde saca
@@ -979,9 +972,8 @@ void render(Scene scene)
 							free(hit_rfc);
 						}
 					}
-
-					t = 0;
-					if (intersect_sphere(&rayrfc, &scene.spheres[0], &t) ){
+					if (intersect_sphere(&rayrfc, &scene.spheres[0], &t) && (t < md))
+					{
 						
 						md = t;
 						hit_rfc = hit_point(rayrfc, t);
@@ -1001,11 +993,84 @@ void render(Scene scene)
 						set_color(&img->buffer[mypixel], 0, current_pixel, alpha);
 						//break;
 					}
-					
+					 
+					free(hit_pt);
+					free(rfc);
+			}
+		/* 	
+			while (++i < 5)
+			{
+				if (intersect_plane(&ray, &scene.planes[i], &t) && (t < min_dist))
+				{
+					//printf("plano: %d, pxl (%d, %d) | t: %f\n",i, x, y, t);
+					//if (i == 0)
+					//	continue;
+					min_dist = t;
+					double md= 900000;
+					int hit_color = 0;
+					Vector3 *hit_pt = hit_point(ray, t);
+					Vector3 *hit_rfc;
+					Vector3 *dir_pt = normalize_withpoint(scene.cameras->pos , *hit_pt);
+					if (dot(*dir_pt, scene.planes[i].normal ) < 0) // Esto esta del reves, si dot(u, v) < 0 significa que tienen signos opuestos que es en el caso de una reflexion
+						invnormal(&scene.planes[i].normal);
+					Vector3 *rfc = reflect(*dir_pt, scene.planes[i].normal);
+					if (dot(*dir_pt, *rfc ) < 0) // Esto esta del reves, si dot(u, v) < 0 significa que tienen signos opuestos que es en el caso de una reflexion
+						invnormal(rfc);
+					Ray rayrfc = {*hit_pt , *rfc};
+					int j = -1;
+					while (++j < 5)
+					{
+						if (intersect_plane(&rayrfc, &scene.planes[j], &t) && t < md)
+						{
+							hit_rfc = hit_point(rayrfc, t);
+							if (!plane_solution_point(scene.planes[i], *hit_rfc))
+							{
+								md = t;
+								Vector2 px_rfc;
+								point3D_to_pixel(*hit_rfc, *scene.cameras, WINX, WINY, &px_rfc);
+								hit_color = get_color(&scene.img->buffer[idxpixel(px_rfc.x, px_rfc.y)], 0, NULL);
+
+								int mypixel = (y * WINX * 4) + (x * 4);
+								int current_pixel = 0;
+								current_pixel = get_color(&scene.img->buffer[mypixel], 0, &alpha);
+
+								current_pixel = mix_colors(hit_color, current_pixel, 1);
+								set_color(&img->buffer[mypixel], 0, current_pixel, alpha);
+
+								//set_color(&img->buffer[idxpixel(px_rfc.x, px_rfc.y)], 0, hit_color, 0);//pinto de donde saca
+								break;
+							}
+							free(hit_rfc);
+						}
+					}
+					if (intersect_sphere(&rayrfc, &scene.spheres[0], &t) && (t < md))
+					{
+						
+						md = t;
+						hit_rfc = hit_point(rayrfc, t);
+						Vector2 px_rfc;
+						Vector2 px;
+						point3D_to_pixel(*hit_rfc, *scene.cameras, WINX, WINY, &px_rfc);
+						//point3D_to_pixel(*hit_pt, *scene.cameras, WINX, WINY, &px);
+						//set_color(&scene.img->buffer[idxpixel(px_rfc.x, px_rfc.y)],0 , 0xFFFFFF, 0);
+						//set_color(&scene.img->buffer[idxpixel(px.x, px.y)],0 , 0x555555, 0);
+						hit_color = get_color(&scene.img->buffer[idxpixel(px_rfc.x, px_rfc.y)], 0, NULL);
+
+						int mypixel = (y * WINX * 4) + (x * 4);
+						int current_pixel = 0;
+						current_pixel = get_color(&scene.img->buffer[mypixel], 0, &alpha);
+
+						current_pixel = mix_colors(hit_color, current_pixel, 1);
+						set_color(&img->buffer[mypixel], 0, current_pixel, alpha);
+						//break;
+					}
+					 
 					free(hit_pt);
 					free(rfc);
 				}
 			}
+			 */
+			
 			i = -1;
 			while(++i < (scene.n_spheres))
 			{
@@ -1016,10 +1081,11 @@ void render(Scene scene)
 					int hit_color = 0;
 					Vector3 *hit_rfc;
 					Vector3 *hit_pt = hit_point(ray, t);
+					Vector3 *dir_pt = normalize_withpoint(scene.cameras->pos , *hit_pt);
 					Vector3 *normal = normal_sphere(*hit_pt, scene.spheres[i]);
-					//if (dot(ray.direction, *normal) < 0)
-					//	invnormal(normal);
-					Vector3 *rfc = reflect(*normal, ray.direction);
+					Vector3 *rfc = reflect(*dir_pt, *normal);
+					if (dot(*dir_pt, *rfc) < 0) // Esto esta del reves, si dot(u, v) < 0 significa que tienen signos opuestos que es en el caso de una reflexion
+						invnormal(rfc);
 					Ray rayrfc = {*hit_pt , *rfc};
 					int j = -1;
 					while (++j < scene.n_planes)
@@ -1072,68 +1138,20 @@ void render(Scene scene)
 					free(rfc);
 				}
 			}
+		
 		}
 	}
 
 //	scene.img->buffer = tmp_bfr;
 	scene.img = img;
 	mlx_put_image_to_window(scene.mlx, scene.win, scene.img->img, 0, 0);
- /* 	for (int y = 0; y < WINY; ++y) { //Esta es la coordenada de la pantalla
-		for (int x = 0; x < WINX ; ++x) {
-			//  Este es el haz que se lanza desde camara_pos hasta el punto de la
-			Ray ray = *generate_ray(x, y, WINX, WINY, *scene.cameras); 
-			double t = 0;
-			double d = 0;
-			min_dist = 90000000;
-			int i = -1;
-			while (++i < 5)
-			{
-				if (intersect_plane(&ray, &scene.planes[i], &t) && (t < min_dist))
-				{
-						min_dist = t;
-						Vector3 *hit_pt = hit_point(ray, t);
-						int current_color = render_plane(scene, *hit_pt, i, x, y);
-						int mypixel = (y * WINX * 4) + (x * 4);
-						set_color(&scene.img->buffer[mypixel], 0, current_color, 0);
-						free(hit_pt);
-				}
-			} 
-			if (intersect_sphere(&ray, scene.spheres, &t) && (t < min_dist))
-			{
-				min_dist = t;
-				Vector3 *hit_pt = hit_point(ray, t);
-				int current_color = render_sphere(scene, *hit_pt, y, x);
-				int px_x = 0, px_y =0;
-				Vector2 *hit_px = convert_to_pixel(*hit_pt, *scene.cameras);
-				
-				point3D_to_pixel(*hit_pt, *scene.cameras, WINX, WINY, &px_x, &px_y);
-				printf("result: (%d, %d) | Expected: (%d, %d)\n", (int)hit_px->x, (int)hit_px->y, x, y);
-				int mypixel = (y * WINX * 4) + (x * 4);
-				//set_color(&scene.img->buffer[( (int)px_y * WINX * 4) + ((int)px_x* 4)], 0, current_color, 0);
-				set_color(&scene.img->buffer[mypixel], 0, current_color, 0);
-				
-				//Reflejo la bola y si intersecta, entonces verifico si la camara_dir respecto a su angulo es 0 para poder reflejarlo
-				free(hit_pt);
-				free(hit_px);
-			}
-			if (intersect_sphere(&ray, &scene.spheres[1], &t)) //para la esfera de luz
-			{
-				Vector3 *hit_pt = hit_point(ray, t);
-				int current_color = 0xFFFFFF;//render_sphere(scene, *hit_pt, y, x);
-				int mypixel = (y * WINX * 4) + (x * 4);
-				set_color(&scene.img->buffer[mypixel], 0, current_color, 0);
-				//Reflejo la bola y si intersecta, entonces verifico si la camara_dir respecto a su angulo es 0 para poder reflejarlo
-				free(hit_pt);
-			}
-		}
-	}
-	  */
-	
 	
 	end = clock();
 	double elapsed = (double)(end - start) / CLOCKS_PER_SEC * 1000; // Convertido a milisegundos
 	printf("Elapsed time: %.3f milliseconds\n", elapsed);
 }
+
+
 
 int main()
 {
@@ -1146,7 +1164,6 @@ int main()
 	scene.img = &img;
 	scene.img->img = mlx_new_image(scene.mlx, WINX, WINY);
 	scene.img->buffer = mlx_get_data_addr(scene.img->img, &(scene.img->bitxpixel), &(scene.img->lines), &(scene.img->endian));
-	mlx_put_image_to_window(scene.mlx, scene.win, scene.img->img, 0, 0);
 	Plane *plans = malloc(sizeof(Plane) * 5);
 	plans[0] =  (Plane){{0, 0, 1}, {0, 0, -1}};
 	plans[0].mater_prop.color[0] = 0x010c32;
@@ -1176,7 +1193,7 @@ int main()
 	scene.planes = plans;
 	Light light;
 	scene.lights = &light;
-	scene.lights->color = 0xFFFFFF;
+	scene.lights->color = int_to_color(0xFFFFFF);
 	scene.lights->point =  (Vector3){0, -5, 3};
 	scene.lights->ratio = 1;
 	Sphere sphere;      // Esfera en Z = 5 con radio 1
@@ -1188,10 +1205,10 @@ int main()
 	scene.spheres[1].radius = 0.2;
 	Camera camera;
 	scene.cameras = &camera;
-	scene.cameras->pos = (Vector3){0, 0, 15};
+	scene.cameras->pos = (Vector3){0, 0, 45};
 	// Ajusta el tamaño del plano de proyección en función de la relación de aspecto
 	scene.cameras->aspect_ratio = (double)WINX/WINY;
-	double fov = 70;
+	double fov = 50;
 	scene.cameras->plane_distance = tan((fov / 2) * (M_PI / 180));
 	scene.cameras->plane_half_width = scene.cameras->aspect_ratio * scene.cameras->plane_distance; // Ajuste según el aspecto
 	scene.cameras->plane_half_height = 1.0 * scene.cameras->plane_distance;         // Altura basada en la distancia

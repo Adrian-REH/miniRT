@@ -76,14 +76,17 @@ typedef enum {
 	CYLINDER,
 	POLYGON,
 };
-
+typedef enum { 
+	R,
+	G,
+	B
+};
 typedef struct t_materialProperties{
-    double reflection;                 // Reflexión
-    double absorption;                 // Absorción
+    double reflect;                    // Reflexión
+    double absorption[3];              // Absorción
     double transmission;               // Transmisión
     double glossiness;                 // Brillo
     double diffusion;                  // Difusión
-    double roughness;                  // Rugosidad
     double iridescence;                // Iridescencia
     double emission;                   // Emisión
     double subsurface_scattering;      // SSS
@@ -96,6 +99,14 @@ typedef struct {
 	double x, y, z;
 	int	color;
 } Vector3;
+
+typedef struct {
+	double r;
+	double	g;
+	double b;
+	int	color;
+} Color;
+
 typedef struct {
 	double x, y;
 } Vector2;
@@ -133,9 +144,8 @@ typedef struct {
 
 typedef struct {
 	Vector3	point;
-	int		color;
 	int		ratio;
-	Sphere sphere;
+	Color *color;
 } Light;
 
 typedef struct {
@@ -149,11 +159,6 @@ typedef struct {
 	double plane_half_width;
 	double plane_half_height;
 } Camera;
-
-typedef struct {
-	int		color_base;
-	int		back_ground;
-} Color;
 
 
 typedef struct

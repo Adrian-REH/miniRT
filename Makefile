@@ -32,7 +32,7 @@ MINILIBXCC  := -I $(MINILIBX_DIR) -L $(MINILIBX_DIR) -lmlx
 HEADER      := -I$(INC) -I$(LIBFT_DIR) -I$(MINILIBX_DIR)
 FLAGSVISUAL := -L$(LIBFT_DIR) -lft -lm -lX11 -lXext  -lXt
 
-SRC_FILES   =   main 
+SRC_FILES   =   main
 
 SRC         =   $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJ         =   $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
