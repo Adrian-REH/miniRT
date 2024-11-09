@@ -38,7 +38,16 @@ Color *int_to_color(int src) {
     color->color = src;
     return color;
 }
-
+void addint_to_color(Color *color, int src) {
+    if (color == NULL) {
+        return NULL;  // Manejo de error de asignación de memoria
+    }
+    color->r = ((src >> 16) & 0xFF) / 255.0;
+    color->g = ((src >> 8) & 0xFF) / 255.0;
+    color->b = (src & 0xFF) / 255.0;
+    color->color = src;
+    return color;
+}
 void	set_color(char *buffer, int endian, int color, int alpha)
 {
 	if (endian == 1)
@@ -385,15 +394,48 @@ void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen
      pxl->y = ( pxl->y < screen_height && pxl->y > 0) ? pxl->y : screen_height - 1;
 }
 
-Ray *generate_ray(int x, int y, int screen_width, int screen_height, Camera camera) {
+Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera) {
 
 	// Inicializa el rayo y su origen
 	Ray *ray = malloc(sizeof(Ray));
 	ray->origin = camera.pos;
 
 	// Calcula las coordenadas del punto en el plano de proyección
-    float px = (2 * (x + 0.5) / (float) WINX - 1) * camera.aspect_ratio * camera.plane_distance;
-    float py = (1 - 2 * (y + 0.5) / (float) WINY) * camera.plane_distance;
+    double px = (2 * (x ) / (float) WINX - 1) * camera.aspect_ratio * camera.plane_distance;
+    double py = (1 - 2 * (y ) / (float) WINY) * camera.plane_distance;
+
+	// Calcula el punto en el plano de proyección usando los vectores de la cámara
+	Vector3 point_on_plane = {
+		camera.dir.x  + camera.horizontal.x * px + camera.vertical.x * py,
+		camera.dir.y  + camera.horizontal.y * px + camera.vertical.y * py,
+		camera.dir.z  + camera.horizontal.z * px + camera.vertical.z * py
+	};
+	// Calcula la dirección del rayo desde la cámara al punto en el plano de proyección
+	ray->direction.x = point_on_plane.x ;
+	ray->direction.y = point_on_plane.y;
+	ray->direction.z = point_on_plane.z ;
+//para 8 es 2.5
+//para 10 es 2
+	// Normaliza la dirección del rayo para obtener un vector unitario
+	double length = sqrt(ray->direction.x * ray->direction.x +
+						 ray->direction.y * ray->direction.y +
+						 ray->direction.z * ray->direction.z);
+	ray->direction.x /= length;
+	ray->direction.y /= length;
+	ray->direction.z /= length;
+
+	return ray;
+}
+
+Ray *generate_rayv2(double x, double y, int screen_width, int screen_height, Camera camera, double u, double v) {
+
+	// Inicializa el rayo y su origen
+	Ray *ray = malloc(sizeof(Ray));
+	ray->origin = camera.pos;
+
+	// Calcula las coordenadas del punto en el plano de proyección
+    double px = (2 * (x + u) / (float) WINX - 1) * camera.aspect_ratio * camera.plane_distance;
+    double py = (1 - 2 * (y + v) / (float) WINY) * camera.plane_distance;
 
 	// Calcula el punto en el plano de proyección usando los vectores de la cámara
 	Vector3 point_on_plane = {
@@ -681,11 +723,9 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 				double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
 				specular = fmin(fmax(specular, 0.0), 1.0);
 				
-				//La cantidad de color del material sobre
 				//La cantidad de luz que aplico sobre el color del material
 				vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(0.8, fmax(0.0, ( 1 - (diffuse_intensity * attenuation )))) , 0.95, 0, prop);
 				normalize_color(vCurrentColor);
-				
 				//current_color = mix_colors(scene.planes[n_plane].mater_prop.color[1], current_color, diffuse_intensity * attenuation);
 				vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(1, fmax(0.0, ( 1- (specular * attenuation * diffuse_intensity)))) , 0.95, 0, prop);
 				normalize_color(vCurrentColor);
@@ -697,7 +737,7 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 		}else
 		{
 			Vector3 *hit_shadow = hit_point(rayslight, t);
-			double distance_light = distance(rayslight.origin, *hit_shadow);
+			double distance_light = distance(hit_pt, *hit_shadow);
 			double attenuation = calculate_attenuation(distance_light, L_P_KC, L_P_KL, L_P_KQ);
 			double diffuse_intensity = calculate_intensity(scene.planes[n_plane].normal, rayslight.direction);
 			diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
@@ -705,7 +745,7 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 			double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
 			specular = fmin(fmax(specular, 0.0), 1.0);
 
-			vCurrentColor = illuminate_surface(int_to_color(ambient_color), vCurrentColor, fmin(1, fmax(0.0, ( attenuation ))) , 0.95, 0, prop);
+			vCurrentColor = illuminate_surface(vCurrentColor, int_to_color(ambient_color) , fmin(1, fmax(0.0, (diffuse_intensity * attenuation ))) , 0.95, 0, prop);
 			normalize_color(vCurrentColor);
 			current_color = vCurrentColor->color;
 		}
@@ -715,10 +755,12 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 	return current_color;
 }
 
-int render_point_sphere(Scene scene, Vector3 hit_pt){
+int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere){
 	double d;
 	int current_color = 0; // Color base de la esfera
 	int ambient_color = 0; // Color gris para la luz ambiental
+	Color *vCurrentColor = scene.spheres[nb_sphere].mater_prop.vColor;
+	MaterialProperties prop = scene.spheres[nb_sphere].mater_prop;
 
 	Vector3 *n_sphere = normalize_withpoint( scene.spheres->center, hit_pt);
 	Vector3 *cam_dir = normalize_withpoint(scene.cameras->pos, hit_pt );
@@ -733,16 +775,24 @@ int render_point_sphere(Scene scene, Vector3 hit_pt){
 			double distance_light = distance(rayslight.origin, hit_pt);
 			double attenuation = calculate_attenuation(distance_light, 1, 0.01, 0.03);
 			double diffuse_intensity = calculate_intensity(*n_sphere, rayslight.direction);
-			diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1);
-			current_color = mix_colors(0xc61200, current_color, diffuse_intensity * attenuation);
 			Vector3 *reflect_dir = reflect(rayslight.direction, *n_sphere);
-			// Cálculo de la luz especular
+			diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1);
 			double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
-			//	attenuation = calculate_attenuation(distance_light, 1.0, 0.1, 0.01);
-			//specular = fmin(fmax(specular, 0.0), 1.0);
-			current_color = mix_colors(0xFFFFFF, current_color, specular * attenuation);
+			specular = fmin(fmax(specular, 0.0), 1.0);
+						//La cantidad de luz que aplico sobre el color del material
+			vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(0.8, fmax(0.0, ( 1 - (diffuse_intensity * attenuation )))) , 0.95, 0, prop);
+			normalize_color(vCurrentColor);
+			//current_color = mix_colors(scene.planes[n_plane].mater_prop.color[1], current_color, diffuse_intensity * attenuation);
+			vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(1, fmax(0.0, ( 1- (specular * attenuation * diffuse_intensity)))) , 0.95, 0, prop);
+			normalize_color(vCurrentColor);
+			
+			vCurrentColor = illuminate_surface(int_to_color(ambient_color), vCurrentColor, fmin(1, fmax(0.0, ( 1 - ( attenuation * diffuse_intensity)))) , 0.9, 0, prop);
+			normalize_color(vCurrentColor);
+			current_color = vCurrentColor->color;
 			free(reflect_dir);
 		}
+		else
+			current_color = ambient_color;
 	}
 	free(cam_dir);
 	return current_color;
@@ -940,6 +990,13 @@ int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id){
 	return type;
 }
 
+
+
+
+double random_float() {
+    return rand() / (double)RAND_MAX;
+}
+
 void render(Scene scene)
 {
    // normalize(&light);
@@ -947,6 +1004,7 @@ void render(Scene scene)
 	double min_dist;
 	int alpha = 0;
 	start = clock();
+	/* 
 	for (int y = 0; y < WINY; ++y) { //Esta es la coordenada de la pantalla
 		for (int x = 0; x < WINX ; ++x) {
 			//  Este es el haz que se lanza desde camara_pos hasta el punto de la
@@ -966,7 +1024,7 @@ void render(Scene scene)
 			if (type == SPHERE)
 			{
 				Vector3 *hit_pt = hit_point(ray, t);
-				int current_color = render_point_sphere(scene, *hit_pt);
+				int current_color = render_point_sphere(scene, *hit_pt, id);
 				set_color(&scene.img->buffer[idxpixel(x, y)], 0, current_color, 0);
 				//set_color(&scene.img->buffer[mypixel], 0, current_color, 0);
 				//Reflejo la bola y si intersecta, entonces verifico si la camara_dir respecto a su angulo es 0 para poder reflejarlo
@@ -976,7 +1034,7 @@ void render(Scene scene)
 			if (intersect_sphere(&ray, &scene.spheres[1], &t)) //para la esfera de luz
 			{
 				Vector3 *hit_pt = hit_point(ray, t);
-				int current_color = 0xFFFFFF;//render_point_sphere(scene, *hit_pt, y, x);
+				int current_color = 0xFFFFFF;
 				int mypixel = (y * WINX * 4) + (x * 4);
 				set_color(&scene.img->buffer[mypixel], 0, current_color, 0);
 				//Reflejo la bola y si intersecta, entonces verifico si la camara_dir respecto a su angulo es 0 para poder reflejarlo
@@ -984,7 +1042,8 @@ void render(Scene scene)
 			}
 		}
 	}
- 
+  */
+
 	char *tmp_bfr;
 	Img *img = malloc(sizeof(Img));
 	img->img = mlx_new_image(scene.mlx, WINX, WINY);
@@ -1015,6 +1074,8 @@ void render(Scene scene)
 					invnormal(rfc);
 				Ray rayrfc = {*hit_pt , *rfc};
 				int j = -1;
+
+				//Si hay reflexion entonces pasa esto
 				while (++j < scene.n_planes){
 
 					if (intersect_plane(&rayrfc, &scene.planes[j], &t) && (t < md))
@@ -1024,11 +1085,9 @@ void render(Scene scene)
 						if (!plane_solution_point(scene.planes[i], *hit_rfc))
 						{
 							md = t;
-							//Vector2 px_rfc;
-							//point3D_to_pixel(*hit_rfc, *scene.cameras, WINX, WINY, &px_rfc);
 							int current_pixel = render_point_plane(scene, *hit_pt, i);
 							hit_color = render_point_plane(scene, *hit_rfc, j);
-							current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene.planes[i].mater_prop)->color;
+							current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene.planes[i].mater_prop)->color;
 							set_color(&img->buffer[idxpixel(x, y)], 0, current_pixel, alpha);
 						}
 						free(hit_rfc);
@@ -1041,7 +1100,7 @@ void render(Scene scene)
 						hit_rfc = hit_point(rayrfc, t);
 						if (!plane_solution_point(scene.planes[i], *hit_rfc)){
 							md = t;
-							hit_color = render_point_sphere(scene, *hit_rfc);
+							hit_color = render_point_sphere(scene, *hit_rfc, j);
 							int current_pixel = render_point_plane(scene, *hit_pt, i);
 							current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene.planes[i].mater_prop)->color;
 							set_color(&img->buffer[idxpixel(x, y)], 0, current_pixel, alpha);
@@ -1049,9 +1108,11 @@ void render(Scene scene)
 						free(hit_rfc);
 					}
 				}
+				
 				free(hit_pt);
 				free(rfc);
 			}
+			
 			if (type == SPHERE){
 				double md= 900000;
 				int hit_color = 0;
@@ -1071,15 +1132,15 @@ void render(Scene scene)
 					{
 						hit_rfc = hit_point(rayrfc, t);
 						//El plano que emitio el rayo no deberia ser solucion para la reflexion
-						if (!plane_solution_point(scene.planes[i], *hit_rfc))
+						if (!sphere_solution_point(scene.spheres[i], *hit_rfc))
 						{
 							md = t;
 							//Vector2 px_rfc;
 							//point3D_to_pixel(*hit_rfc, *scene.cameras, WINX, WINY, &px_rfc);
-							int current_pixel = render_point_sphere(scene, *hit_pt);
+							int current_pixel = render_point_sphere(scene, *hit_pt, i);
 							hit_color = render_point_plane(scene, *hit_rfc, j);
-							current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene.spheres[i].mater_prop)->color;
-							set_color(&img->buffer[idxpixel(x, y)], 0, current_pixel, alpha);
+							current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 1, 1, 0, scene.spheres[i].mater_prop)->color;
+							set_color(&img->buffer[idxpixel(x, y)], 0, hit_color, alpha);
 						}
 						free(hit_rfc);
 					}
@@ -1094,10 +1155,10 @@ void render(Scene scene)
 						if (!sphere_solution_point(scene.spheres[i], *hit_rfc))
 						{
 							md = t;
-							int current_pixel = render_point_sphere(scene, *hit_pt);
-							hit_color = render_point_sphere(scene, *hit_rfc);
-							current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene.spheres[i].mater_prop)->color;
-							set_color(&img->buffer[idxpixel(x, y)], 0, current_pixel, alpha);
+							int current_pixel = render_point_sphere(scene, *hit_pt, i);
+							hit_color = render_point_sphere(scene, *hit_rfc, j);
+							current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.1, 0.1, 0, scene.spheres[i].mater_prop)->color;
+							set_color(&img->buffer[idxpixel(x, y)], 0, hit_color, alpha);
 						}
 						free(hit_rfc);
 					}
@@ -1111,6 +1172,8 @@ void render(Scene scene)
 				//Reflejo la bola y si intersecta, entonces verifico si la camara_dir respecto a su angulo es 0 para poder reflejarlo
 				free(hit_pt);
 			}
+		
+		
 		}
 	}
 
@@ -1278,7 +1341,173 @@ void render(Scene scene)
 	printf("Elapsed time: %.3f milliseconds\n", elapsed);
 }
 
+int calculate_pixel_color(int x, int y, Scene *scene, int samples_per_pixel) {
+    Color final_color = {0, 0, 0};  // Color acumulado (R, G, B)
+    Color sample_color = {0, 0, 0};  // Color acumulado (R, G, B)
+    float inv_samples = 1.0f / samples_per_pixel;
 
+    for (int s = 0; s < samples_per_pixel; s++) {
+        // Calcular pequeñas desviaciones aleatorias dentro del píxel (jittering)
+        double u = (x + random_float()) / (double)WINX;
+        double v = (y + random_float()) / (double)WINY;
+
+        // Generar rayo para la posición u, v dentro del píxel
+		Ray ray = *generate_ray(x + u, y + v, WINX, WINY, *scene->cameras); 
+		double t = 0;
+		double min_dist = 90000000;
+		int type;
+		int id;
+		type = find_nearest_obj(*scene, &ray, &t, &id);
+		if (type == PLANE){
+			double md= 900000;
+			int hit_color = 0;
+			Vector3 *hit_pt = hit_point(ray, t);
+			Vector3 *hit_rfc;
+			Vector3 *dir_pt = normalize_withpoint(scene->cameras->pos , *hit_pt);
+			Vector3 *rfc = reflect(*dir_pt, scene->planes[id].normal);
+			if (dot(scene->planes[id].normal, *rfc) < 0)
+				invnormal(rfc);
+			Ray rayrfc = {*hit_pt , *rfc};
+			int j = -1;
+
+			//Si hay reflexion entonces pasa esto
+			while (++j < scene->n_planes){
+
+				if (intersect_plane(&rayrfc, &scene->planes[j], &t) && (t < md))
+				{
+					hit_rfc = hit_point(rayrfc, t);
+					//El plano que emitio el rayo no deberia ser solucion para la reflexion
+					if (!plane_solution_point(scene->planes[id], *hit_rfc))
+					{
+						md = t;
+						hit_color = render_point_plane(*scene, *hit_rfc, j);
+						int current_pixel = render_point_plane(*scene, *hit_pt, id);
+						current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+						set_color(&scene->img->buffer[idxpixel(x, y)], 0, current_pixel, NULL);
+						addint_to_color(&sample_color, current_pixel);
+					}
+					free(hit_rfc);
+				}
+			}
+			j = -1;
+			while (++j < scene->n_spheres)
+			{
+				if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md)){
+					hit_rfc = hit_point(rayrfc, t);
+					if (!plane_solution_point(scene->planes[id], *hit_rfc)){
+						md = t;
+						hit_color = render_point_sphere(*scene, *hit_rfc, j);
+						
+						int current_pixel = render_point_plane(*scene, *hit_pt, id);
+						current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+						set_color(&scene->img->buffer[idxpixel(x, y)], 0, current_pixel, NULL);
+						addint_to_color(&sample_color, current_pixel);
+					}
+					free(hit_rfc);
+				}
+			}
+			
+			free(hit_pt);
+			free(dir_pt);
+			free(rfc);
+		}
+		
+		if (type == SPHERE)
+		{
+			double md= 900000;
+			int hit_color = 0;
+			Vector3 *hit_pt = hit_point(ray, t);
+			Vector3 *hit_rfc;
+			Vector3 *dir_pt = normalize_withpoint(scene->cameras->pos , *hit_pt);
+			Vector3 *n_sphere = normal_sphere(*hit_pt, scene->spheres[id]);
+			Vector3 *rfc = reflect(*dir_pt, *n_sphere);
+			if (dot(*n_sphere, *rfc) < 0)
+				invnormal(rfc);
+			Ray rayrfc = {*hit_pt , *rfc};
+			int j = -1;
+			//Verificador de planos o objetos mas cercanos para optimizar
+			while (++j < scene->n_planes)
+			{
+				if (intersect_plane(&rayrfc, &scene->planes[j], &t) && (t < md))
+				{
+					hit_rfc = hit_point(rayrfc, t);
+					//El plano que emitio el rayo no deberia ser solucion para la reflexion
+					if (!sphere_solution_point(scene->spheres[id], *hit_rfc))
+					{
+						md = t;
+						hit_color = render_point_plane(*scene, *hit_rfc, j);
+						int current_pixel = render_point_sphere(*scene, *hit_pt, id);
+						current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene->spheres[id].mater_prop)->color;
+						set_color(&scene->img->buffer[idxpixel(x, y)], 0, hit_color, NULL);
+						addint_to_color(&sample_color, hit_color);
+					}
+					free(hit_rfc);
+				}
+			}
+			j = -1;
+			while (++j < scene->n_spheres)
+			{
+				if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md))
+				{
+					hit_rfc = hit_point(rayrfc, t);
+					//El plano que emitio el rayo no deberia ser solucion para la reflexion
+					if (!sphere_solution_point(scene->spheres[id], *hit_rfc))
+					{
+						md = t;
+						hit_color = render_point_sphere(*scene, *hit_rfc, j);
+						int current_pixel = render_point_sphere(*scene, *hit_pt, id);
+						current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene->spheres[id].mater_prop)->color;
+						set_color(&scene->img->buffer[idxpixel(x, y)], 0, hit_color, NULL);
+						addint_to_color(&sample_color, hit_color);
+					}
+					free(hit_rfc);
+				}
+			}
+
+			free(hit_pt);
+			free(dir_pt);
+			free(n_sphere);
+			free(rfc);
+		}
+			
+		if (intersect_sphere(&ray, &scene->spheres[1], &t)) //para la esfera de luz
+		{
+			Vector3 *hit_pt = hit_point(ray, t);
+			addint_to_color(&sample_color, 0xFFFFFF);
+			free(hit_pt);
+		}
+	
+        // Acumular el color de esta muestra
+        final_color.r += sample_color.r;
+        final_color.g += sample_color.g;
+        final_color.b += sample_color.b;
+    }
+    // Promediar el color acumulado dividiendo por el número de muestras
+	final_color.r *= inv_samples;
+	final_color.g *= inv_samples;
+	final_color.b *= inv_samples;
+
+	return colornormal_to_int(final_color);
+}
+
+void render_scene(Scene scene, int samples_per_pixel) {
+	time_t start, end;
+	double min_dist;
+	int alpha = 0;
+	start = clock();
+    for (int y = 0; y < WINY ; y++) {
+        for (int x = 0; x < WINX ; x++) {
+            // Calcula el color del píxel con multiple-sampling (anti-aliasing)
+         	int color = calculate_pixel_color(x, y, &scene, samples_per_pixel);
+            // Guardar o mostrar el color final del píxel
+           set_color(&scene.img->buffer[idxpixel(x, y)], 0, color, 0);
+        }
+    }
+	mlx_put_image_to_window(scene.mlx, scene.win, scene.img->img, 0, 0);
+	end = clock();
+	double elapsed = (double)(end - start) / CLOCKS_PER_SEC * 1000; // Convertido a milisegundos
+	printf("Elapsed time: %.3f milliseconds\n", elapsed);
+}
 
 int main()
 {
@@ -1291,7 +1520,7 @@ int main()
 	scene.img = &img;
 	scene.img->img = mlx_new_image(scene.mlx, WINX, WINY);
 	scene.img->buffer = mlx_get_data_addr(scene.img->img, &(scene.img->bitxpixel), &(scene.img->lines), &(scene.img->endian));
-	Plane *plans = malloc(sizeof(Plane) * 5);
+	Plane *plans = malloc(sizeof(Plane) * 6);
 	plans[0] =  (Plane){{0, 0, 1}, {0, 0, -1}};
 	plans[0].mater_prop.color[0] = 0xb29674;
 	plans[0].mater_prop.color[1] = 0xb29674;
@@ -1338,11 +1567,21 @@ int main()
 	plans[4].mater_prop.absorption[R] = 1 - plans[4].mater_prop.vColor->r ;
 	plans[4].mater_prop.absorption[G] = 1 - plans[4].mater_prop.vColor->g ;
 	plans[4].mater_prop.absorption[B] = 1 - plans[4].mater_prop.vColor->b ;
+	plans[5] =  (Plane){{0, 0, 35}, {0, 0, 1}};
+	plans[5].mater_prop.color[0] = 0xb29674;
+	plans[5].mater_prop.color[1] = 0xb29674;
+	plans[5].mater_prop.color[2] = 0xFFFFFF;
+	plans[5].mater_prop.vColor = int_to_color(0xcbb677);
+	plans[5].mater_prop.absorption[R] = 1 - plans[5].mater_prop.vColor->r;
+	plans[5].mater_prop.absorption[G] = 1 - plans[5].mater_prop.vColor->g;
+	plans[5].mater_prop.absorption[B] = 1 - plans[5].mater_prop.vColor->b;
+
 	normalize(&plans[0].normal);
 	normalize(&plans[1].normal);
 	normalize(&plans[2].normal);
 	normalize(&plans[3].normal);
 	normalize(&plans[4].normal);
+	normalize(&plans[5].normal);
 	scene.planes = plans;
 	scene.lights = malloc(sizeof(Light));
 	scene.lights->color = int_to_color(0xFFFFFF);
@@ -1350,9 +1589,9 @@ int main()
 	scene.lights->ratio = 1;
 	Sphere sphere;      // Esfera en Z = 5 con radio 1
 	scene.spheres = malloc(sizeof(Sphere)*2);
-	scene.spheres->center = (Vector3){0, 0, 2};
-	scene.spheres->radius = 1;
-	scene.spheres->mater_prop.vColor = int_to_color(0xcbb677);
+	scene.spheres->center = (Vector3){0, 0, 3};
+	scene.spheres->radius = 1.5;
+	scene.spheres->mater_prop.vColor = int_to_color(0xc41414);
 	scene.spheres->mater_prop.absorption[R] = 1 - scene.spheres->mater_prop.vColor->r ;
 	scene.spheres->mater_prop.absorption[G] = 1 - scene.spheres->mater_prop.vColor->g ;
 	scene.spheres->mater_prop.absorption[B] = 1 - scene.spheres->mater_prop.vColor->b ;
@@ -1384,7 +1623,8 @@ int main()
 	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", plans[3].mater_prop.vColor->r, plans[3].mater_prop.vColor->g, plans[3].mater_prop.vColor->b, plans[3].mater_prop.vColor->color);
 	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", plans[4].mater_prop.vColor->r, plans[4].mater_prop.vColor->g, plans[4].mater_prop.vColor->b, plans[4].mater_prop.vColor->color);
 	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", scene.lights->color->r, scene.lights->color->g, scene.lights->color->b, scene.lights->color->color);
-	render(scene);
+	render_scene(scene, 4);
+	//render(scene);
 	free(scene.planes);
 	//mlx_put_image_to_window(scene.mlx, scene.win, scene.img->img, 0, 0);
 	mlx_loop(scene.mlx);

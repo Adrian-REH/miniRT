@@ -22,8 +22,8 @@
 # define X 0
 # define Y 1
 # define Z 2
-#define SHININESS 20
-#define KS 1
+#define SHININESS 30
+#define KS 0.8
 #define AMBIENT_INTENSITY 0.1 // Ajusta este valor según lo necesites
 
 # define L_A_S_KC 1.0
