@@ -14,8 +14,14 @@
 #define MAIN_H
 
 #include "../lib/minilibx-linux/mlx.h"
+#include "../lib/libcolor/libcolor.h"
+#include "../lib/libvector3/libvector3.h"
 #include "../lib/libft/libft.h"
 #include "../lib/minilibx_opengl/mlx_opengl.h"
+#include <float.h>
+#include <stdint.h>
+#define EPSILON 1e-6 // Margen de tolerancia para precisión flotante
+
 #include <math.h>
 #define WINX 1280 
 #define WINY 720
@@ -78,29 +84,25 @@
 #define REFLECT 0.95 // Intensidad de la luz
 
 
-
-typedef enum { 
+typedef enum
+{
 	PLANE,
 	SPHERE,
 	CYLINDER,
 	POLYGON,
 };
-typedef enum { 
+
+typedef enum
+{
 	R,
 	G,
 	B
 };
 
 
-typedef struct {
-	double r;
-	double	g;
-	double b;
-	int	color;
-} Color;
 
-
-typedef struct t_materialProperties{
+typedef struct t_materialProperties
+{
     double reflect;                    // Reflexión
     double absorption[3];              // Absorción
     double transmission;               // Transmisión
@@ -115,65 +117,74 @@ typedef struct t_materialProperties{
 	Color *vColor;
 } MaterialProperties;
 
-typedef struct {
-	double x, y, z;
-	int	color;
-} Vector3;
 
-typedef struct {
-	double x, y;
+typedef struct
+{
+	double	x;
+	double	y;
 } Vector2;
 
-typedef struct {
-	Vector3 origin;
-	Vector3 direction;
+typedef struct
+{
+	Vector3	origin;
+	Vector3	direction;
 } Ray;
 
-typedef struct {
-	Vector3 center;
-	double radius;
-	int color;
-	MaterialProperties mater_prop;
+typedef struct
+{
+	Vector3				center;
+	double				radius;
+	int					color;
+	MaterialProperties	mater_prop;
 } Sphere;
 
-typedef struct {
-	Vector3 center;
-	Vector3 axis;
-	double diameter;
-	double height;
-	int	color;
+typedef struct
+{
+	Vector3	center;
+	Vector3	axis;
+	double	diameter;
+	double	height;
+	int		color;
 } Cylinder;
 
-typedef struct {
-	Vector3 normal;
-	Vector3 point;
-	MaterialProperties mater_prop;
+typedef struct
+{
+	Vector3				normal;
+	Vector3				point;
+	MaterialProperties	mater_prop;
 } Plane;
 
-typedef struct {
-	Vector3 *vertex;
-	Vector3 normal;
-	int	color;
+typedef struct
+{
+	Vector3	*vertex;
+	Vector3	normal;
+	int		n_vertex;
+	Color	color;
 } Polygon;
 
-typedef struct {
+typedef struct
+{
 	Vector3	point;
-	int		ratio;
-	Color *color;
+	double	ratio;
+	Color	*color;
 } Light;
+
+typedef struct {
+	Color	*color;
+	double	ratio;
+} Ambient;
 
 typedef struct {
 	Vector3	pos;
 	Vector3	dir;
 	Vector3	horizontal;
 	Vector3	vertical;
-	int fov;
-	double aspect_ratio;
-	double plane_distance;
-	double plane_half_width;
-	double plane_half_height;
+	double	fov;
+	double	aspect_ratio;
+	double	plane_distance;
+	double	plane_half_width;
+	double	plane_half_height;
 } Camera;
-
 
 typedef struct
 {
@@ -182,23 +193,38 @@ typedef struct
 	void	*img;
 	int		lines;
 	int		endian;
-
 } Img;
 
 typedef struct {
-	void	*mlx;
-	void	*win;
-	Img		*img;
-	Camera *cameras;
-	Sphere *spheres;
-	Cylinder *cylinders;
-	Plane *planes;
-	Light *lights;
-	int n_lights;
-	int n_planes;
-	int n_cylinders;
-	int n_spheres;
+	void		*mlx;
+	void		*win;
+	Img			*img;
+	Camera		*cameras;
+	Sphere		*spheres;
+	Cylinder	*cylinders;
+	Plane		*planes;
+	Light		*lights;
+	int			n_lights;
+	int			n_planes;
+	int			n_cylinders;
+	int			n_spheres;
+	int			(*parser[10])(void *, void *);
 } Scene;
 
 
+//------OBJECT------
+int intersect_sphere(const Ray *ray, const Sphere *sphere,  double *t);
+int sphere_solution_point(Sphere sphere, Vector3 point);
+Vector3 *normal_sphere(Vector3 hit_point, Sphere sphere);
+int plane_solution_point(Plane plane, Vector3 point);
+int intersect_plane(const Ray *ray, const Plane *plane, double *t);
+//------PARSER------
+int	parser_camera(Scene *scene, char **data);
+int	parser_plane(Scene *scene, char **data);
+int	parser_light(Scene *scene, char **data);
+int	parser_sphere(Scene *scene, char **data);
+//------RENDER------
+int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere);
+int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane);
+void render_scene(Scene scene, int samples_per_pixel);
 #endif

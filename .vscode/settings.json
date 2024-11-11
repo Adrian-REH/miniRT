@@ -11,6 +11,10 @@
 		"iterator": "c",
 		"float.h": "c",
 		"random": "c",
-		"algorithm": "c"
+		"algorithm": "c",
+		"stdint.h": "c",
+		"libcolor.h": "c",
+		"libft.h": "c",
+		"libvector3.h": "c"
 	}
 }
