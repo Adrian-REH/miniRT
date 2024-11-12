@@ -248,6 +248,8 @@ void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera);
 Vector3 *hit_point(Ray ray, double t);
 double mix(double a, double b, double t);
+//------RANDOM------
+double random_float();
 //------OBJECT------
 int idxfind_min(double *arr, int size);
 int find_nearest_sphere(Scene scene, Ray *ray, double *t);
@@ -263,9 +265,10 @@ int	parser_plane(Scene *scene, char **data);
 int	parser_light(Scene *scene, char **data);
 int	parser_sphere(Scene *scene, char **data);
 //------RENDER------
+int calculate_pixel_color(int x, int y, Scene *scene, int samples_per_pixel);
 int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere);
 int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane);
 int find_nearest_plane(Scene scene, Ray *ray, double *t);
-void render_scene(Scene scene, int samples_per_pixel);
+void render_scene(Scene *scene, int samples_per_pixel);
 
 #endif

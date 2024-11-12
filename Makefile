@@ -99,12 +99,14 @@ $(NAME):	$(OBJ)
 			@echo "$(GREEN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
 
 
-all:	makelibs
+all:	$(OBJ_DIRS) makelibs
 		@$(MAKE) $(NAME)
+
 makelibs:    
 		@$(MAKE) -C $(PRINTF_DIR)
 		@$(MAKE) -C $(MINILIBX_DIR)
 		@$(MAKE) -C $(LIBFT_DIR)
+
 bonus :$(OBJ_DIR)
 
 fclean : clean
