@@ -61,7 +61,7 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/parser/parser_cylinder.c \
 				src/parser/parser_plane.c \
 				src/parser/parser_polygon.c \
-				src/parser/parser_scene.c \
+				src/parser/parser_obj.c \
 				src/parser/parser_sphere.c \
 				src/render/render_plane.c \
 				src/render/render_sphere.c \

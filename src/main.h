@@ -86,6 +86,8 @@ typedef enum
 {
 	PLANE,
 	SPHERE,
+	CAMERA,
+	LIGHT,
 	CYLINDER,
 	POLYGON,
 } e_obj;
@@ -101,7 +103,6 @@ typedef struct
 	double	x;
 	double	y;
 	double	z;
-	int	color;
 } Vector3;
 
 typedef struct
@@ -265,6 +266,7 @@ int	parser_camera(Scene *scene, char **data);
 int	parser_plane(Scene *scene, char **data);
 int	parser_light(Scene *scene, char **data);
 int	parser_sphere(Scene *scene, char **data);
+int	parser_obj(Scene *scene, int fd);
 //------RENDER------
 int	render_plane(Scene *scene,Vector3 hit_pt, int id);
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id);

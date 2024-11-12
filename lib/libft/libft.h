@@ -69,4 +69,15 @@ void		ft_lstclear(t_list **lst, void (*del)(void*));
 void		ft_lstiter(t_list *lst, void (*f)(void *));
 t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
+/*GNL*/
+char		*gnl(int fd);
+char		*get_next_line(int fd);
+char		*ft_strjoin_gnl(char const *s1, char const *s2);
+int			ft_strlen_gnl(const char *s);
+void		ft_lenword_gnl(const char *s, int c, int *l_word);
+char		*ft_strchr_gnl(const char *s, int c);
+char		*ft_substr_gnl(char const *s, unsigned int start, size_t len);
+char		*ft_strdup_gnl(const char *s1);
+size_t		ft_strlcat_gnl(char *dst, const char *src, size_t dstsize);
+
 #endif
