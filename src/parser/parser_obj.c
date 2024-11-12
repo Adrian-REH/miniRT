@@ -78,7 +78,7 @@ int parser_obj(Scene *scene, int fd)
 	//Reconoce patrones los typos
 	//en caso de que encuetres un 'pl'en el argumento 0 del split vas a llamar
 	//para vos data es un split de los valores de la linea
-	while (1)
+	while (1)//No olvidarse de poner una comprobacion o hacer brake
 	{
 		char *line = get_next_line(fd);
 		if (!line)
