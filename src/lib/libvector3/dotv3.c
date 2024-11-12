@@ -1,4 +1,4 @@
-#include "libvector3.h"
+#include "../../main.h"
 
 double dot(Vector3 a, Vector3 b)
 {

@@ -1,4 +1,4 @@
-#include "libvector3.h"
+#include "../../main.h"
 void normalize(Vector3 *v)
 {
 	// Calcula la magnitud del vector

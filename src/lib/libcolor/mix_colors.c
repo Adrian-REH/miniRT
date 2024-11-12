@@ -1,5 +1,9 @@
-#include "libcolor.h"
+#include "../../main.h"
 
+double mix(double a, double b, double t)
+{
+    return a * (1 - t) + b * t;
+}
 int mix_colors(int base_color, int current_color, double intensity)
 {
 		intensity = fmax(0.0, fmin(1.0, intensity));

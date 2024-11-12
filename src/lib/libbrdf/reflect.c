@@ -1,5 +1,7 @@
 
-Vector3 *reflect(Vector3 L, Vector3 N) {
+#include "../../main.h"
+Vector3 *reflect(Vector3 L, Vector3 N)
+{
 	double dot_product = dot(N, L); // N dot L
 	Vector3 *reflection = malloc(sizeof(Vector3));
 	*reflection =  (Vector3) {

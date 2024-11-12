@@ -34,7 +34,8 @@ Color *int_to_color(int src) {
 }
 
 
-double mix(double a, double b, double t) {
+double mix(double a, double b, double t)
+{
     return a * (1 - t) + b * t;
 }
 

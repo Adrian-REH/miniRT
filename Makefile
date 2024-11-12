@@ -13,11 +13,11 @@
 
 NAME        := miniRT
 SRC_DIR     := src/
-OBJ_DIR     := obj/
+OBJ_DIRS     := obj/
 CC          := gcc
-CFLAGS      := -g -O3 -ffast-math -funroll-loops -march=native -flto -fsanitize=address,leak
+CFLAGS      := -g -O3 -ffast-math -funroll-loops -march=native -flto -MMD
 FSANITIZE   := 
-RM          := rm -f
+RM          := rm -rf
 
 INC         := inc/
 LIB         := lib/
@@ -28,74 +28,107 @@ MINILIBX    := $(MINILIBX_DIR)libmlx.a
 LIBFT_DIR   := $(LIB)libft/
 LIBFT       := $(LIBFT_DIR)libft.a
 
+CYAN = \033[0;96m
+DEF_COLOR = \033[0;49m
 MINILIBXCC  := -I $(MINILIBX_DIR) -L $(MINILIBX_DIR) -lmlx
-HEADER      := -I$(INC) -I$(LIBFT_DIR) -I$(MINILIBX_DIR)
+HEADER      := -I$(LIBFT_DIR) -I$(MINILIBX_DIR)
 FLAGSVISUAL := -L$(LIBFT_DIR) -lft -lm -lX11 -lXext  -lXt
 
-SRC_FILES   =   main
+SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
+				src/lib/libcolor/color_to_int.c \
+				src/lib/libcolor/fill_color_by_int.c \
+				src/lib/libcolor/get_color.c \
+				src/lib/libcolor/illuminate_surface.c \
+				src/lib/libcolor/int_to_color.c \
+				src/lib/libcolor/mix_colors.c \
+				src/lib/libcolor/normalize_color.c \
+				src/lib/libcolor/rgb_to_color.c \
+				src/lib/libcolor/set_color.c \
+				src/lib/libcolor/specular_intensity.c \
+				src/lib/libprojection/generate_ray.c \
+				src/lib/libprojection/idxpixel.c \
+				src/lib/libprojection/project3_to_pixel.c \
+				src/lib/libvector3/calculate_intensity.c \
+				src/lib/libvector3/distancev3.c \
+				src/lib/libvector3/dotv3.c \
+				src/lib/libvector3/hit_point.c \
+				src/lib/libvector3/normalizev3.c \
+				src/lib/libbrdf/reflect.c \
+				src/parser/parser_ambient.c \
+				src/parser/parser_camera.c \
+				src/parser/parser_light.c \
+				src/parser/parser_cylinder.c \
+				src/parser/parser_plane.c \
+				src/parser/parser_polygon.c \
+				src/parser/parser_scene.c \
+				src/parser/parser_sphere.c \
+				src/render/render_plane.c \
+				src/render/render_sphere.c \
+				src/render/render_polygon.c \
+				src/render/render_cylinder.c \
+				src/render/render_scene.c \
+				src/object/ambient.c \
+				src/object/camera.c \
+				src/object/cylinder.c \
+				src/object/light.c \
+				src/object/plane.c \
+				src/object/polygon.c \
+				src/object/scene.c \
+				src/object/sphere.c \
+				src/main.c \
 
-SRC         =   $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
-OBJ         =   $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
-DEPS        =   $(addprefix $(OBJ_DIR), $(addsuffix .d, $(SRC_FILES)))
+OBJ_DIRS := obj/src/lib/libcolor obj/src/lib/libprojection obj/src/lib/libvector3 obj/src/lib/libbrdf \
+            obj/src/parser obj/src/render obj/src/object
 
-OBJF        =   .cache_exists
+# Regla para crear los directorios de objetos
+$(OBJ_DIRS):
+	@mkdir -p $@
+
+# Definir los objetos
+OBJ := $(patsubst %.c,obj/%.o,$(SRC_FILES))
+
+# Regla para compilar los archivos fuente en objetos
+obj/%.o: %.c | $(OBJ_DIRS)
+	@echo "🍩 $(YELLOW)Compiling: $< $(DEF_COLOR)"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+-include	${DEPS}
+-include $(OBJ:.o=.d)
+$(NAME):	$(OBJ)        
+			@$(CC) $(CFLAGS) $(FSANITIZE) $(OBJ) $(PRINTF) $(MINILIBXCC) $(FLAGSVISUAL) -o $(NAME)        
+			@echo "$(GREEN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
 
 
 all:	makelibs
 		@$(MAKE) $(NAME)
-
 makelibs:    
 		@$(MAKE) -C $(PRINTF_DIR)
 		@$(MAKE) -C $(MINILIBX_DIR)
 		@$(MAKE) -C $(LIBFT_DIR)
+bonus :$(OBJ_DIR)
 
--include	${DEPS}
-$(NAME):	$(OBJ)        
-			@$(CC) $(CFLAGS) $(FSANITIZE) $(OBJ) $(PRINTF) $(MINILIBXCC) $(FLAGSVISUAL) -o $(NAME)        
-			@echo "👉 $(BLUE)$(CC) $(CFLAGS) $(FSANITIZE) $(OBJ) $(PRINTF) $(MINILIBXCC) $(FLAGSVISUAL) -o $(NAME)$(DEF_COLOR)"
-			@echo "$(GREEN)✨ FDF compiled!$(DEF_COLOR)"
+fclean : clean
+	$(RM) $(NAME)
+	make fclean -C lib/libft
+	@echo "$(CYAN) ✨ ¡CLEANED! ✨ $(DEF_COLOR)"
 
-bonus:      
-			@$(MAKE) all
-            
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJF)
-			@echo "🍩 $(YELLOW)Compiling: $< $(DEF_COLOR)"
-			$(CC) $(CFLAGS) -MMD -c $< -o $@
+clean :
+	@echo "$(CYAN) 🍩 ¡INIT CLEAN! 🍩 $(DEF_COLOR)"
+	$(RM) $(OBJ) $(OBJ_DIRS) *.gcno *.gcda *.gcov *.html *.css
+	make clean -C lib/libft
 
-$(OBJF):
-			@mkdir -p $(OBJ_DIR)
+re : fclean all
 
-$(PRINTF):
-	@make -C $(PRINTF_DIR)
-	@echo "$(GREEN)ft_printf compiled!$(DEF_COLOR)"    
+norm :
+	norminette | grep -i "error"
 
-$(MINILIBX):
-	@make -C $(MINILIBX_DIR)
-	@echo "$(GREEN)Minilibx compiled!$(DEF_COLOR)"            
+cov:
+	gcov --object-directory=obj/lib lib/ft_sarrprint.c;
+	@for src in $(SRCS); do \
+		echo "Processing $$src"; \
+		dir=$$(dirname "$$src"); \
+		gcov --object-directory=obj/$$dir "$$src"; \
+	done
+	gcovr -r . --html --html-details -o coverage.html
 
-clean:
-			@make clean -sC $(PRINTF_DIR)
-			@echo "$(CYAN)ft_printf object and dependency files cleaned.$(DEF_COLOR)"
-			@make clean -C $(MINILIBX_DIR)
-			@echo "$(CYAN)Minilibx object files cleaned.$(DEF_COLOR)"    
-			@make clean -C $(LIBFT_DIR)
-			@echo "$(CYAN)Libft object files cleaned.$(DEF_COLOR)"
-			$(RM) -rf $(OBJ_DIR)
-			@echo "$(CYAN)Fdf object files cleaned!$(DEF_COLOR)"
-
-fclean:		clean
-			$(RM) -f $(NAME)
-			@echo "$(CYAN)Fdf executable files cleaned!$(DEF_COLOR)"
-			$(RM) -f $(MINILIBX_DIR)libmlx.a
-			@echo "$(CYAN)libmlx.a lib cleaned!$(DEF_COLOR)"            
-			$(RM) -f $(LIBFT_DIR)libft.a
-			@echo "$(CYAN)libft.a lib cleaned!$(DEF_COLOR)"
-
-re:			fclean 
-			@$(MAKE)    
-			@echo "$(GREEN)Cleaned and rebuilt everything for Fdf!$(DEF_COLOR)"
-
-norm:
-			@norminette $(SRC) $(INC) | grep -v Norme -B1 || true
-
-.PHONY:     all clean fclean re
+.PHONY:     all clean fclean re bonus norm cov

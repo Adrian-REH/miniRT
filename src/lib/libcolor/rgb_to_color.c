@@ -1,4 +1,4 @@
-#include "libcolor.h"
+#include "../../main.h"
 
 Color *rgb_to_color(int r, int g, int b)
 {

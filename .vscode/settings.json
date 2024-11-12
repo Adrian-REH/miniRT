@@ -15,6 +15,10 @@
 		"stdint.h": "c",
 		"libcolor.h": "c",
 		"libft.h": "c",
-		"libvector3.h": "c"
+		"libvector3.h": "c",
+		"projection.h": "c",
+		"libobj.h": "c",
+		"libbrdf.h": "c",
+		"libprojection.h": "c"
 	}
 }

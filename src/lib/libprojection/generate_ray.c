@@ -1,5 +1,6 @@
-
-Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera) {
+#include "../../main.h"
+Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera)
+{
 
 	// Inicializa el rayo y su origen
 	Ray *ray = malloc(sizeof(Ray));

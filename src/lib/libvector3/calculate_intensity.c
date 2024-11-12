@@ -1,4 +1,4 @@
-#include "libvector3.h"
+#include "../../main.h"
 
 double calculate_intensity(Vector3 normal, Vector3 light_dir)
 {

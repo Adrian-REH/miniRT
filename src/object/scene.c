@@ -1,7 +1,7 @@
+#include "../main.h"
 
-
-
-int idxfind_min(double *arr, int size) {
+int idxfind_min(double *arr, int size)
+{
 	int i;
 	int idx;
 	double min;
@@ -20,8 +20,8 @@ int idxfind_min(double *arr, int size) {
     return idx;  // Retorna el valor mínimo encontrado
 }
 
-
-int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id){
+int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id)
+{
 	double distance[10];
 	double idx[10];
 	int type;

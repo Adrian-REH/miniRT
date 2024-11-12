@@ -1,5 +1,5 @@
-#include "libcolor.h"
 
+#include "../../main.h"
 Color *int_to_color(int src)
 {
     Color *color = malloc(sizeof(Color));

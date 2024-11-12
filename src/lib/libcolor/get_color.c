@@ -1,5 +1,5 @@
-#include "libcolor.h"
 
+#include "../../main.h"
 int get_color(char *buffer, int endian, int *alpha)
 {
     int color = 0;

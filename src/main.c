@@ -16,7 +16,8 @@
 
 //OBJECT----------------------------------------------
 
-int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_point) {
+int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_point) 
+{
 	Ray shadow_ray;
 	shadow_ray.origin = hit_point;
 	shadow_ray.direction = *normalize_withpoint(hit_point, light_pos); // Vector from hit_point to light
@@ -433,7 +434,7 @@ int calculate_pixel_color(int x, int y, Scene *scene, int samples_per_pixel) {
 						hit_color = render_point_plane(*scene, *hit_rfc, j);
 						int current_pixel = render_point_plane(*scene, *hit_pt, id);
 						current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-						set_color(&scene->img->buffer[idxpixel(x, y)], 0, current_pixel, NULL);
+						set_color(&scene->img->buffer[idxpixel(x, y)], 0, current_pixel, 0);
 						addint_to_color(&sample_color, current_pixel);
 					}
 					free(hit_rfc);
@@ -450,7 +451,7 @@ int calculate_pixel_color(int x, int y, Scene *scene, int samples_per_pixel) {
 						
 						int current_pixel = render_point_plane(*scene, *hit_pt, id);
 						current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-						set_color(&scene->img->buffer[idxpixel(x, y)], 0, current_pixel, NULL);
+						set_color(&scene->img->buffer[idxpixel(x, y)], 0, current_pixel, 0);
 						addint_to_color(&sample_color, current_pixel);
 					}
 					free(hit_rfc);
@@ -488,7 +489,7 @@ int calculate_pixel_color(int x, int y, Scene *scene, int samples_per_pixel) {
 						hit_color = render_point_plane(*scene, *hit_rfc, j);
 						int current_pixel = render_point_sphere(*scene, *hit_pt, id);
 						current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene->spheres[id].mater_prop)->color;
-						set_color(&scene->img->buffer[idxpixel(x, y)], 0, hit_color, NULL);
+						set_color(&scene->img->buffer[idxpixel(x, y)], 0, hit_color, 0);
 						addint_to_color(&sample_color, hit_color);
 					}
 					free(hit_rfc);
@@ -507,7 +508,7 @@ int calculate_pixel_color(int x, int y, Scene *scene, int samples_per_pixel) {
 						hit_color = render_point_sphere(*scene, *hit_rfc, j);
 						int current_pixel = render_point_sphere(*scene, *hit_pt, id);
 						current_pixel = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene->spheres[id].mater_prop)->color;
-						set_color(&scene->img->buffer[idxpixel(x, y)], 0, hit_color, NULL);
+						set_color(&scene->img->buffer[idxpixel(x, y)], 0, hit_color, 0);
 						addint_to_color(&sample_color, hit_color);
 					}
 					free(hit_rfc);

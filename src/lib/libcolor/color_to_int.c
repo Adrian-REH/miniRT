@@ -1,5 +1,5 @@
-#include "libcolor.h"
 
+#include "../../main.h"
 int colornormal_to_int(Color color)
 {
     int r = (int)(color.r * 255.0);

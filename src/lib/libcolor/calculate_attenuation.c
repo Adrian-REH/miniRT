@@ -1,4 +1,5 @@
-#include "libcolor.h"
+
+#include "../../main.h"
 
 double calculate_attenuation(double distance, double k_c, double k_l, double k_q)
 {

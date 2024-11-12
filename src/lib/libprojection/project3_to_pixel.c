@@ -1,5 +1,7 @@
+#include "../../main.h"
 
-void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen_height, Vector2 *pxl) {
+void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen_height, Vector2 *pxl)
+{
     // Vector desde la cámara al punto
     Vector3 to_point = {
         point.x - camera.pos.x,

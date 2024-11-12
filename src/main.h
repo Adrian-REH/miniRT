@@ -14,15 +14,13 @@
 #define MAIN_H
 
 #include "../lib/minilibx-linux/mlx.h"
-#include "../lib/libcolor/libcolor.h"
-#include "../lib/libvector3/libvector3.h"
 #include "../lib/libft/libft.h"
 #include "../lib/minilibx_opengl/mlx_opengl.h"
 #include <float.h>
 #include <stdint.h>
+#include <math.h>
 #define EPSILON 1e-6 // Margen de tolerancia para precisión flotante
 
-#include <math.h>
 #define WINX 1280 
 #define WINY 720
 # define X 0
@@ -90,17 +88,52 @@ typedef enum
 	SPHERE,
 	CYLINDER,
 	POLYGON,
-};
+} e_obj;
 
 typedef enum
 {
 	R,
 	G,
 	B
-};
+} e_col;
+typedef struct
+{
+	double	x;
+	double	y;
+	double	z;
+	int	color;
+} Vector3;
 
+typedef struct
+{
+	double	r;
+	double	g;
+	double	b;
+	int		color;
+} Color;
+typedef struct
+{
+	double	x;
+	double	y;
+} Vector2;
 
+typedef struct {
+	Vector3	pos;
+	Vector3	dir;
+	Vector3	horizontal;
+	Vector3	vertical;
+	double	fov;
+	double	aspect_ratio;
+	double	plane_distance;
+	double	plane_half_width;
+	double	plane_half_height;
+} Camera;
 
+typedef struct
+{
+	Vector3	origin;
+	Vector3	direction;
+} Ray;
 typedef struct t_materialProperties
 {
     double reflect;                    // Reflexión
@@ -117,18 +150,6 @@ typedef struct t_materialProperties
 	Color *vColor;
 } MaterialProperties;
 
-
-typedef struct
-{
-	double	x;
-	double	y;
-} Vector2;
-
-typedef struct
-{
-	Vector3	origin;
-	Vector3	direction;
-} Ray;
 
 typedef struct
 {
@@ -174,18 +195,6 @@ typedef struct {
 	double	ratio;
 } Ambient;
 
-typedef struct {
-	Vector3	pos;
-	Vector3	dir;
-	Vector3	horizontal;
-	Vector3	vertical;
-	double	fov;
-	double	aspect_ratio;
-	double	plane_distance;
-	double	plane_half_width;
-	double	plane_half_height;
-} Camera;
-
 typedef struct
 {
 	char	*buffer;
@@ -211,8 +220,38 @@ typedef struct {
 	int			(*parser[10])(void *, void *);
 } Scene;
 
+Vector3 *reflect(Vector3 L, Vector3 N);
+int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_point) ;
+double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
+int		colornormal_to_int(Color color);
+void	addint_to_color(Color *color, int src);
+void	fillcolor_by_int(Color *color, int src);
+Color	*int_to_color(int src);
+int		mix_colors(int base_color, int current_color, double intensity);
+void	normalize_color(Color *color);
+Color	*rgb_to_color(int r, int g, int b);
+void	set_color(char *buffer, int endian, int color, int alpha);
+int		get_color(char *buffer, int endian, int *alpha);
+Color *illuminate_surface(Color *surface_color, Color *light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
 
+double calculate_intensity(Vector3 normal, Vector3 light_dir);
+double distance(Vector3 init, Vector3 end);
+double dot(Vector3 a, Vector3 b);
+void normalize(Vector3 *v);
+Vector3 *invnormal(Vector3 *normal);
+Vector3 *normalize_withpoint(Vector3 init, Vector3 end);
+double specular_intensity(Vector3 reflection, Vector3 view_dir, double shininess, double ks);
+
+
+int idxpixel(int x, int y);
+void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen_height, Vector2 *pxl);
+Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera);
+Vector3 *hit_point(Ray ray, double t);
+double mix(double a, double b, double t);
 //------OBJECT------
+int idxfind_min(double *arr, int size);
+int find_nearest_sphere(Scene scene, Ray *ray, double *t);
+int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id);
 int intersect_sphere(const Ray *ray, const Sphere *sphere,  double *t);
 int sphere_solution_point(Sphere sphere, Vector3 point);
 Vector3 *normal_sphere(Vector3 hit_point, Sphere sphere);
@@ -226,5 +265,7 @@ int	parser_sphere(Scene *scene, char **data);
 //------RENDER------
 int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere);
 int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane);
+int find_nearest_plane(Scene scene, Ray *ray, double *t);
 void render_scene(Scene scene, int samples_per_pixel);
+
 #endif
