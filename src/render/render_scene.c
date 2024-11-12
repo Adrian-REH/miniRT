@@ -8,8 +8,8 @@ int calculate_pixel_color(int x, int y, Scene *scene, int samples_per_pixel)
 
     for (int s = 0; s < samples_per_pixel; s++) {
         // Calcular pequeñas desviaciones aleatorias dentro del píxel (jittering)
-        double u = (x + random_float()) / (double)WINX;
-        double v = (y + random_float()) / (double)WINY;
+        double u = (x + random_double()) / (double)WINX;
+        double v = (y + random_double()) / (double)WINY;
 
         // Generar rayo para la posición u, v dentro del píxel
 		Ray ray = *generate_ray(x + u, y + v, WINX, WINY, *scene->cameras); 

@@ -249,7 +249,7 @@ Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camer
 Vector3 *hit_point(Ray ray, double t);
 double mix(double a, double b, double t);
 //------RANDOM------
-double random_float();
+double random_double();
 //------OBJECT------
 int idxfind_min(double *arr, int size);
 int find_nearest_sphere(Scene scene, Ray *ray, double *t);

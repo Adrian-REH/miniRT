@@ -54,6 +54,7 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libvector3/hit_point.c \
 				src/lib/libvector3/normalizev3.c \
 				src/lib/libbrdf/reflect.c \
+				src/lib/librandom/random_double.c \
 				src/parser/parser_ambient.c \
 				src/parser/parser_camera.c \
 				src/parser/parser_light.c \
@@ -78,7 +79,7 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/main.c \
 
 OBJ_DIRS := obj/src/lib/libcolor obj/src/lib/libprojection obj/src/lib/libvector3 obj/src/lib/libbrdf \
-            obj/src/parser obj/src/render obj/src/object
+            obj/src/parser obj/src/render obj/src/object obj/src/lib/librandom
 
 # Regla para crear los directorios de objetos
 $(OBJ_DIRS):

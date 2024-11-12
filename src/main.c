@@ -44,10 +44,6 @@ int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_po
 	return 0; // Not in shadow
 }
 
-double random_float()
-{
-    return rand() / (double)RAND_MAX;
-}
 
 void render(Scene scene)
 {
