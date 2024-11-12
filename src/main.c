@@ -59,9 +59,7 @@ int main()
 	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	parser_plane(scene, NULL);
 	parser_light(scene, NULL);
-
 	parser_sphere(scene, NULL);
-
 	parser_camera(scene, NULL);
 	
 	//render(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);

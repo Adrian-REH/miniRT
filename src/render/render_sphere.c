@@ -42,3 +42,84 @@ int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere){
 	free(cam_dir);
 	return current_color;
 }
+
+int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int current_pixel)
+{
+	double t = 0;
+	double md = 900000000;
+	int j = -1;
+	Vector3 *hit_rfc;
+	int result = 0;
+	int hit_color;
+
+	while (++j < scene->n_spheres)
+	{
+		if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md)){
+			hit_rfc = hit_point(rayrfc, t);
+			if (!plane_solution_point(scene->planes[id], *hit_rfc))
+			{
+				md = t;
+				hit_color = render_point_sphere(*scene, *hit_rfc, j);
+				result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+			}
+			free(hit_rfc);
+		}
+	}
+	return result;
+}
+
+
+int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
+{
+	Color sample_color = {0, 0, 0, 0};  // Color acumulado (R, G, B)
+	double md = 900000;
+	double t = 0;
+	int hit_color = 0;
+	Vector3 *hit_rfc;
+	Vector3 *dir_pt = normalize_withpoint(scene->cameras->pos , hit_pt);
+	Vector3 *n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
+	Vector3 *rfc = reflect(*dir_pt, *n_sphere);
+	if (dot(*n_sphere, *rfc) < 0)
+		invnormal(rfc);
+	Ray rayrfc = {hit_pt , *rfc};
+	int j = -1;
+	//Verificador de planos o objetos mas cercanos para optimizar
+	int current_pixel = render_point_sphere(*scene, hit_pt, id);
+	while (++j < scene->n_planes)
+	{
+		if (intersect_plane(&rayrfc, &scene->planes[j], &t) && (t < md))
+		{
+			hit_rfc = hit_point(rayrfc, t);
+			//El plano que emitio el rayo no deberia ser solucion para la reflexion
+			if (!sphere_solution_point(scene->spheres[id], *hit_rfc))
+			{
+				md = t;
+				hit_color = render_point_plane(*scene, *hit_rfc, j);
+				int result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene->spheres[id].mater_prop)->color;
+				addint_to_color(&sample_color, hit_color);
+			}
+			free(hit_rfc);
+		}
+	}
+	j = -1;
+	while (++j < scene->n_spheres)
+	{
+		if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md))
+		{
+			hit_rfc = hit_point(rayrfc, t);
+			//El plano que emitio el rayo no deberia ser solucion para la reflexion
+			if (!sphere_solution_point(scene->spheres[id], *hit_rfc))
+			{
+				md = t;
+				hit_color = render_point_sphere(*scene, *hit_rfc, j);
+				int result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene->spheres[id].mater_prop)->color;
+				addint_to_color(&sample_color, hit_color);
+			}
+			free(hit_rfc);
+		}
+	}
+	free(dir_pt);
+	free(n_sphere);
+	free(rfc);
+	return sample_color.color;
+}

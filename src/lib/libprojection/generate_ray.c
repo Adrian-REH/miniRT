@@ -1,4 +1,5 @@
 #include "../../main.h"
+
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera)
 {
 
@@ -33,3 +34,20 @@ Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camer
 	return ray;
 }
 
+Ray *generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal)
+{
+	Ray		*rayrfc;
+	Vector3	*dir_pt;
+	Vector3	*rfc;
+	
+	rayrfc = malloc(sizeof(Ray));
+	if (!rayrfc)
+		return NULL;
+	dir_pt = normalize_withpoint(scene->cameras->pos , hit_pt);
+	rfc = reflect(*dir_pt, normal);
+	if (dot(normal, *rfc) < 0)
+		invnormal(rfc);
+	rayrfc->origin=  hit_pt;
+	rayrfc->direction =  *rfc;
+	return rayrfc;
+}
