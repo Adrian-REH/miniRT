@@ -24,10 +24,12 @@ int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id)
 {
 	double distance[10];
 	double idx[10];
-	int type;
+	int type = -1;
 
+	*t = 0;
 	idx[PLANE] = find_nearest_plane(scene, ray, t);
 	distance[0] = *t;
+	*t = 0;
 	idx[SPHERE] = find_nearest_sphere(scene, ray, t);
 	distance[1] = *t;
 	idx[2] = 0;
@@ -38,4 +40,12 @@ int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id)
 	*id = idx[type];
 	*t = distance[type];
 	return type;
+}
+int obj_solution_point(Scene scene, Vector3 point, int type, int id)
+{
+	if (type == PLANE && !plane_solution_point(scene.planes[id], point))
+		return 0;
+	if (type == SPHERE && !sphere_solution_point(scene.spheres[id], point))
+		return 0;
+	return 1;
 }

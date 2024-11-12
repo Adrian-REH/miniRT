@@ -6,7 +6,8 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
     Color sample_color = {0, 0, 0};  // Color acumulado (R, G, B)
     float inv_samples = 1.0f / samples_per_pixel;
 
-    for (int s = 0; s < samples_per_pixel; s++) {
+    for (int s = 0; s < samples_per_pixel; s++)
+	{
         // Calcular pequeñas desviaciones aleatorias dentro del píxel (jittering)
         double u = (x + random_double()) / (double)WINX;
         double v = (y + random_double()) / (double)WINY;
@@ -17,6 +18,7 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 		double min_dist = 90000000;
 		int type;
 		int id;
+		int hit_color;
 		type = find_nearest_obj(*scene, &ray, &t, &id);
 		Vector3 *hit_pt = hit_point(ray, t);
 		if (type == PLANE)

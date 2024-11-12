@@ -252,12 +252,13 @@ Ray *generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal);
 //------RANDOM------
 double random_double();
 //------OBJECT------
+int obj_solution_point(Scene scene, Vector3 point, int type, int id);
 int idxfind_min(double *arr, int size);
 int find_nearest_sphere(Scene scene, Ray *ray, double *t);
 int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id);
 int intersect_sphere(const Ray *ray, const Sphere *sphere,  double *t);
-int sphere_solution_point(Sphere sphere, Vector3 point);
 Vector3 *normal_sphere(Vector3 hit_point, Sphere sphere);
+int sphere_solution_point(Sphere sphere, Vector3 point);
 int plane_solution_point(Plane plane, Vector3 point);
 int intersect_plane(const Ray *ray, const Plane *plane, double *t);
 //------PARSER------
@@ -273,7 +274,7 @@ int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere);
 int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane);
 int find_nearest_plane(Scene scene, Ray *ray, double *t);
 void render_scene(Scene *scene, int samples_per_pixel);
-int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int current_pixel);
-int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int current_pixel);
+int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type);
+int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type);
 
 #endif

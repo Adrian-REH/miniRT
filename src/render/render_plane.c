@@ -64,31 +64,28 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 	return current_color;
 }
 
-int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int current_pixel)
+int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 {
 	double t = 0;
 	double md = 900000000;
 	int j = -1;
 	Vector3 *hit_rfc;
-	int result = 0;
-	int hit_color;
+	int hit_color = 0;
 
-	while (++j < scene->n_planes){
-
+	while (++j < scene->n_planes)
+	{
 		if (intersect_plane(&rayrfc, &scene->planes[j], &t) && (t < md))
 		{
 			hit_rfc = hit_point(rayrfc, t);
-			//El plano que emitio el rayo no deberia ser solucion para la reflexion
-			if (!plane_solution_point(scene->planes[id], *hit_rfc))
+			if (!obj_solution_point(*scene, *hit_rfc, type, id))
 			{
 				md = t;
 				hit_color = render_point_plane(*scene, *hit_rfc, j);
-				result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
 			}
 			free(hit_rfc);
 		}
 	}
-	return result;
+	return hit_color;
 }
 
 
@@ -112,10 +109,15 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 	int j = -1;
 	int type = find_nearest_obj(*scene, rayrfc, &t, &idx);
 	if (type == PLANE)
-		result = render_reflect_plane(scene, *rayrfc, id, current_pixel);
+	{
+		hit_color = render_reflect_plane(scene, *rayrfc, id, PLANE);
+		result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+	}
 	if (type == SPHERE)
-		result = render_reflect_sphere(scene, *rayrfc, id, current_pixel);
-	
+	{
+		hit_color = render_reflect_sphere(scene, *rayrfc, id, PLANE);
+		result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+	}
 	free(rayrfc);
 	return result;
 }
