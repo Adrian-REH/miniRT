@@ -69,36 +69,32 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 {
-	Color sample_color = {0, 0, 0, 0};  // Color acumulado (R, G, B)
-	double md = 900000;
 	double t = 0;
 	int hit_color = 0;
 	int result = 0;
-	int idx = 0;
-	Vector3 *hit_rfc;
+	int idx = id;
 	Vector3 *n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
-	//Ray rayrfc = {hit_pt , *rfc};
-	
 	Ray *rayrfc = generate_reflect_ray(scene, hit_pt, *n_sphere);
 	int j = -1;
 	//Verificador de planos o objetos mas cercanos para optimizar
 	int current_pixel = render_point_sphere(*scene, hit_pt, id);
-	
 	//Se confunde consigo mismo para buscar el mas cercano
-	scene->n_spheres = 0;
 	//Solucion: Intentar identificar el cuerpo donde sale y hacer que no se autointersecte.
-	int type = find_nearest_obj(*scene, rayrfc, &t, &idx);
-	if (type == PLANE)
+	if (scene->spheres[id].mater_prop.reflect)
 	{
-		hit_color = render_reflect_plane(scene, *rayrfc, id, SPHERE);
-		result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, SPHERE);
+		if (type == PLANE)
+		{
+			hit_color = render_reflect_plane(scene, *rayrfc, id, SPHERE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		}
+		if (type == SPHERE)
+		{
+			hit_color = render_reflect_sphere(scene, *rayrfc, id, SPHERE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		}
+		free(n_sphere);
+		return hit_color;
 	}
-	if (type == SPHERE)
-	{
-		hit_color = render_reflect_sphere(scene, *rayrfc, id, SPHERE);
-		result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-	}
-	scene->n_spheres = 1;
-	free(n_sphere);
-	return hit_color;
+	return current_pixel;
 }

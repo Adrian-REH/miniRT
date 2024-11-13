@@ -107,7 +107,7 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 	//Hago la reflexion
 	Vector3 *hit_rfc;
 	int j = -1;
-	int type = find_nearest_obj(*scene, rayrfc, &t, &idx);
+	int type = find_nearest_obj(*scene, rayrfc, &t, &idx, PLANE);
 	if (type == PLANE)
 	{
 		hit_color = render_reflect_plane(scene, *rayrfc, id, PLANE);

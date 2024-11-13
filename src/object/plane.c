@@ -44,7 +44,7 @@ int intersect_plane(const Ray *ray, const Plane *plane, double *t)
 	return (*t > 0); // Si t es positivo, hay intersección en dirección del rayo
 }
 
-int find_nearest_plane(Scene scene, Ray *ray, double *t)
+int find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type)
 {
 	int i;
 	int j;
@@ -54,6 +54,8 @@ int find_nearest_plane(Scene scene, Ray *ray, double *t)
 	j = -1;
 	while (++i < scene.n_planes)
 	{
+		if (id == i && type == PLANE)
+			continue ;
 		if (intersect_plane(ray, &scene.planes[i], t) && (*t < min_dist))
 		{
 			min_dist = *t;

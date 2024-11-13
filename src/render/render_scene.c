@@ -19,7 +19,7 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 		int type;
 		int id;
 		int hit_color;
-		type = find_nearest_obj(*scene, &ray, &t, &id);
+		type = find_nearest_obj(*scene, &ray, &t, &id, 10);
 		Vector3 *hit_pt = hit_point(ray, t);
 		if (type == PLANE)
 			addint_to_color(&sample_color, render_plane(scene, *hit_pt, id));
