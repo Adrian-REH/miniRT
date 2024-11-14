@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 21:21:28 by adherrer          #+#    #+#             */
-/*   Updated: 2024/06/26 16:18:04 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/13 20:37:23 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 32
+#endif
 typedef struct s_list
 {
 	void			*content;

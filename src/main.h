@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mathmatrix.c                                       :+:      :+:    :+:   */
+/*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/17 11:27:48 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/14 01:42:19 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <float.h>
 #include <stdint.h>
 #include <math.h>
+#include <fcntl.h>
 #define EPSILON 1e-6 // Margen de tolerancia para precisión flotante
 
 #define WINX 1280 
@@ -208,6 +209,8 @@ typedef struct
 typedef struct {
 	void		*mlx;
 	void		*win;
+	int			width;
+	int			height;
 	Img			*img;
 	Camera		*cameras;
 	Sphere		*spheres;
@@ -234,6 +237,7 @@ Color	*rgb_to_color(int r, int g, int b);
 void	set_color(char *buffer, int endian, int color, int alpha);
 int		get_color(char *buffer, int endian, int *alpha);
 Color *illuminate_surface(Color *surface_color, Color *light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
+int		ft_sarrsize(char **arr);
 
 double calculate_intensity(Vector3 normal, Vector3 light_dir);
 double distance(Vector3 init, Vector3 end);
@@ -242,6 +246,7 @@ void normalize(Vector3 *v);
 Vector3 *invnormal(Vector3 *normal);
 Vector3 *normalize_withpoint(Vector3 init, Vector3 end);
 double specular_intensity(Vector3 reflection, Vector3 view_dir, double shininess, double ks);
+double	ft_atof(const char *str);
 
 
 int idxpixel(int x, int y);
@@ -262,11 +267,16 @@ Vector3 *normal_sphere(Vector3 hit_point, Sphere sphere);
 int plane_solution_point(Plane plane, Vector3 point);
 int intersect_plane(const Ray *ray, const Plane *plane, double *t);
 //------PARSER------
+int	parser_obj(Scene *scene, int fd);
 int	parser_camera(Scene *scene, char **data);
 int	parser_plane(Scene *scene, char **data);
 int	parser_light(Scene *scene, char **data);
 int	parser_sphere(Scene *scene, char **data);
-int	parser_obj(Scene *scene, int fd);
+int	parser_resolution(Scene *scene, char **data);
+int	parser_ambient(Scene *scene, char **data);
+int	parser_cylinder(Scene *scene, char **data);
+int parser_triangle(Scene *scene, char **data);
+int parser_square(Scene *scene, char **data);
 //------RENDER------
 int	render_plane(Scene *scene,Vector3 hit_pt, int id);
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id);
@@ -277,5 +287,12 @@ int find_nearest_plane(Scene scene, Ray *ray, double *t);
 void render_scene(Scene *scene, int samples_per_pixel);
 int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int current_pixel);
 int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int current_pixel);
+
+
+
+// UTILS
+void	ft_free_p2(char **dst);
+
+int init_file(char *file);
 
 #endif

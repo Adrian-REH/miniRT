@@ -2,6 +2,8 @@
 
 int	parser_sphere(Scene *scene, char **data)
 {
+
+	printf("Sphere\n"); return (1);
 	scene->spheres = malloc(sizeof(Sphere) * 2);
 	scene->spheres[scene->n_spheres].center = (Vector3){0, 0, 3};
 	scene->spheres[scene->n_spheres].radius = 1.5;

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
+#    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 02:54:59 by adherrer          #+#    #+#              #
-#    Updated: 2024/11/02 00:24:44 by adherrer         ###   ########.fr        #
+#    Updated: 2024/11/14 01:25:41 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME        := miniRT
 SRC_DIR     := src/
 OBJ_DIRS     := obj/
 CC          := gcc
-CFLAGS      := -g -O3 -ffast-math -funroll-loops -march=native -flto -MMD
+CFLAGS      := -g3 -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
 FSANITIZE   := 
 RM          := rm -rf
 
@@ -55,17 +55,21 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libvector3/normalizev3.c \
 				src/lib/libbrdf/reflect.c \
 				src/lib/librandom/random_double.c \
+				src/lib/libsarr/ft_sarrsize.c \
+				src/lib/libmath/ft_atof.c \
+				src/lib/libutils/ft_free_p2.c \
 				src/parser/parser_ambient.c \
 				src/parser/parser_camera.c \
 				src/parser/parser_light.c \
 				src/parser/parser_cylinder.c \
 				src/parser/parser_plane.c \
-				src/parser/parser_polygon.c \
 				src/parser/parser_obj.c \
 				src/parser/parser_sphere.c \
+				src/parser/parser_triangle.c \
+				src/parser/parser_square.c \
+				src/parser/parser_resolution.c \
 				src/render/render_plane.c \
 				src/render/render_sphere.c \
-				src/render/render_polygon.c \
 				src/render/render_cylinder.c \
 				src/render/render_scene.c \
 				src/object/ambient.c \
@@ -79,7 +83,8 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/main.c \
 
 OBJ_DIRS := obj/src/lib/libcolor obj/src/lib/libprojection obj/src/lib/libvector3 obj/src/lib/libbrdf \
-            obj/src/parser obj/src/render obj/src/object obj/src/lib/librandom
+            obj/src/parser obj/src/render obj/src/object obj/src/lib/librandom obj/src/lib/libsarr \
+			obj/src/lib/libmath obj/src/lib/libutils
 
 # Regla para crear los directorios de objetos
 $(OBJ_DIRS):

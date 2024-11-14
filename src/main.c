@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 23:12:23 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/03 03:08:42 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/13 23:38:53 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,28 @@ int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_po
 	return 0; // Not in shadow
 }
 
+int init_file(char *file)
+{
+	int fd;
+	int len_file = ft_strlen(file);
+	if (file[len_file - 1] != 't' && file[len_file - 2] != 'r' && file[len_file - 3] != '.')
+	{
+		printf("Error: El archivo no es un archivo .rt\n");
+		exit(1);
+	}
+	fd = open(file, 0);	
+	if (fd < 0)
+	{
+		printf("Error al abrir el archivo\n");
+		exit(1);
+	}
+	return (fd);
+}
 
 int main()
 {
 	Scene *scene = malloc(sizeof(Scene));
-	
+	ft_bzero(scene, sizeof(Scene));
 	scene->mlx = mlx_init();
 	scene->win = mlx_new_window(scene->mlx, WINX, WINY, "miniRT!");
 	Img img;
@@ -57,6 +74,7 @@ int main()
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
 
 	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	parser_obj(scene, init_file("mandatory.rt"));
 	parser_plane(scene, NULL);
 	parser_light(scene, NULL);
 	parser_sphere(scene, NULL);
