@@ -19,7 +19,7 @@ int	parser_light(Scene *scene, char **data)
 
 	// printf("Light\n");
 // |l| |-40,0,30| |0.7| |255,255,255
-	printf("----> |%s| |%s| |%s| |%s|\n", data[0], data[1], data[2], data[3]);
+//	printf("----> |%s| |%s| |%s| |%s|\n", data[0], data[1], data[2], data[3]);
 
 
 
@@ -53,7 +53,7 @@ int	parser_light(Scene *scene, char **data)
 	color.r = atof(args[0]);
 	color.g = atof(args[1]);
 	color.b = atof(args[2]);
-printf("----> |%f| |%f| |%f|\n", color.r, color.g, color.b);
+//printf("----> |%f| |%f| |%f|\n", color.r, color.g, color.b);
 
 
 	if (color.r < 0 || color.r > 255)
@@ -74,11 +74,11 @@ printf("----> |%f| |%f| |%f|\n", color.r, color.g, color.b);
 
 	
 	scene->lights->color = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
-	scene->lights->color = int_to_color(0xFFFFFF);
+//	scene->lights->color = int_to_color(0xFFFFFF);
 	scene->lights->point =  point;
 	scene->lights->ratio = ratio;
 
-	printf("----> |%f| |%f| |%f| |%f|\n", scene->lights->point.x, scene->lights->point.y, scene->lights->point.z, scene->lights->ratio);
-	printf("----> |%f| |%f| |%f|\n", scene->lights->color->r, scene->lights->color->g, scene->lights->color->b);
-	exit (1);
+	// printf("----> |%f| |%f| |%f| |%f|\n", scene->lights->point.x, scene->lights->point.y, scene->lights->point.z, scene->lights->ratio);
+	// printf("----> |%f| |%f| |%f|\n", scene->lights->color->r, scene->lights->color->g, scene->lights->color->b);
+	//exit (1);
 }

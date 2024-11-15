@@ -144,6 +144,11 @@ int parser_obj(Scene *scene, int fd)
 		ft_free_p2(data);
 		line = get_next_line(fd);
 	}
+	
+	printf("resolution: %d %d\n", scene->width, scene->height);
+
+	printf("ambient: %d\n", scene->ambient->ratio);
+	//printf("color (%f, %f, %f)\n", scene->ambient->color.r, scene->ambient->color.g, scene->ambient->color.b);
 	printf("n_planes: %d\n", scene->n_planes);
 	printf(" norme (%f, %f, %f)\n", scene->planes[0].normal.x,scene->planes[0].normal.y,scene->planes[0].normal.z);
 	printf(" axis (%f, %f, %f)\n", scene->planes[0].point.x,scene->planes[0].point.y,scene->planes[0].point.z);
@@ -154,6 +159,12 @@ int parser_obj(Scene *scene, int fd)
 	printf(" Radous (%f )\n", scene->spheres[0].radius);
 	printf(" vCOlor (%f, %f, %f)\n", scene->spheres[0].mater_prop.vColor->r, scene->spheres[0].mater_prop.vColor->g, scene->spheres[0].mater_prop.vColor->b);
 
+
+	printf("SQUERE: \n");
+	printf(" center (%f, %f, %f)\n", scene->squares[0].center.x,scene->squares[0].center.y,scene->squares[0].center.z);
+	printf(" normal (%f, %f, %f)\n", scene->squares[0].normal.x,scene->squares[0].normal.y,scene->squares[0].normal.z);
+	printf(" side (%f )\n", scene->squares[0].side);
+	//printf(" vColor (%f, %f, %f)\n", scene->squares[0].mater_prop.vColor->r, scene->squares[0].mater_prop.vColor->g, scene->squares[0].mater_prop.vColor->b);
 
 	printf("CYLINDER: %d\n", scene->n_cylinders);
 	printf(" center (%f, %f, %f)\n", scene->cylinders[0].center.x,scene->cylinders[0].center.y,scene->cylinders[0].center.z);

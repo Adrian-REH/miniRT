@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/15 21:19:38 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/16 00:20:48 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,9 @@ typedef struct
 	int		color;
 } Cylinder;
 
+
+
+
 typedef struct
 {
 	Vector3				normal;
@@ -184,6 +187,15 @@ typedef struct
 	int		n_vertex;
 	Color	color;
 } Polygon;
+
+typedef struct
+{
+	Vector3	center;
+	Vector3	normal;
+	double	side;
+	Color	color;
+
+} Square;
 
 typedef struct
 {
@@ -213,7 +225,9 @@ typedef struct {
 	int			height;
 	Img			*img;
 	Camera		*cameras;
+	Ambient		*ambient;
 	Sphere		*spheres;
+	Square		*squares;
 	Cylinder	*cylinders;
 	Plane		*planes;
 	Light		*lights;
