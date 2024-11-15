@@ -148,7 +148,19 @@ int parser_obj(Scene *scene, int fd)
 	printf(" norme (%f, %f, %f)\n", scene->planes[0].normal.x,scene->planes[0].normal.y,scene->planes[0].normal.z);
 	printf(" axis (%f, %f, %f)\n", scene->planes[0].point.x,scene->planes[0].point.y,scene->planes[0].point.z);
 	printf(" vCOlor (%f, %f, %f)\n", scene->planes[0].mater_prop.vColor->r, scene->planes[0].mater_prop.vColor->g, scene->planes[0].mater_prop.vColor->b);
+	
+	printf("SPHERE: %d\n", scene->n_planes);
+	printf(" norme (%f, %f, %f)\n", scene->spheres[0].center.x,scene->spheres[0].center.y,scene->spheres[0].center.z);
+	printf(" Radous (%f )\n", scene->spheres[0].radius);
+	printf(" vCOlor (%f, %f, %f)\n", scene->spheres[0].mater_prop.vColor->r, scene->spheres[0].mater_prop.vColor->g, scene->spheres[0].mater_prop.vColor->b);
 
+
+	printf("CYLINDER: %d\n", scene->n_cylinders);
+	printf(" center (%f, %f, %f)\n", scene->cylinders[0].center.x,scene->cylinders[0].center.y,scene->cylinders[0].center.z);
+	printf(" axis (%f, %f, %f)\n", scene->cylinders[0].axis.x,scene->cylinders[0].axis.y,scene->cylinders[0].axis.z);
+	printf(" diameter (%f )\n", scene->cylinders[0].diameter);
+	printf(" height (%f )\n", scene->cylinders[0].height);
+	//printf(" vColor (%f, %f, %f)\n", scene->cylinders[0].color.r, scene->cylinders[0].mater_prop.vColor->g, scene->cylinders[0].mater_prop.vColor->b);
 	exit(1);
 	//vas a splitear la linea
 }

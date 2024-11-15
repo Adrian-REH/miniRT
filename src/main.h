@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/14 01:42:19 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/15 21:19:38 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@
 #define COL_T 5000 //Luz ligeramente calida
 #define INTSITY 0.8 // Material muy reflectante pero no perfecto
 #define REFLECT 0.95 // Intensidad de la luz
-
+#define PI 3.1415
 
 typedef enum
 {
@@ -292,6 +292,7 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int current_pixel);
 
 // UTILS
 void	ft_free_p2(char **dst);
+void	*ft_realloc(void *ptr, size_t size_old, size_t size);
 
 int init_file(char *file);
 

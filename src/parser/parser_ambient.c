@@ -2,5 +2,7 @@
 
 int	parser_ambient(Scene *scene, char **data)
 {
-    printf("Ambient\n");
+    printf("Ambient function fichero para procesar\n");
+
+
 }

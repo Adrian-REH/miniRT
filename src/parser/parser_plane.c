@@ -1,22 +1,7 @@
 
 #include "../main.h"
 
-void	*ft_realloc(void *ptr, size_t size_old, size_t size)
-{
-	void	*new;
 
-	new = malloc(size);
-	if (!new)
-		return (NULL);
-	if (ptr)
-	{
-		ft_memcpy(new, ptr, size_old);
-		free(ptr);
-	}
-	if (size > size_old)
-		ft_bzero(new + size_old, size - size_old);
-	return (new);
-}
 
 /**
  * Re alocar la memoria de scene->planes para guardar los datos del nuevo plano.
