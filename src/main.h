@@ -23,6 +23,7 @@
 
 #define WINX 1280 
 #define WINY 720
+# define N_SAMPLING 1
 # define X 0
 # define Y 1
 # define Z 2
@@ -177,11 +178,12 @@ typedef struct
 
 typedef struct
 {
-	Vector3	*vertex;
-	Vector3	normal;
+	Vector3	vertex[3];
+	Vector3	*dir[3];
 	int		n_vertex;
-	Color	color;
-} Polygon;
+	Plane	*p_triangle;
+	MaterialProperties	mater_prop;
+} Triangle;
 
 typedef struct
 {
@@ -208,6 +210,7 @@ typedef struct {
 	void		*mlx;
 	void		*win;
 	Img			*img;
+	Triangle	*triangle;
 	Camera		*cameras;
 	Sphere		*spheres;
 	Cylinder	*cylinders;
@@ -217,11 +220,13 @@ typedef struct {
 	int			n_planes;
 	int			n_cylinders;
 	int			n_spheres;
+	int			n_triangles;
 	int			(*parser[10])(void *, void *);
 } Scene;
 
+double	cross_product(Vector3 v1, Vector3 v2);
 Vector3 *reflect(Vector3 L, Vector3 N);
-int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_point) ;
+int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point) ;
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 int		colornormal_to_int(Color color);
 void	addint_to_color(Color *color, int src);
@@ -267,6 +272,7 @@ int	parser_plane(Scene *scene, char **data);
 int	parser_light(Scene *scene, char **data);
 int	parser_sphere(Scene *scene, char **data);
 //------RENDER------
+int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t);
 int	render_plane(Scene *scene,Vector3 hit_pt, int id);
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id);
 int render_sampling(int x, int y, Scene *scene, int samples_per_pixel);

@@ -20,7 +20,7 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 	if (intersect_plane(&rayslight, &scene.planes[n_plane], &d))
 	{
 		// Calcula el punto de impacto con el rayo de luz
-		double t = is_in_shadow(scene, 5, scene.lights->point, hit_pt);
+		double t = is_in_shadow(scene, scene.lights->point, hit_pt);
 		if (!t)
 		{	// Calcula la dirección de la luz hacia el punto de impacto
 				double distance_light = distance(rayslight.origin, hit_pt);
@@ -93,7 +93,7 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 {
 	double t = 0;
-	double idx = 0;
+	double idx = id;
 	int hit_color = 0;
 	int tmp[2] = {0 , 0};
 	int result = 0;
@@ -102,22 +102,25 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 
 	//Si hay reflexion entonces ...
 	//Genero un ray
-	
-	Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->planes[id].normal);
-	//Hago la reflexion
-	Vector3 *hit_rfc;
-	int j = -1;
-	int type = find_nearest_obj(*scene, rayrfc, &t, &idx, PLANE);
-	if (type == PLANE)
+	if (scene->planes[id].mater_prop.reflect)
 	{
-		hit_color = render_reflect_plane(scene, *rayrfc, id, PLANE);
-		result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->planes[id].normal);
+		//Hago la reflexion
+		Vector3 *hit_rfc;
+		int j = -1;
+		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, PLANE);
+		if (type == PLANE)
+		{
+			hit_color = render_reflect_plane(scene, *rayrfc, id, PLANE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		}
+		if (type == SPHERE)
+		{
+			hit_color = render_reflect_sphere(scene, *rayrfc, id, PLANE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		}
+		free(rayrfc);
+		return result;
 	}
-	if (type == SPHERE)
-	{
-		hit_color = render_reflect_sphere(scene, *rayrfc, id, PLANE);
-		result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-	}
-	free(rayrfc);
-	return result;
+	return current_pixel;
 }

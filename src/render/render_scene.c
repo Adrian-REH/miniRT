@@ -17,13 +17,17 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 		double t = 0;
 		double min_dist = 90000000;
 		int type;
-		int id;
+		int id = 0;
 		int hit_color;
 		type = find_nearest_obj(*scene, &ray, &t, &id, 10);
 		Vector3 *hit_pt = hit_point(ray, t);
-		if (type == PLANE)
+		if (type == PLANE && id >= 0)
 			addint_to_color(&sample_color, render_plane(scene, *hit_pt, id));
-		if (type == SPHERE)
+		if (type == SPHERE && id >= 0)
+			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));
+		if (type == CYLINDER && id >= 0)
+			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));
+		if (type == POLYGON && id >= 0)
 			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));
 			
 		if (intersect_sphere(&ray, &scene->spheres[1], &t)) //para la esfera de luz

@@ -7,12 +7,10 @@ int plane_solution_point(Plane plane, Vector3 point)
     double D = -(plane.normal.x * plane.point.x + 
                 plane.normal.y * plane.point.y + 
                 plane.normal.z * plane.point.z);
-
     // Calcula el valor de la ecuación del plano con el punto dado
     double result = plane.normal.x * point.x + 
                    plane.normal.y * point.y + 
                    plane.normal.z * point.z + D;
-
     // Verifica si el resultado está dentro del margen de tolerancia
     if (fabs(result) < EPSILON) {
         return 1; // El punto está en el plano

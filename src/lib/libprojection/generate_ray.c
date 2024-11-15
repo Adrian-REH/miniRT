@@ -24,13 +24,7 @@ Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camer
 //para 8 es 2.5
 //para 10 es 2
 	// Normaliza la dirección del rayo para obtener un vector unitario
-	double length = sqrt(ray->direction.x * ray->direction.x +
-						 ray->direction.y * ray->direction.y +
-						 ray->direction.z * ray->direction.z);
-	ray->direction.x /= length;
-	ray->direction.y /= length;
-	ray->direction.z /= length;
-
+	normalize(&(ray->direction));
 	return ray;
 }
 
