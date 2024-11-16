@@ -32,21 +32,21 @@ printf(" spehere ----->1|%s| 2|%s| 3|%s| 4|%s| \n", data[0], data[1], data[2], d
 		printf("Error: %s not contain coor x, x ,y\n", data[1]);
 		exit(1);
 	}
-	scene->spheres = malloc(sizeof(Sphere) * 1);
+	//scene->spheres = malloc(sizeof(Sphere) * 1);
+	scene->spheres = ft_realloc(scene->spheres, sizeof(Sphere) * scene->n_spheres, sizeof(Sphere) * (scene->n_spheres + 2));
 
 	center.x = atof(args[0]);
 	center.y = atof(args[1]);
 	center.z = atof(args[2]);
-
 	ft_free_p2(args);
-
 	if (data[2] == NULL)
 	{
 		printf("Error: %s not contain radius\n", data[2]);
 		exit(1);
 	}
-	radius = atof(data[2]);
-
+	radius = atof(data[2]); // limit(0, INT_MAX, radio)
+	if (radius < 0)
+		return NULL;
 	args = ft_split(data[3], ',');
 	if (ft_sarrsize(args) != 3)
 	{
@@ -78,9 +78,9 @@ printf(" spehere ----->1|%s| 2|%s| 3|%s| 4|%s| \n", data[0], data[1], data[2], d
 	scene->spheres[scene->n_spheres].mater_prop.absorption[R] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->r;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[G] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->g;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[B] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->b;
-	//scene->n_spheres++;
 	scene->spheres[scene->n_spheres].center = center;
 	scene->spheres[scene->n_spheres].radius = radius;
+	//scene->n_spheres++;
 
 	
 	//ft_bzero(&scene->spheres, sizeof(Plane));

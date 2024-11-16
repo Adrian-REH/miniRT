@@ -17,20 +17,18 @@ int	parser_ambient(Scene *scene, char **data)
 
     Color color = {0, 0, 0};
     printf("Ambient function fichero para procesar\n");
-
     scene->ambient = malloc(sizeof(Ambient));
-
-   scene->ambient->ratio = ft_radio(data[1]);
-
+    scene->ambient->ratio = ft_radio(data[1]);
     char **args = ft_split(data[2], ',');
     if (ft_sarrsize(args) != 3)
     {
         printf("Error: %s not contain color r, g, b\n", data[2]);
         exit(1);
     }
-    color.r = atof(args[0]);
-    color.g = atof(args[1]);
-    color.b = atof(args[2]);
+    color.r = ft_limit(0.0, 255.0, atof(args[0]));
+    //Verificar si cumple con que esta en 0 255
+    color.g = ft_limit(0.0, 255.0, atof(args[1]));
+    color.b = ft_limit(0.0, 255.0,  atof(args[2]));
 
 
     if (color.r < 0 || color.r > 255)
@@ -48,10 +46,5 @@ int	parser_ambient(Scene *scene, char **data)
         printf("Error: %s not contain color r, g, b\n", data[2]);
         exit(1);
     }
-
-
-
-
-
-
+    scene->ambient->color = rgb_to_color(color.r, color.g, color.b);
 }

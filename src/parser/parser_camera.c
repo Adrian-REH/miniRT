@@ -17,7 +17,6 @@ int	parser_camera(Scene *scene, char **data)
 	Vector3	coord = {0, 0, 0};
 	Vector3	dir = {0, 0, 0};
 	double	fov;
-
 	Camera camera;
 	
 	printf("Camera\n");
@@ -34,9 +33,8 @@ int	parser_camera(Scene *scene, char **data)
 		exit(1);
 	}
 	scene->cameras = malloc(sizeof(Camera));
-
 	coord = ft_coordinate(data[1]);
-	
+
 	args = ft_split(data[2], ',');
 	if (ft_sarrsize(args) != 3)
 	{
@@ -47,6 +45,7 @@ int	parser_camera(Scene *scene, char **data)
 	printf("----> dir: (%f, %f, %f)\n", dir.x, dir.y, dir.z);
 	
 	fov = atof(data[3]);
+	//limit(0, 180, atof(data[3]));
 	if (fov < 0 || fov > 180)
 	{
 		printf("Error: %s no es un typo valido\n", data[3]);
@@ -59,14 +58,16 @@ int	parser_camera(Scene *scene, char **data)
 	// scene->cameras = malloc(sizeof(Camera));
 	// scene->cameras->pos = (Vector3){0, 0, 30};
 	// // Ajusta el tamaño del plano de proyección en función de la relación de aspecto
-	// scene->cameras->aspect_ratio = (double)WINX/WINY;
 	// double fov = 50;
+
+	//Llegar una conclusion para obtener siempre primero el height y width antes de tocar la camara
+	scene->cameras->aspect_ratio = scene->width / scene->height; 
 	scene->cameras->plane_distance = tan((fov / 2) * (PI / 180));
 	scene->cameras->plane_half_width = scene->cameras->aspect_ratio * scene->cameras->plane_distance; // Ajuste según el aspecto
 	scene->cameras->plane_half_height = 1.0 * scene->cameras->plane_distance;         // Altura basada en la distancia
+	scene->cameras->horizontal = (Vector3){1, 0, 0};      // Apunta hacia la derecha
+	scene->cameras->vertical = (Vector3){0, -1, 0};         // Apunta hacia arriba
 	
 	// PREGUNTAR A ADRIAN
 	scene->cameras->dir = (Vector3){0, 0, -1}; // Apunta hacia el -Z
-	scene->cameras->horizontal = (Vector3){1, 0, 0};      // Apunta hacia la derecha
-	scene->cameras->vertical = (Vector3){0, -1, 0};         // Apunta hacia arriba
 }

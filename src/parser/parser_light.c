@@ -20,14 +20,6 @@ int	parser_light(Scene *scene, char **data)
 	double	ratio = 0;
 	Color color = {0, 0, 0};
 
-/*
-
-	Vector3	point;
-	double	ratio;
-	Color	*color;*/
-
-
-
 
 	// printf("Light\n");
 // |l| |-40,0,30| |0.7| |255,255,255
@@ -36,7 +28,8 @@ int	parser_light(Scene *scene, char **data)
 
 
 	scene->lights = malloc(sizeof(Light));
-
+	if (!scene->lights)
+		return NULL;
 	char **args = ft_split(data[1], ',');
 	if (ft_sarrsize(args) != 3)
 	{
@@ -48,7 +41,7 @@ int	parser_light(Scene *scene, char **data)
 	point.z = atof(args[2]);
 
 	ft_free_p2(args);
-	ratio = ft_radio(data[2]);
+	ratio = ft_radio(data[2]); //Podes usar ft_limit
 	args = ft_split(data[3], ',');
 	if (ft_sarrsize(args) != 3)
 	{
@@ -78,7 +71,6 @@ int	parser_light(Scene *scene, char **data)
 		exit(1);
 	}
 
-	
 	scene->lights->color = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 //	scene->lights->color = int_to_color(0xFFFFFF);
 	scene->lights->point =  point;

@@ -167,7 +167,7 @@ typedef struct
 	Vector3	axis;
 	double	diameter;
 	double	height;
-	int		color;
+	MaterialProperties	mater_prop;
 } Cylinder;
 
 typedef struct
@@ -175,7 +175,7 @@ typedef struct
 	Vector3	*vertex1;
 	Vector3	*vertex2;
 	Vector3	*vertex3;
-	Color	color;
+	MaterialProperties	mater_prop;
 } Triangle;
 
 
@@ -200,7 +200,7 @@ typedef struct
 	Vector3	center;
 	Vector3	normal;
 	double	side;
-	Color	color;
+	MaterialProperties	mater_prop;
 } Square;
 
 typedef struct
@@ -242,9 +242,11 @@ typedef struct {
 	int			n_planes;
 	int			n_cylinders;
 	int			n_spheres;
+	int			n_squares;
 	int			(*parser[10])(void *, void *);
 } Scene;
 
+double ft_limit(double min, double max, double val);
 Vector3 *reflect(Vector3 L, Vector3 N);
 int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_point) ;
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);

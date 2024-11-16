@@ -124,7 +124,7 @@ int	parser_cylinder(Scene *scene, char **data)
 	scene->cylinders[scene->n_cylinders].axis = axis;
 	scene->cylinders[scene->n_cylinders].diameter = diameter;
 	scene->cylinders[scene->n_cylinders].height = height;
-	scene->cylinders[scene->n_cylinders].color = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
+	scene->cylinders[scene->n_cylinders].mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 
 
 	

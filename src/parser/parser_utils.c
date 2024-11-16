@@ -12,6 +12,14 @@
 
 #include "../main.h"
 
+double ft_limit(double min, double max, double val)
+{
+	if ( max < val && val > min)
+		return val;
+	printf("Error el valor no se encuentre entre los limites [%f, %f]", min, max);
+	//llamar a una funcion que libere
+	exit(1);
+}
 double ft_radio(char *str)
 {
 	double	radio;
@@ -41,6 +49,7 @@ Vector3	ft_coordinate(char *argv)
 	ft_free_p2(args);
 	return (coord);
 }
+
 Vector3	ft_normalizate(char *argv)
 {
 	Vector3 norm;

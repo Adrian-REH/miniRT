@@ -20,13 +20,14 @@ int	parser_square(Scene *scene, char **data)
     Color color = {0, 0, 0};
 
    // printf(" SQUARE ----->1|%s| 2|%s| 3|%s| 4|%s| 5 |%s| \n", data[0], data[1], data[2], data[3], data[4]);
+    //CENTER
     char **args = ft_split(data[1], ',');
     if (ft_sarrsize(args) != 3)
     {
         printf("Error: %s not contain coor x, x ,y\n", data[1]);
         exit(1);
     }
-    scene->squares = malloc(sizeof(Square) * 1);
+	scene->squares = ft_realloc(scene->squares, sizeof(Square) * scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
 
     center.x = atof(args[0]);
     center.y = atof(args[1]);
@@ -34,6 +35,7 @@ int	parser_square(Scene *scene, char **data)
 
     ft_free_p2(args);
 
+    //NORMAL
     args = ft_split(data[2], ',');
     if (ft_sarrsize(args) != 3)
     {
@@ -45,8 +47,7 @@ int	parser_square(Scene *scene, char **data)
     normal.y = atof(args[1]);
     normal.z = atof(args[2]);
 
-
-
+    //SIDE
     if (data[3] == NULL)
     {
         printf("Error: %s not contain side\n", data[3]);
@@ -55,6 +56,7 @@ int	parser_square(Scene *scene, char **data)
     side = atof(data[3]);
 
     ft_free_p2(args);
+    //COLOR
     args = ft_split(data[4], ',');
 
 
@@ -88,14 +90,13 @@ int	parser_square(Scene *scene, char **data)
     scene->squares->center = center;
     scene->squares->normal = normal;
     scene->squares->side = side;
-    //scene->squares->color = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
-
+    scene->squares->mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
+    scene->squares[scene->n_squares].mater_prop.absorption[R] = 1 - scene->squares[scene->n_squares].mater_prop.vColor->r;
+	scene->squares[scene->n_squares].mater_prop.absorption[G] = 1 - scene->squares[scene->n_squares].mater_prop.vColor->g;
+	scene->squares[scene->n_squares].mater_prop.absorption[B] = 1 - scene->squares[scene->n_squares].mater_prop.vColor->b;
+	scene->squares[scene->n_squares].mater_prop.reflect = 0;
     printf(" SQUARE %s %s %s %s",data[0], data[1], data[2], data[3]);
 
-    
-
-
-   
     /*
    
 :
