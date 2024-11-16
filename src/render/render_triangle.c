@@ -85,7 +85,7 @@ int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 	int result = 0;
 	int current_pixel = render_point_triangle(*scene, hit_pt, id);
 
-	if (scene->triangle[id].mater_prop.reflect)
+	if (0)
 	{
 		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangle[id].p_triangle->normal);
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, TRIANGLE);
