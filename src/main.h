@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/16 00:20:48 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/16 17:19:34 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,13 @@ typedef struct
 	int		color;
 } Cylinder;
 
+typedef struct
+{
+	Vector3	*vertex1;
+	Vector3	*vertex2;
+	Vector3	*vertex3;
+	Color	color;
+} Triangle;
 
 
 
@@ -194,7 +201,6 @@ typedef struct
 	Vector3	normal;
 	double	side;
 	Color	color;
-
 } Square;
 
 typedef struct
@@ -202,7 +208,7 @@ typedef struct
 	Vector3	point;
 	double	ratio;
 	Color	*color;
-} Light;
+}	Light;
 
 typedef struct {
 	Color	*color;
@@ -228,6 +234,7 @@ typedef struct {
 	Ambient		*ambient;
 	Sphere		*spheres;
 	Square		*squares;
+	Triangle	*triangles;
 	Cylinder	*cylinders;
 	Plane		*planes;
 	Light		*lights;
@@ -307,6 +314,10 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int current_pixel);
 // UTILS
 void	ft_free_p2(char **dst);
 void	*ft_realloc(void *ptr, size_t size_old, size_t size);
+Vector3	ft_coordinate(char *argv);
+double	ft_radio(char *str);
+Vector3	ft_normalizate(char *argv);
+
 
 int init_file(char *file);
 

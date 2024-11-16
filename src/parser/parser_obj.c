@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_obj.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 16:06:04 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/16 16:09:16 by razamora         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../main.h"
 
 int	ft_sarrprint(char **arr)
@@ -64,12 +76,12 @@ void init_parser(Scene *scene)
 	scene->parser[1] = parser_ambient;//posicion 1
 	scene->parser[2] = parser_camera;//posicion 2
 	scene->parser[3] = parser_light;//posicion 3
-	scene->parser[4] = parser_plane;//posicion 3
-	scene->parser[5] = parser_sphere;//posicion 3
-	scene->parser[6] = parser_square;//posicion 3
-	scene->parser[7] = parser_cylinder;//posicion 3
-	scene->parser[8] = parser_triangle;//posicion 3
-	scene->parser[9] = NULL;//parser_triangle;//posicion 3
+	scene->parser[4] = parser_plane;//posicion 4
+	scene->parser[5] = parser_sphere;//posicion 5
+	scene->parser[6] = parser_square;//posicion 6
+	scene->parser[7] = parser_cylinder;//posicion 7
+	scene->parser[8] = parser_triangle;//posicion 8
+	scene->parser[9] = NULL; // NULL 
 
 }
 
@@ -154,6 +166,13 @@ int parser_obj(Scene *scene, int fd)
 	printf(" axis (%f, %f, %f)\n", scene->planes[0].point.x,scene->planes[0].point.y,scene->planes[0].point.z);
 	printf(" vCOlor (%f, %f, %f)\n", scene->planes[0].mater_prop.vColor->r, scene->planes[0].mater_prop.vColor->g, scene->planes[0].mater_prop.vColor->b);
 	
+
+	printf("CAMERA: \n");
+	printf(" pos (%f, %f, %f)\n", scene->cameras[0].pos.x,scene->cameras[0].pos.y,scene->cameras[0].pos.z);
+	printf(" dir (%f, %f, %f)\n", scene->cameras[0].dir.x,scene->cameras[0].dir.y,scene->cameras[0].dir.z);
+	printf(" fov (%f )\n", scene->cameras[0].fov);
+	
+
 	printf("SPHERE: %d\n", scene->n_planes);
 	printf(" norme (%f, %f, %f)\n", scene->spheres[0].center.x,scene->spheres[0].center.y,scene->spheres[0].center.z);
 	printf(" Radous (%f )\n", scene->spheres[0].radius);

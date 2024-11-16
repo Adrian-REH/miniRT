@@ -6,7 +6,7 @@
 #    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 02:54:59 by adherrer          #+#    #+#              #
-#    Updated: 2024/11/15 21:47:03 by razamora         ###   ########.fr        #
+#    Updated: 2024/11/16 17:20:56 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME        := miniRT
 SRC_DIR     := src/
 OBJ_DIRS     := obj/
 CC          := gcc
-CFLAGS      := -g3 -O3 -ffast-math -funroll-loops -march=native -flto -MMD -fsanitize=address
+CFLAGS      := -g3 -O3 -ffast-math -funroll-loops -march=native -flto -MMD #fsanitize=address
 FSANITIZE   := 
 RM          := rm -rf
 
@@ -68,6 +68,7 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/parser/parser_sphere.c \
 				src/parser/parser_triangle.c \
 				src/parser/parser_square.c \
+				src/parser/parser_utils.c \
 				src/parser/parser_resolution.c \
 				src/render/render_plane.c \
 				src/render/render_sphere.c \

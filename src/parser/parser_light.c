@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_light.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 16:06:10 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/16 16:53:31 by razamora         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "../main.h"
 
@@ -36,13 +48,7 @@ int	parser_light(Scene *scene, char **data)
 	point.z = atof(args[2]);
 
 	ft_free_p2(args);
-	ratio = atof(data[2]);
-	if (ratio < 0 || ratio > 1)
-	{
-		printf("Error: %s Error value ratio\n", data[2]);
-		exit(1);
-	}
-
+	ratio = ft_radio(data[2]);
 	args = ft_split(data[3], ',');
 	if (ft_sarrsize(args) != 3)
 	{

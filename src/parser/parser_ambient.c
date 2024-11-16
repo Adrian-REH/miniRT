@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_ambient.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 16:06:22 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/16 16:57:48 by razamora         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../main.h"
 
 int	parser_ambient(Scene *scene, char **data)
@@ -8,34 +20,34 @@ int	parser_ambient(Scene *scene, char **data)
 
     scene->ambient = malloc(sizeof(Ambient));
 
-   scene->ambient->ratio = atof(data[1]);
+   scene->ambient->ratio = ft_radio(data[1]);
 
-char **args = ft_split(data[2], ',');
-if (ft_sarrsize(args) != 3)
-{
-    printf("Error: %s not contain color r, g, b\n", data[2]);
-    exit(1);
-}
-color.r = atof(args[0]);
-color.g = atof(args[1]);
-color.b = atof(args[2]);
+    char **args = ft_split(data[2], ',');
+    if (ft_sarrsize(args) != 3)
+    {
+        printf("Error: %s not contain color r, g, b\n", data[2]);
+        exit(1);
+    }
+    color.r = atof(args[0]);
+    color.g = atof(args[1]);
+    color.b = atof(args[2]);
 
 
-if (color.r < 0 || color.r > 255)
-{
-    printf("Error: %s not contain color r, g, b\n", data[2]);
-    exit(1);
-}
-if (color.g < 0 || color.g > 255)
-{
-    printf("Error: %s not contain color r, g, b\n", data[2]);
-    exit(1);
-}
-if (color.b < 0 || color.b > 255)
-{
-    printf("Error: %s not contain color r, g, b\n", data[2]);
-    exit(1);
-}
+    if (color.r < 0 || color.r > 255)
+    {
+        printf("Error: %s not contain color r, g, b\n", data[2]);
+        exit(1);
+    }
+    if (color.g < 0 || color.g > 255)
+    {
+        printf("Error: %s not contain color r, g, b\n", data[2]);
+        exit(1);
+    }
+    if (color.b < 0 || color.b > 255)
+    {
+        printf("Error: %s not contain color r, g, b\n", data[2]);
+        exit(1);
+    }
 
 
 
