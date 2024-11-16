@@ -175,6 +175,9 @@ typedef struct
 	Vector3	*vertex1;
 	Vector3	*vertex2;
 	Vector3	*vertex3;
+	Vector3	vertex[3];
+	int		n_vertex;
+	Plane	*p_triangle;
 	MaterialProperties	mater_prop;
 } Triangle;
 
@@ -243,6 +246,7 @@ typedef struct {
 	int			n_cylinders;
 	int			n_spheres;
 	int			n_squares;
+	int			n_triangles;
 	int			(*parser[10])(void *, void *);
 } Scene;
 

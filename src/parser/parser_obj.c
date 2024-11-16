@@ -121,12 +121,14 @@ int	ft_countword(const char *s, int c)
 	}
 	return (count);
 }
+
 int parser_obj(Scene *scene, int fd)
 {
 	init_parser(scene);
 	char **data;
 	int i=0;
 	char **alphabet = init_args();
+
 	//int i = 0;
 	//Abrir el archivo
 	//Leerlo
