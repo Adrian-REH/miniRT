@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/16 17:19:34 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:50:49 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,16 @@ typedef struct
 	MaterialProperties	mater_prop;
 } Cylinder;
 
+
+
+
+typedef struct
+{
+	Vector3				normal;
+	Vector3				point;
+	MaterialProperties	mater_prop;
+} Plane;
+
 typedef struct
 {
 	Vector3	*vertex1;
@@ -180,15 +190,6 @@ typedef struct
 	Plane	*p_triangle;
 	MaterialProperties	mater_prop;
 } Triangle;
-
-
-
-typedef struct
-{
-	Vector3				normal;
-	Vector3				point;
-	MaterialProperties	mater_prop;
-} Plane;
 
 typedef struct
 {
@@ -321,10 +322,13 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int current_pixel);
 void	ft_free_p2(char **dst);
 void	*ft_realloc(void *ptr, size_t size_old, size_t size);
 Vector3	ft_coordinate(char *argv);
-double	ft_radio(char *str);
+double	ft_ratio(char *str);
+Color ft_color(char *str);
 Vector3	ft_normalizate(char *argv);
+Vector3	substract(Vector3 init, Vector3 end);
+Vector3	cross_v3(Vector3 v1, Vector3 v2);
+int		init_file(char *file);
 
 
-int init_file(char *file);
 
 #endif

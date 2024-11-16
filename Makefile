@@ -6,7 +6,7 @@
 #    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 02:54:59 by adherrer          #+#    #+#              #
-#    Updated: 2024/11/16 17:20:56 by razamora         ###   ########.fr        #
+#    Updated: 2024/11/16 22:51:43 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,13 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/librandom/random_double.c \
 				src/lib/libsarr/ft_sarrsize.c \
 				src/lib/libmath/ft_atof.c \
+				src/lib/libmath/substract.c \
+				src/lib/libmath/cross_v3.c \
+				src/lib/libparse/ft_coordinate.c \
+				src/lib/libparse/ft_limit.c \
+				src/lib/libparse/ft_normalizate.c \
+				src/lib/libparse/ft_ratio.c \
+				src/lib/libparse/ft_color.c \
 				src/lib/libutils/ft_free_p2.c \
 				src/lib/libutils/ft_realloc.c \
 				src/parser/parser_ambient.c \
@@ -86,7 +93,7 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 
 OBJ_DIRS := obj/src/lib/libcolor obj/src/lib/libprojection obj/src/lib/libvector3 obj/src/lib/libbrdf \
             obj/src/parser obj/src/render obj/src/object obj/src/lib/librandom obj/src/lib/libsarr \
-			obj/src/lib/libmath obj/src/lib/libutils
+			obj/src/lib/libmath obj/src/lib/libutils obj/src/lib/libparse
 
 # Regla para crear los directorios de objetos
 $(OBJ_DIRS):
