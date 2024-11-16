@@ -201,21 +201,22 @@ int main()
 	parser_sphere(scene, NULL);
 	parser_camera(scene, NULL);
 	parser_triangle(scene, NULL);
+	parser_cylinder(scene, NULL);
 	
+	printf("ang(dircmr, dirtr): %f\n", dot(scene->cameras->dir, scene->triangle[0].p_triangle->normal) * ( 180/ M_PI));
 	//render(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);
-	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[0].mater_prop.vColor->r, scene->planes[0].mater_prop.vColor->g, scene->planes[0].mater_prop.vColor->b, scene->planes[0].mater_prop.vColor->color);
-	printf("ABS RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[0].mater_prop.absorption[R], scene->planes[0].mater_prop.absorption[G], scene->planes[0].mater_prop.absorption[B], scene->planes[0].mater_prop.vColor->color);
+	printf("Original  RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[0].mater_prop.vColor->r, scene->planes[0].mater_prop.vColor->g, scene->planes[0].mater_prop.vColor->b, scene->planes[0].mater_prop.vColor->color);
+	printf("ABS       RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[0].mater_prop.absorption[R], scene->planes[0].mater_prop.absorption[G], scene->planes[0].mater_prop.absorption[B], scene->planes[0].mater_prop.vColor->color);
 	printf("planes[0] RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[1].mater_prop.vColor->r, scene->planes[1].mater_prop.vColor->g, scene->planes[1].mater_prop.vColor->b, scene->planes[1].mater_prop.vColor->color);
+	printf("planes[0] Norm: (%.2f, %.2f, %.2f)\n", scene->planes[0].normal.x, scene->planes[0].normal.y, scene->planes[0].normal.z);
 	printf("planes[1] RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[2].mater_prop.vColor->r, scene->planes[2].mater_prop.vColor->g, scene->planes[2].mater_prop.vColor->b, scene->planes[2].mater_prop.vColor->color);
 	printf("planes[2] RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[3].mater_prop.vColor->r, scene->planes[3].mater_prop.vColor->g, scene->planes[3].mater_prop.vColor->b, scene->planes[3].mater_prop.vColor->color);
 	printf("planes[3] RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[4].mater_prop.vColor->r, scene->planes[4].mater_prop.vColor->g, scene->planes[4].mater_prop.vColor->b, scene->planes[4].mater_prop.vColor->color);
-	printf("lights RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->lights->color->r, scene->lights->color->g, scene->lights->color->b, scene->lights->color->color);
-	printf("triangle[4] RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->triangle[0].mater_prop.vColor->r, scene->triangle[0].mater_prop.vColor->g, scene->triangle[0].mater_prop.vColor->b, scene->triangle[0].mater_prop.vColor->color);
+	printf("light     RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->lights->color->r, scene->lights->color->g, scene->lights->color->b, scene->lights->color->color);
+	printf("triangle[0] RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->triangle[0].mater_prop.vColor->r, scene->triangle[0].mater_prop.vColor->g, scene->triangle[0].mater_prop.vColor->b, scene->triangle[0].mater_prop.vColor->color);
 	printf("triangle[0] Norm: (%.2f, %.2f, %.2f)\n", scene->triangle[0].p_triangle->normal.x, scene->triangle[0].p_triangle->normal.y, scene->triangle[0].p_triangle->normal.z);
-	printf("plane[0] Norm: (%.2f, %.2f, %.2f)\n", scene->planes[0].normal.x, scene->planes[0].normal.y, scene->planes[0].normal.z);
 	//RENDER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	//ft_memset(scene->img->buffer, 0 ,((WINY - 1)* WINX * 4) + ((WINX - 1) * 4));
 	render_scene(scene, N_SAMPLING);
 	//mlx_loop(scene->mlx);
 	mlx_listen_meta(scene);

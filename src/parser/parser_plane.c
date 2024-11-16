@@ -14,7 +14,7 @@ int	parser_plane(Scene *scene, char **data)
 	scene->planes[scene->n_planes].mater_prop.color[1] = 0xb29674;
 	scene->planes[scene->n_planes].mater_prop.color[2] = 0xFFFFFF;
 	scene->planes[scene->n_planes].mater_prop.vColor = int_to_color(0xcbb677);
-	scene->planes[scene->n_planes].mater_prop.reflect = 1;
+	scene->planes[scene->n_planes].mater_prop.reflect = 0;
 	scene->planes[scene->n_planes].mater_prop.absorption[R] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->r;
 	scene->planes[scene->n_planes].mater_prop.absorption[G] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->g;
 	scene->planes[scene->n_planes].mater_prop.absorption[B] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->b;
@@ -24,6 +24,7 @@ int	parser_plane(Scene *scene, char **data)
 	scene->planes[scene->n_planes].mater_prop.color[1] = 0xff001d;
 	scene->planes[scene->n_planes].mater_prop.color[2] = 0xFFFFFF;
 	scene->planes[scene->n_planes].mater_prop.vColor = int_to_color(0xff001d);
+	scene->planes[scene->n_planes].mater_prop.reflect = 0;
 	scene->planes[scene->n_planes].mater_prop.absorption[R] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->r;
 	scene->planes[scene->n_planes].mater_prop.absorption[G] = 1 -scene->planes[scene->n_planes].mater_prop.vColor->g;
 	scene->planes[scene->n_planes].mater_prop.absorption[B] = 1 -scene->planes[scene->n_planes].mater_prop.vColor->b;
@@ -33,6 +34,7 @@ int	parser_plane(Scene *scene, char **data)
 	scene->planes[scene->n_planes].mater_prop.color[1] = 0x00ffb5;
 	scene->planes[scene->n_planes].mater_prop.color[2] = 0xFFFFFF;
 	scene->planes[scene->n_planes].mater_prop.vColor = int_to_color(0x00ffb5);
+	scene->planes[scene->n_planes].mater_prop.reflect = 0;
 	scene->planes[scene->n_planes].mater_prop.absorption[R] =1 - scene->planes[scene->n_planes].mater_prop.vColor->r;
 	scene->planes[scene->n_planes].mater_prop.absorption[G] = 1 -scene->planes[scene->n_planes].mater_prop.vColor->g;
 	scene->planes[scene->n_planes].mater_prop.absorption[B] = 1 -scene->planes[scene->n_planes].mater_prop.vColor->b;
@@ -42,6 +44,7 @@ int	parser_plane(Scene *scene, char **data)
 	scene->planes[scene->n_planes].mater_prop.color[1] = 0xb29674;
 	scene->planes[scene->n_planes].mater_prop.color[2] = 0xFFFFFF;
 	scene->planes[scene->n_planes].mater_prop.vColor = int_to_color(0xcbb677);
+	scene->planes[scene->n_planes].mater_prop.reflect = 0;
 	scene->planes[scene->n_planes].mater_prop.absorption[R] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->r;
 	scene->planes[scene->n_planes].mater_prop.absorption[G] = 1 -scene->planes[scene->n_planes].mater_prop.vColor->g;
 	scene->planes[scene->n_planes].mater_prop.absorption[B] = 1 -scene->planes[scene->n_planes].mater_prop.vColor->b;
@@ -51,6 +54,7 @@ int	parser_plane(Scene *scene, char **data)
 	scene->planes[scene->n_planes].mater_prop.color[1] = 0xb29674;
 	scene->planes[scene->n_planes].mater_prop.color[2] = 0xFFFFFF;
 	scene->planes[scene->n_planes].mater_prop.vColor = int_to_color(0xcbb677);
+	scene->planes[scene->n_planes].mater_prop.reflect = 0;
 	scene->planes[scene->n_planes].mater_prop.absorption[R] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->r;
 	scene->planes[scene->n_planes].mater_prop.absorption[G] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->g;
 	scene->planes[scene->n_planes].mater_prop.absorption[B] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->b;
@@ -60,6 +64,7 @@ int	parser_plane(Scene *scene, char **data)
 	scene->planes[scene->n_planes].mater_prop.color[1] = 0xb29674;
 	scene->planes[scene->n_planes].mater_prop.color[2] = 0xFFFFFF;
 	scene->planes[scene->n_planes].mater_prop.vColor = int_to_color(0xcbb677);
+	scene->planes[scene->n_planes].mater_prop.reflect = 0;
 	scene->planes[scene->n_planes].mater_prop.absorption[R] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->r;
 	scene->planes[scene->n_planes].mater_prop.absorption[G] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->g;
 	scene->planes[scene->n_planes].mater_prop.absorption[B] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->b;

@@ -1,12 +1,7 @@
 #include "../main.h"
 
 /**
- * Intersecto la recta con el pplano, si la recta lo intersecta 
- * entonces puedo tenerun punto de interseccionsi tengo 
- * el punto de interseccion entonces compruebo si 
- * ese punto interscta con las rectas, si en el caso de que no de cero
- * verifico su los signos de los resultado de las rectas son menores o mayores a cero
- * en ccaso de que uno falle entonces no esta el punto dentro del plano.
+ * Möller–Trumbore
  */
 int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
 {

@@ -167,7 +167,7 @@ typedef struct
 	Vector3	axis;
 	double	diameter;
 	double	height;
-	int		color;
+	MaterialProperties	mater_prop;
 } Cylinder;
 
 typedef struct
@@ -224,9 +224,10 @@ typedef struct {
 	int			n_triangles;
 	int			(*parser[10])(void *, void *);
 } Scene;
-
+int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
+int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
 int line_solution_point(Ray ray, Vector3 point);
-int	parser_triangle(Scene *scene, char **data);
+int triangle_solution_point(Triangle triangle, Vector3 hit_pt);
 double	mod(Vector3 v);
 double		sin_v3(Vector3 v1, Vector3 v2);
 Vector3		cross_v3(Vector3 v1, Vector3 v2);
@@ -252,7 +253,7 @@ void normalize(Vector3 *v);
 Vector3 *invnormal(Vector3 *normal);
 Vector3 *normalize_withpoint(Vector3 init, Vector3 end);
 double specular_intensity(Vector3 reflection, Vector3 view_dir, double shininess, double ks);
-
+int solve_quadratic(double a, double b, double c, double* t0, double* t1);
 Vector3 *dir_withpoint(Vector3 init, Vector3 end);
 int idxpixel(int x, int y);
 void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen_height, Vector2 *pxl);
@@ -273,6 +274,8 @@ int sphere_solution_point(Sphere sphere, Vector3 point);
 int plane_solution_point(Plane plane, Vector3 point);
 int intersect_plane(const Ray *ray, const Plane *plane, double *t);
 //------PARSER------
+int	parser_cylinder(Scene *scene, char **data);
+int	parser_triangle(Scene *scene, char **data);
 int	parser_camera(Scene *scene, char **data);
 int	parser_plane(Scene *scene, char **data);
 int	parser_light(Scene *scene, char **data);

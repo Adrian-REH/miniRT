@@ -8,7 +8,7 @@ int	parser_triangle(Scene *scene, char **data)
 	scene->triangle->vertex[1] = (Vector3){3, 1, 1};
 	scene->triangle->vertex[2] = (Vector3){0, -3, 1};
 	scene->triangle->dir[0] = normalize_withpoint(scene->triangle->vertex[0], scene->triangle->vertex[1]);
-	scene->triangle->dir[1] = normalize_withpoint(scene->triangle->vertex[1], scene->triangle->vertex[2]);
+	scene->triangle->dir[1] = normalize_withpoint(scene->triangle->vertex[2], scene->triangle->vertex[0]);
 	scene->triangle->dir[2] = normalize_withpoint(scene->triangle->vertex[2], scene->triangle->vertex[0]);
 	scene->triangle->n_vertex = 3;
 	scene->triangle->mater_prop.vColor = int_to_color(0xFFFFFF);

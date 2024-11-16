@@ -19,6 +19,7 @@ int idxfind_min(double *arr, int size)
 	}
     return idx;  // Retorna el valor mínimo encontrado
 }
+
 /**
  * Necesito un mejor algoritmo que recuerde los cuerpos y sepa a cual ir y a cual no
  * para intersectar.
@@ -48,13 +49,16 @@ int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id, int omit)
 	*t = distance[type];
 	return type;
 }
+
 int obj_solution_point(Scene scene, Vector3 point, int type, int id)
 {
 	if (type == PLANE && !plane_solution_point(scene.planes[id], point))
 		return 0;
 	if (type == SPHERE && !sphere_solution_point(scene.spheres[id], point))
 		return 0;
-/* 	if (type == TRIANGLE && !triangle_solution_point(scene.triangle[id], point))
-		return 0; */
+ 	if (type == TRIANGLE && !plane_solution_point(scene.triangle[id].p_triangle[0], point))
+		return 0;
+ 	if (type == CYLINDER)
+		return 0;
 	return 1;
 }
