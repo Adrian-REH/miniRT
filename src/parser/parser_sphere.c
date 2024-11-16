@@ -17,5 +17,5 @@ int	parser_sphere(Scene *scene, char **data)
 	scene->spheres[scene->n_spheres].mater_prop.absorption[R] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->r ;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[G] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->g ;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[B] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->b ;
-
+scene->n_spheres = 0;
 }

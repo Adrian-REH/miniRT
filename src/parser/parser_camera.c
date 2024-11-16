@@ -4,7 +4,7 @@ int	parser_camera(Scene *scene, char **data)
 {
 
 	scene->cameras = malloc(sizeof(Camera));
-	scene->cameras->pos = (Vector3){0, 0, 30};
+	scene->cameras->pos = (Vector3){0, 0, 20};
 	// Ajusta el tamaño del plano de proyección en función de la relación de aspecto
 	scene->cameras->aspect_ratio = (double)WINX/WINY;
 	double fov = 50;

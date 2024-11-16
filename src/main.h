@@ -19,7 +19,7 @@
 #include <float.h>
 #include <stdint.h>
 #include <math.h>
-#define EPSILON 1e-6 // Margen de tolerancia para precisión flotante
+#define EPSILON 1e-8 // Margen de tolerancia para precisión flotante
 
 #define WINX 1280 
 #define WINY 720
@@ -88,7 +88,7 @@ typedef enum
 	PLANE,
 	SPHERE,
 	CYLINDER,
-	POLYGON,
+	TRIANGLE,
 } e_obj;
 
 typedef enum
@@ -135,6 +135,7 @@ typedef struct
 	Vector3	origin;
 	Vector3	direction;
 } Ray;
+
 typedef struct t_materialProperties
 {
     double reflect;                    // Reflexión
@@ -224,9 +225,14 @@ typedef struct {
 	int			(*parser[10])(void *, void *);
 } Scene;
 
-double	cross_product(Vector3 v1, Vector3 v2);
-Vector3 *reflect(Vector3 L, Vector3 N);
-int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point) ;
+int line_solution_point(Ray ray, Vector3 point);
+int	parser_triangle(Scene *scene, char **data);
+double	mod(Vector3 v);
+double		sin_v3(Vector3 v1, Vector3 v2);
+Vector3		cross_v3(Vector3 v1, Vector3 v2);
+Vector3		*reflect(Vector3 L, Vector3 N);
+Vector3 subtract(Vector3 init, Vector3 end);
+int		is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point) ;
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 int		colornormal_to_int(Color color);
 void	addint_to_color(Color *color, int src);
@@ -238,7 +244,7 @@ Color	*rgb_to_color(int r, int g, int b);
 void	set_color(char *buffer, int endian, int color, int alpha);
 int		get_color(char *buffer, int endian, int *alpha);
 Color *illuminate_surface(Color *surface_color, Color *light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
-
+Vector3	cross_v3(Vector3 v1, Vector3 v2);
 double calculate_intensity(Vector3 normal, Vector3 light_dir);
 double distance(Vector3 init, Vector3 end);
 double dot(Vector3 a, Vector3 b);
@@ -247,7 +253,7 @@ Vector3 *invnormal(Vector3 *normal);
 Vector3 *normalize_withpoint(Vector3 init, Vector3 end);
 double specular_intensity(Vector3 reflection, Vector3 view_dir, double shininess, double ks);
 
-
+Vector3 *dir_withpoint(Vector3 init, Vector3 end);
 int idxpixel(int x, int y);
 void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen_height, Vector2 *pxl);
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera);
@@ -272,6 +278,8 @@ int	parser_plane(Scene *scene, char **data);
 int	parser_light(Scene *scene, char **data);
 int	parser_sphere(Scene *scene, char **data);
 //------RENDER------
+int find_nearest_triangle(Scene scene, Ray *ray, double *t, int id, int type);
+int	render_triangle(Scene *scene, Vector3 hit_pt, int id);
 int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t);
 int	render_plane(Scene *scene,Vector3 hit_pt, int id);
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id);

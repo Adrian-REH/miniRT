@@ -10,13 +10,13 @@ int idxfind_min(double *arr, int size)
         return 0;
 	i = 0;
 	idx = 0;
-    min = arr[i];  // Inicializamos el valor mínimo con el primer elemento
-    while (++i < size) {
-        if (arr[i] < min) {
-            min = arr[i];  // Actualizamos el valor mínimo si encontramos uno menor
+	min = arr[i];  // Inicializamos el valor mínimo con el primer elemento
+	while (++i < size) {
+		if (arr[i] < min) {
+			min = arr[i];  // Actualizamos el valor mínimo si encontramos uno menor
 			idx = i;
-        }
-    }
+		}
+	}
     return idx;  // Retorna el valor mínimo encontrado
 }
 /**
@@ -32,15 +32,18 @@ int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id, int omit)
 
 	d = *t;
 	idx[PLANE] = find_nearest_plane(scene, ray, t, *id, omit);
-	distance[0] = *t;
+	distance[PLANE] = *t;
 	idx[SPHERE] = find_nearest_sphere(scene, ray, t, *id, omit);
-	distance[1] = *t;
+	distance[SPHERE] = *t;
+	idx[CYLINDER] = 0;
+	distance[CYLINDER] = 900000000000000000;
+	idx[TRIANGLE] = find_nearest_triangle(scene, ray, t, *id, omit);
+	distance[TRIANGLE] = *t;
 
-	idx[2] = 0;
 	//idx[2] = find_nearest_cylinder(scene, ray, &satate[1]);
 	//idx[3] = find_nearest_polygon(scene, ray, &satate[1]);
 	//idx[4] = 0;
-	type = idxfind_min(distance, 2);
+	type = idxfind_min(distance, 4);
 	*id = idx[type];
 	*t = distance[type];
 	return type;
@@ -51,5 +54,7 @@ int obj_solution_point(Scene scene, Vector3 point, int type, int id)
 		return 0;
 	if (type == SPHERE && !sphere_solution_point(scene.spheres[id], point))
 		return 0;
+/* 	if (type == TRIANGLE && !triangle_solution_point(scene.triangle[id], point))
+		return 0; */
 	return 1;
 }

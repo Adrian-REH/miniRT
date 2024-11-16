@@ -52,6 +52,30 @@ int render_point_triangle(Scene scene, Vector3 hit_pt, int n_triangle)
 	return current_color;
 }
 
+int	render_reflect_triangle(Scene *scene, Ray rayrfc, int id, int type)
+{
+	double t = 0;
+	double md = 900000000;
+	int j = -1;
+	Vector3 *hit_rfc;
+	int hit_color = 0;
+
+	while (++j < scene->n_triangles)
+	{
+		if (intersect_triangle(&rayrfc, &scene->triangle[j], &t) && (t < md))
+		{
+			hit_rfc = hit_point(rayrfc, t);
+			if (!obj_solution_point(*scene, *hit_rfc, type, id))
+			{
+				md = t;
+				hit_color = render_point_triangle(*scene, *hit_rfc, j);
+			}
+			free(hit_rfc);
+		}
+	}
+	return hit_color;
+}
+
 int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 {
 	double t = 0;
@@ -60,12 +84,29 @@ int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 	int tmp[2] = {0 , 0};
 	int result = 0;
 	int current_pixel = render_point_triangle(*scene, hit_pt, id);
-	double md = 900000;
 
 	if (scene->triangle[id].mater_prop.reflect)
 	{
-		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->planes[id].normal);
+		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangle[id].p_triangle->normal);
+		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, TRIANGLE);
+		if (type == PLANE)
+		{
+			hit_color = render_reflect_plane(scene, *rayrfc, id, TRIANGLE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		}
+		if (type == SPHERE)
+		{
+			hit_color = render_reflect_sphere(scene, *rayrfc, id, TRIANGLE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		}
+		if (type == TRIANGLE)
+		{
+			hit_color = render_reflect_triangle(scene, *rayrfc, id, TRIANGLE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+		}
+		free(rayrfc);
+		return hit_color;
 	}
-
+	return current_pixel;
 
 }

@@ -98,7 +98,6 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 	int tmp[2] = {0 , 0};
 	int result = 0;
 	int current_pixel = render_point_plane(*scene, hit_pt, id);
-	double md = 900000;
 
 	//Si hay reflexion entonces ...
 	//Genero un ray
