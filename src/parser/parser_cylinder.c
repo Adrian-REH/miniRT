@@ -6,14 +6,11 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:06:14 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 23:11:20 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/17 12:36:25 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
-
-
-
 
 static double diamenter_cylinder(char *data)
 {

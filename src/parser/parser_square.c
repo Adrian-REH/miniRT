@@ -6,12 +6,24 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:37 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 16:05:39 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/17 15:33:15 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
 
+
+static double side_square(char *data)
+{
+    double side;
+    if (data == NULL)
+    {
+        printf("Error: %s not contain side\n", data);
+        exit(1);
+    }
+    side = atof(data);
+    return (side);
+}
 int	parser_square(Scene *scene, char **data)
 {
     Vector3 center = {0, 0, 0};
@@ -29,63 +41,15 @@ int	parser_square(Scene *scene, char **data)
     }
 	scene->squares = ft_realloc(scene->squares, sizeof(Square) * scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
 
-    center.x = atof(args[0]);
-    center.y = atof(args[1]);
-    center.z = atof(args[2]);
-
-    ft_free_p2(args);
-
-    //NORMAL
-    args = ft_split(data[2], ',');
-    if (ft_sarrsize(args) != 3)
-    {
-        printf("Error: %s not contain normal x, x ,y\n", data[2]);
-        exit(1);
-    }
+    center = ft_coordinate(data[1]);
+    normal = ft_normalizate(data[2]);
 
     normal.x = atof(args[0]);
     normal.y = atof(args[1]);
     normal.z = atof(args[2]);
 
-    //SIDE
-    if (data[3] == NULL)
-    {
-        printf("Error: %s not contain side\n", data[3]);
-        exit(1);
-    }
-    side = atof(data[3]);
-
-    ft_free_p2(args);
-    //COLOR
-    args = ft_split(data[4], ',');
-
-
-    if (ft_sarrsize(args) != 3)
-    {
-        printf("Error: %s not contain color r, g, b\n", data[4]);
-        exit(1);
-    }
-
-    color.r = atof(args[0]);
-    color.g = atof(args[1]);
-
-    color.b = atof(args[2]);
-
-    if (color.r < 0 || color.r > 255)
-    {
-        printf("Error: %s  r outside color range\n", data[3]);
-        exit(1);
-    }
-    if (color.g < 0 || color.g > 255)
-    {
-        printf("Error: %s g outside color range\n", data[3]);
-        exit(1);
-    }
-    if (color.b < 0 || color.b > 255)
-    {
-        printf("Error: %s b outside color range\n", data[3]);
-        exit(1);
-    }
+    side = side_square(data[3]);
+    color = ft_color(data[4]);
 
     scene->squares->center = center;
     scene->squares->normal = normal;

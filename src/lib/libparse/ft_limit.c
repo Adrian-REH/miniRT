@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 21:40:02 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 22:08:45 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/17 15:05:55 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 double	ft_limit(double min, double max, double val)
 {
-	if ( max < val || val > min)
-		return val;
-	printf("Error el valor no se encuentre entre los limites [%f, %f]", min, max);
-	//llamar a una funcion que libere
-	exit(1);
+	printf("min: %f, max: %f, val: %f\n", min, max, val);
+	if ( val < min || val > max)
+	{
+		printf(" max %f < val %f || val %f > min %f\n",max, val, val, min);
+		printf("Error el valor no se encuentre entre los limites [%f, %f]", min, max);
+		exit(1);
+	}
+	return (val);
 }
