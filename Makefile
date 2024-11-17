@@ -59,6 +59,8 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libbrdf/reflect.c \
 				src/lib/librandom/random_double.c \
 				src/lib/libsarr/ft_sarrsize.c \
+				src/lib/libsarr/ft_sarrprint.c \
+				src/lib/libsarr/ft_sarradd.c \
 				src/lib/libmath/ft_atof.c \
 				src/lib/libmath/substract.c \
 				src/lib/libparse/ft_coordinate.c \

@@ -242,6 +242,11 @@ typedef struct {
 	int			(*parser[10])(void *, void *);
 } Scene;
 
+
+//------libsarr----
+int		ft_sarrprint(char **arr);
+char	**ft_sarradd(char **arr, char *string);
+int		ft_sarrsize(char **arr);
 //-----libcolor------
 double ft_limit(double min, double max, double val);
 Vector3 *reflect(Vector3 L, Vector3 N);
@@ -260,7 +265,6 @@ Color *illuminate_surface(Color *surface_color, Color *light_color, double inten
 Vector3 scalev3(Vector3 v, float scalar);
 double		sin_v3(Vector3 v1, Vector3 v2);
 Vector3	cross_v3(Vector3 v1, Vector3 v2);
-int		ft_sarrsize(char **arr);
 
 int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
 int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
