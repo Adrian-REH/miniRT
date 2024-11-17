@@ -22,14 +22,8 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 		double d;
 		type = find_nearest_obj(*scene, &ray, &t, &id, 10);
 		Vector3 *hit_pt = hit_point(ray, t);
-		if (type == PLANE && id >= 0){
-			addint_to_color(&sample_color, render_plane(scene, *hit_pt, id));}
-		if (type == SPHERE && id >= 0){
-			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));}
-		if (type == TRIANGLE && id >= 0){
-			addint_to_color(&sample_color, render_triangle(scene, *hit_pt, id));}
-		if (type == CYLINDER && id >= 0){
-			addint_to_color(&sample_color, render_cylinder(scene, *hit_pt, id));}
+		if (scene->render[type] && id >= 0)
+			addint_to_color(&sample_color, scene->render[type](scene, *hit_pt, id));
 
         // Acumular el color de esta muestra
         final_color.r += sample_color.r;
@@ -44,8 +38,29 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 	return colornormal_to_int(final_color);
 }
 
+void init_rfc_render(Scene *scene)
+{
+	scene->rfc[0] = render_reflect_plane;//posicion 0
+	scene->rfc[1] = render_reflect_sphere;//posicion 1
+	scene->rfc[2] = render_reflect_triangle;//posicion 2
+	scene->rfc[3] = render_reflect_cylinder;//posicion 3
+	scene->rfc[4] = NULL; // NULL 
+
+}
+
+void init_render(Scene *scene)
+{
+	scene->render[0] = render_plane;//posicion 0
+	scene->render[1] = render_sphere;//posicion 1
+	scene->render[2] = render_triangle;//posicion 2
+	scene->render[3] = render_cylinder;//posicion 3
+	scene->render[4] = NULL; // NULL 
+}
+
 void render_scene(Scene *scene, int samples_per_pixel)
 {
+	init_rfc_render(scene);
+	init_render(scene);
 	time_t start, end;
 	double min_dist;
 	int alpha = 0;

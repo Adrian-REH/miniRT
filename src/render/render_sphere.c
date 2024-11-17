@@ -83,15 +83,10 @@ int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 		Vector3 *n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
 		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, *n_sphere);
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, SPHERE);
-		if (type == PLANE)
+		if (scene->rfc[type])
 		{
-			hit_color = render_reflect_plane(scene, *rayrfc, id, SPHERE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-		}
-		if (type == SPHERE)
-		{
-			hit_color = render_reflect_sphere(scene, *rayrfc, id, SPHERE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+			hit_color = scene->rfc[type](scene, *rayrfc, id, SPHERE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->spheres[id].mater_prop)->color;
 		}
 		free(rayrfc);
 		free(n_sphere);

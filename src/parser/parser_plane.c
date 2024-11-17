@@ -47,6 +47,7 @@ int	parser_plane(Scene *scene, char **data)
 	point = ft_coordinate(data[1]);
 	color = ft_color(data[3]);
 	scene->planes[scene->n_planes].mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
+	scene->planes[scene->n_planes].mater_prop.reflect = 1;
 	scene->planes[scene->n_planes].mater_prop.absorption[R] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->r;
 	scene->planes[scene->n_planes].mater_prop.absorption[G] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->g;
 	scene->planes[scene->n_planes].mater_prop.absorption[B] = 1 - scene->planes[scene->n_planes].mater_prop.vColor->b;

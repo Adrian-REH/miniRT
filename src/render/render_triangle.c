@@ -89,21 +89,11 @@ int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 	{
 		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangles[id].p_triangle->normal);
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, TRIANGLE);
-		if (type == PLANE)
+		if (scene->rfc[type])
 		{
-			hit_color = render_reflect_plane(scene, *rayrfc, id, TRIANGLE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.6, 0.9, 0, scene->planes[id].mater_prop)->color;
+			hit_color = scene->rfc[type](scene, *rayrfc, id, TRIANGLE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.6, 0.9, 0, scene->triangles[id].mater_prop)->color;
 		}
-		if (type == SPHERE)
-		{
-			hit_color = render_reflect_sphere(scene, *rayrfc, id, TRIANGLE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-		} 
-		if (type == TRIANGLE)
-		{
-			hit_color = render_reflect_triangle(scene, *rayrfc, id, TRIANGLE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-		} 
 		free(rayrfc);
 		return hit_color;
 	}

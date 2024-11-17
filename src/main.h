@@ -239,6 +239,8 @@ typedef struct {
 	int			n_spheres;
 	int			n_squares;
 	int			n_triangles;
+	int			(*rfc[10])(void *, Ray, int, int);
+	int			(*render[10])(void *, Vector3, int);
 	int			(*parser[10])(void *, void *);
 } Scene;
 
@@ -333,8 +335,8 @@ int find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type);
 void render_scene(Scene *scene, int samples_per_pixel);
 int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type);
 int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type);
-
-
+int	render_reflect_triangle(Scene *scene, Ray rayrfc, int id, int type);
+int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type);
 
 // UTILS
 void	ft_free_p2(char **dst);
