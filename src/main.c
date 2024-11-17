@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 23:12:23 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/17 21:32:04 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/17 22:40:39 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +220,26 @@ int init_file(char *file)
 	return (fd);
 }
 
+static void review_scene(Scene *scene)
+{
+
+	if (scene->n_lights == 0)
+	{
+		printf("Error: No hay Luz en la escena\n");
+		exit(1);
+	}
+	if (!scene->cameras)
+	{
+		printf("Error: No hay camaras en la escena\n");
+		exit(1);
+	}
+	if (!scene->ambient)
+	{
+		printf("Error: No hay Ambiente en la escena\n");
+		exit(1);
+	}
+
+}
 int main()
 {
 	Scene *scene = malloc(sizeof(Scene));
@@ -230,8 +250,9 @@ int main()
 	scene->img = &img;
 	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
-	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	parser_obj(scene, init_file("old.rt"));
+	review_scene(scene);
+	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	render_scene(scene, N_SAMPLING);
 	//mlx_loop(scene->mlx);
 	mlx_listen_meta(scene);
