@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 23:12:23 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/13 23:38:53 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/17 21:32:04 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ int main()
 	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
 	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	parser_obj(scene, init_file("mandatory.rt"));
+	parser_obj(scene, init_file("old.rt"));
 	render_scene(scene, N_SAMPLING);
 	//mlx_loop(scene->mlx);
 	mlx_listen_meta(scene);
