@@ -157,10 +157,12 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 
 	double light_dist = distance(hit_point, light_pos);
 	double t = 0;
+	int i;
 
  
 	 // Check intersection with all planes
-	for (int i = 0; i < scene.n_planes; ++i) {
+	i = -1;
+	while (++i < scene.n_planes) {
 		if (intersect_plane(&shadow_ray, &scene.planes[i], &t)) {
 			if (t > 0 && t < light_dist) {
 				return t; // In shadow
@@ -168,18 +170,35 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 		}
 	} 
    // Check intersection with the sphere
-	if (intersect_sphere(&shadow_ray, scene.spheres, &t)) {
-		if (t > 0 && t < light_dist) {
-			return t; // In shadow
+	i = -1;
+	while (++i < scene.n_spheres)
+	{
+		if (intersect_sphere(&shadow_ray, scene.spheres, &t)) {
+			if (t > 0 && t < light_dist) {
+				return t; // In shadow
+			}
 		}
 	}
    // Check intersection with the triangle
-	if (intersect_triangle(&shadow_ray, scene.triangle, &t)) {
-		if (t > 0 && t < light_dist) {
-			return t; // In shadow
+	i = -1;
+	while (++i < scene.n_triangles)
+	{
+		if (intersect_triangle(&shadow_ray, scene.triangle, &t)) {
+			if (t > 0 && t < light_dist) {
+				return t; // In shadow
+			}
 		}
 	}
- 
+   // Check intersection with the triangle
+	i = -1;
+	while (++i < scene.n_cylinders)
+	{
+		if (intersect_cylinder(&shadow_ray, scene.cylinders, &t)) {
+			if (t > 0 && t < light_dist) {
+				return t; // In shadow
+			}
+		}
+	}
 	return 0; // Not in shadow
 }
 
@@ -194,7 +213,6 @@ int main()
 	scene->img = &img;
 	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
-
 	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	parser_plane(scene, NULL);
 	parser_light(scene, NULL);

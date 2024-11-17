@@ -1,5 +1,56 @@
 #include "../main.h"
 
+
+int cylinder_solution_point(Cylinder cylinder, Vector3 point)
+{
+    // Vector desde el centro de la base del cilindro al punto
+    Vector3 cp = subtract(point, cylinder.center);
+    
+    // Proyección de cp sobre el eje del cilindro
+    double projection = dot(cp, cylinder.axis);
+    
+    // Verificar si el punto está entre las bases del cilindro
+    if (projection < 0 || projection > cylinder.height)
+        return 0;
+    
+    // Vector perpendicular al eje del cilindro
+    Vector3 radial = subtract(cp, scalev3(cylinder.axis, projection));
+    
+    // Verificar si el punto está dentro del radio del cilindro
+    double radial_distance_squared = dot(radial, radial);
+    double radius_squared = pow(cylinder.diameter / 2, 2);
+    
+    if (radial_distance_squared <= radius_squared)
+        return 1;
+    return 0;
+}
+
+Vector3 *normal_cylinder(Vector3 hit_point, Cylinder cylinder)
+{
+	Vector3 *normal = malloc(sizeof(Vector3));
+    Vector3 cp = subtract(hit_point, cylinder.center);
+
+    double dot_product = dot(cp, cylinder.axis);
+
+    if (fabs(dot_product) > (cylinder.height - EPSILON)) {
+        // Tapa superior
+        if (dot_product > 0) {
+            *normal = scalev3(cylinder.axis, -1);
+        } 
+        // Tapa inferior
+        else {
+            *normal = scalev3(cylinder.axis, 1);
+        }
+    } 
+    // El punto está en la superficie lateral
+    else {
+        // Proyección de cp perpendicular al eje
+        Vector3 axis_scaled = scalev3(cylinder.axis, dot_product);
+        *normal = subtract(cp, axis_scaled);
+        normalize(normal);
+    }
+	return normal;
+}
 int solve_quadratic(double a, double b, double c, double* t0, double* t1)
 {
     double discriminant = b * b - 4 * a * c;
@@ -20,7 +71,7 @@ int solve_quadratic(double a, double b, double c, double* t0, double* t1)
 
 int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 {
-    Vector3 ro = subtract(ray->origin, cylinder->center);
+    Vector3 ro = subtract(cylinder->center, ray->origin);
     Vector3 d = ray->direction;
     Vector3 ca = cylinder->axis;
 
@@ -57,15 +108,8 @@ int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
         *t = th;
         return 1;
     }
-
     *t = t0;
-	return 0;
-}
-
-int cylinder_solution_point(Triangle triangle, Vector3 hit_pt)
-{
-return 0;
-
+	return 1;
 }
 
 int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type)
@@ -76,11 +120,11 @@ int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type)
 
 	i = -1;
 	j = -1;
-	while (++i < scene.n_triangles)
+	while (++i < scene.n_cylinders)
 	{
 		if (id == i && type == CYLINDER)
 			continue ;
-		if (intersect_cylinder(ray, &scene.triangle[i], t) && (*t < min_dist))
+		if (intersect_cylinder(ray, &scene.cylinders[i], t) && (*t < min_dist))
 		{
 			min_dist = *t;
 			j = i;

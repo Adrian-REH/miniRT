@@ -14,7 +14,7 @@ int render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
 	current_color = vCurrentColor->color;
 	Vector3 *light_dir = normalize_withpoint(scene.lights->point, hit_pt);
 	Ray rayslight = {scene.lights->point, *light_dir};
-	if (intersect_cylinder(&rayslight, &scene.triangle[n_cyl], &d))
+	if (intersect_cylinder(&rayslight, &scene.cylinders[n_cyl], &d))
 	{
 		double t = is_in_shadow(scene, scene.lights->point, hit_pt);
 		if (!t)
@@ -49,6 +49,7 @@ int render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
 			current_color = vCurrentColor->color;
 		}
 	}
+	free(dir_cyl);
 	free(cam_dir);
 	free(light_dir);
 	return current_color;
@@ -87,7 +88,7 @@ int	render_cylinder(Scene *scene, Vector3 hit_pt, int id)
 	int result = 0;
 	int current_pixel = render_point_cylinder(*scene, hit_pt, id);
 
-	if (scene->triangle[id].mater_prop.reflect)
+	if (scene->cylinders[id].mater_prop.reflect)
 	{
 		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangle[id].p_triangle->normal);
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, CYLINDER);

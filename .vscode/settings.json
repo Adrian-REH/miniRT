@@ -26,6 +26,9 @@
 		"tuple": "c",
 		"type_traits": "c",
 		"utility": "c",
-		"x.h": "c"
+		"x.h": "c",
+		"bit": "c",
+		"*.tcc": "c",
+		"cmath": "c"
 	}
 }

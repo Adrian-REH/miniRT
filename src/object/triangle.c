@@ -8,14 +8,14 @@ int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
     Vector3 edge1, edge2, h, s, q;
 	double a, f, u, v;
 
-	edge1 = *dir_withpoint(triangle->vertex[0], triangle->vertex[1]);
-	edge2 = *dir_withpoint(triangle->vertex[0], triangle->vertex[2]);
+	edge1 = subtract(triangle->vertex[0], triangle->vertex[1]);
+	edge2 = subtract(triangle->vertex[0], triangle->vertex[2]);
 	h = cross_v3(ray->direction, edge2);
 	a = dot(edge1, h);
 	if (a > -EPSILON && a < EPSILON)
         return 0;  // El rayo es paralelo al triángulo
     f = 1.0 / a;
-    s = *dir_withpoint(triangle->vertex[0], ray->origin);
+    s = subtract(triangle->vertex[0], ray->origin);
     u = f * dot(s, h);
 	if (u < 0.0 || u > 1.0)
 			return 0;
@@ -34,13 +34,13 @@ int triangle_solution_point(Triangle triangle, Vector3 hit_pt)
 	double	res1;
 	double	res2;
 	double	res3;
-	Vector3 *ap = normalize_withpoint(triangle.vertex[0], hit_pt);
-	Vector3 *bp = normalize_withpoint(triangle.vertex[1], hit_pt);
-	Vector3 *cp = normalize_withpoint(triangle.vertex[2], hit_pt);
+	Vector3 ap = subtract(triangle.vertex[0], hit_pt);
+	Vector3 bp = subtract(triangle.vertex[1], hit_pt);
+	Vector3 cp = subtract(triangle.vertex[2], hit_pt);
 
-	res1 = dot(*(triangle.dir[0]), *ap);
-	res2 = dot(*(triangle.dir[1]), *bp);
-	res3 = dot(*(triangle.dir[2]), *cp);
+	res1 = dot(*(triangle.dir[0]), ap);
+	res2 = dot(*(triangle.dir[1]), bp);
+	res3 = dot(*(triangle.dir[2]), cp);
 	if (res1 >= 0 && res2 >= 0 && res3 >= 0)
 		return 1;
 	if (res1 <= 0 && res2 <= 0 && res3 <= 0)

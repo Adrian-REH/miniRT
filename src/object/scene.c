@@ -36,8 +36,8 @@ int	find_nearest_obj(Scene scene, Ray *ray, double *t, int *id, int omit)
 	distance[PLANE] = *t;
 	idx[SPHERE] = find_nearest_sphere(scene, ray, t, *id, omit);
 	distance[SPHERE] = *t;
-	idx[CYLINDER] = 0;
-	distance[CYLINDER] = 900000000000000000;
+	idx[CYLINDER] = find_nearest_cylinder(scene, ray, t, *id, omit);
+	distance[CYLINDER] = *t;
 	idx[TRIANGLE] = find_nearest_triangle(scene, ray, t, *id, omit);
 	distance[TRIANGLE] = *t;
 
@@ -58,7 +58,7 @@ int obj_solution_point(Scene scene, Vector3 point, int type, int id)
 		return 0;
  	if (type == TRIANGLE && !plane_solution_point(scene.triangle[id].p_triangle[0], point))
 		return 0;
- 	if (type == CYLINDER)
+ 	if (type == CYLINDER && !cylinder_solution_point(scene.cylinders[id], point))
 		return 0;
 	return 1;
 }

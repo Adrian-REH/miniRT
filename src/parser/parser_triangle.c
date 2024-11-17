@@ -19,6 +19,6 @@ int	parser_triangle(Scene *scene, char **data)
 	scene->triangle->p_triangle = malloc(sizeof(Plane));
 	scene->triangle->p_triangle->normal = cross_v3(*(scene->triangle->dir[0]), *(scene->triangle->dir[1]));
 	scene->triangle->p_triangle->point = scene->triangle->vertex[0];
-	scene->n_triangles++;
+	//scene->n_triangles++;
 }
 

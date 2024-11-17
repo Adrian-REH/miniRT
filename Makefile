@@ -54,6 +54,7 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libvector3/hit_point.c \
 				src/lib/libvector3/normalizev3.c \
 				src/lib/libvector3/crossv3.c \
+				src/lib/libvector3/scalev3.c \
 				src/lib/libvector3/mod.c \
 				src/lib/libbrdf/reflect.c \
 				src/lib/librandom/random_double.c \

@@ -224,17 +224,8 @@ typedef struct {
 	int			n_triangles;
 	int			(*parser[10])(void *, void *);
 } Scene;
-int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
-int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
-int line_solution_point(Ray ray, Vector3 point);
-int triangle_solution_point(Triangle triangle, Vector3 hit_pt);
-double	mod(Vector3 v);
-double		sin_v3(Vector3 v1, Vector3 v2);
-Vector3		cross_v3(Vector3 v1, Vector3 v2);
-Vector3		*reflect(Vector3 L, Vector3 N);
-Vector3 subtract(Vector3 init, Vector3 end);
-int		is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point) ;
-double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
+
+//-----libcolor------
 int		colornormal_to_int(Color color);
 void	addint_to_color(Color *color, int src);
 void	fillcolor_by_int(Color *color, int src);
@@ -245,7 +236,22 @@ Color	*rgb_to_color(int r, int g, int b);
 void	set_color(char *buffer, int endian, int color, int alpha);
 int		get_color(char *buffer, int endian, int *alpha);
 Color *illuminate_surface(Color *surface_color, Color *light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
+//------libvector3------
+Vector3 scalev3(Vector3 v, float scalar);
+double		sin_v3(Vector3 v1, Vector3 v2);
+Vector3		cross_v3(Vector3 v1, Vector3 v2);
 Vector3	cross_v3(Vector3 v1, Vector3 v2);
+
+
+int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
+int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
+int line_solution_point(Ray ray, Vector3 point);
+int triangle_solution_point(Triangle triangle, Vector3 hit_pt);
+double	mod(Vector3 v);
+Vector3		*reflect(Vector3 L, Vector3 N);
+Vector3 subtract(Vector3 init, Vector3 end);
+int		is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point) ;
+double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 double calculate_intensity(Vector3 normal, Vector3 light_dir);
 double distance(Vector3 init, Vector3 end);
 double dot(Vector3 a, Vector3 b);
@@ -264,6 +270,8 @@ Ray *generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal);
 //------RANDOM------
 double random_double();
 //------OBJECT------
+int cylinder_solution_point(Cylinder cylinder, Vector3 point);
+Vector3 *normal_cylinder(Vector3 hit_point, Cylinder cylinder);
 int obj_solution_point(Scene scene, Vector3 point, int type, int id);
 int idxfind_min(double *arr, int size);
 int find_nearest_sphere(Scene scene, Ray *ray, double *t, int id, int type);
@@ -281,6 +289,7 @@ int	parser_plane(Scene *scene, char **data);
 int	parser_light(Scene *scene, char **data);
 int	parser_sphere(Scene *scene, char **data);
 //------RENDER------
+int	render_cylinder(Scene *scene, Vector3 hit_pt, int id);
 int find_nearest_triangle(Scene scene, Ray *ray, double *t, int id, int type);
 int	render_triangle(Scene *scene, Vector3 hit_pt, int id);
 int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t);
