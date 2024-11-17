@@ -23,6 +23,7 @@ int	parser_camera(Scene *scene, char **data)
 	printf("CAmera ------->: |%s| |%s| |%s| |%s|",data[0],data[1],data[2], data[3]);
 	
 	scene->cameras = malloc(sizeof(Camera));
+
 	coord = ft_coordinate(data[1]);
 	dir = ft_normalizate(data[2]);
 	printf("----> dir: (%f, %f, %f)\n", dir.x, dir.y, dir.z);

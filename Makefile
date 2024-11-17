@@ -53,6 +53,9 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libvector3/dotv3.c \
 				src/lib/libvector3/hit_point.c \
 				src/lib/libvector3/normalizev3.c \
+				src/lib/libvector3/crossv3.c \
+				src/lib/libvector3/scalev3.c \
+				src/lib/libvector3/mod.c \
 				src/lib/libbrdf/reflect.c \
 				src/lib/librandom/random_double.c \
 				src/lib/libsarr/ft_sarrsize.c \
@@ -71,14 +74,18 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/parser/parser_light.c \
 				src/parser/parser_cylinder.c \
 				src/parser/parser_plane.c \
+				src/parser/parser_scene.c \
+				src/parser/parser_sphere.c \
+				src/parser/parser_triangle.c \
+				src/render/render_plane.c \
+				src/render/render_sphere.c \
+				src/render/render_triangle.c \
 				src/parser/parser_obj.c \
 				src/parser/parser_sphere.c \
 				src/parser/parser_triangle.c \
 				src/parser/parser_square.c \
 				src/parser/parser_utils.c \
 				src/parser/parser_resolution.c \
-				src/render/render_plane.c \
-				src/render/render_sphere.c \
 				src/render/render_cylinder.c \
 				src/render/render_scene.c \
 				src/object/ambient.c \
@@ -86,9 +93,10 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/object/cylinder.c \
 				src/object/light.c \
 				src/object/plane.c \
-				src/object/polygon.c \
+				src/object/triangle.c \
 				src/object/scene.c \
 				src/object/sphere.c \
+				src/object/line.c \
 				src/main.c \
 
 OBJ_DIRS := obj/src/lib/libcolor obj/src/lib/libprojection obj/src/lib/libvector3 obj/src/lib/libbrdf \

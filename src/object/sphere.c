@@ -67,7 +67,7 @@ Vector3 *normal_sphere(Vector3 hit_point, Sphere sphere) {
 	return normal;
 }
 
-int find_nearest_sphere(Scene scene, Ray *ray, double *t)
+int find_nearest_sphere(Scene scene, Ray *ray, double *t, int id, int type)
 {
 	int i;
 	int j;
@@ -77,6 +77,8 @@ int find_nearest_sphere(Scene scene, Ray *ray, double *t)
 	j = -1;
 	while (++i < scene.n_spheres)
 	{
+		if (id == i && type == SPHERE)
+			continue ;
 		if (intersect_sphere(ray, &scene.spheres[i], t) && (*t < min_dist))
 		{
 			min_dist = *t;

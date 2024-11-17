@@ -7,12 +7,10 @@ int plane_solution_point(Plane plane, Vector3 point)
     double D = -(plane.normal.x * plane.point.x + 
                 plane.normal.y * plane.point.y + 
                 plane.normal.z * plane.point.z);
-
     // Calcula el valor de la ecuación del plano con el punto dado
     double result = plane.normal.x * point.x + 
                    plane.normal.y * point.y + 
                    plane.normal.z * point.z + D;
-
     // Verifica si el resultado está dentro del margen de tolerancia
     if (fabs(result) < EPSILON) {
         return 1; // El punto está en el plano
@@ -44,7 +42,7 @@ int intersect_plane(const Ray *ray, const Plane *plane, double *t)
 	return (*t > 0); // Si t es positivo, hay intersección en dirección del rayo
 }
 
-int find_nearest_plane(Scene scene, Ray *ray, double *t)
+int find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type)
 {
 	int i;
 	int j;
@@ -54,6 +52,8 @@ int find_nearest_plane(Scene scene, Ray *ray, double *t)
 	j = -1;
 	while (++i < scene.n_planes)
 	{
+		if (id == i && type == PLANE)
+			continue ;
 		if (intersect_plane(ray, &scene.planes[i], t) && (*t < min_dist))
 		{
 			min_dist = *t;

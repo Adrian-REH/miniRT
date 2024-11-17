@@ -46,3 +46,25 @@ Vector3 *normalize_withpoint(Vector3 init, Vector3 end)
 
 	return direction;
 }
+Vector3 *dir_withpoint(Vector3 init, Vector3 end)
+{
+	Vector3 *direction = malloc(sizeof(Vector3));
+
+	// Calcula el vector de dirección restando los puntos
+	direction->x = end.x - init.x;
+	direction->y = end.y - init.y;
+	direction->z = end.z - init.z;
+
+	return direction;
+}
+Vector3 subtract(Vector3 init, Vector3 end)
+{
+	Vector3 direction;
+
+	// Calcula el vector de dirección restando los puntos
+	direction.x = end.x - init.x;
+	direction.y = end.y - init.y;
+	direction.z = end.z - init.z;
+
+	return direction;
+}
