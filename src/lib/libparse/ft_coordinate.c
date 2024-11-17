@@ -1,24 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_ambient.c                                   :+:      :+:    :+:   */
+/*   ft_coordinate.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/16 16:06:22 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 22:56:49 by razamora         ###   ########.fr       */
+/*   Created: 2024/11/16 21:37:25 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/16 21:46:22 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../main.h"
+#include "../../main.h"
 
-int	parser_ambient(Scene *scene, char **data)
+Vector3	ft_coordinate(char *argv)
 {
+	Vector3 coord;
 
-	Color color = {0, 0, 0};
-	printf("Ambient function fichero para procesar\n");
-	scene->ambient = malloc(sizeof(Ambient));
-	scene->ambient->ratio = ft_limit(0, 1, ft_ratio(data[1]));
-	color = ft_color(data[2]);  
-	scene->ambient->color = rgb_to_color(color.r, color.g, color.b);
+	char **args = ft_split(argv, ',');
+	if (ft_sarrsize(args) != 3)
+	{
+		printf("Error: %s not contain coor x, x ,y\n");
+		exit(1);
+	}
+	coord.x = atof(args[0]);
+	coord.y = atof(args[1]);
+	coord.z = atof(args[2]);
+	ft_free_p2(args);
+	return (coord);
 }

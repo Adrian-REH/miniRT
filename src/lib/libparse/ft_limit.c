@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_ambient.c                                   :+:      :+:    :+:   */
+/*   ft_limit.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/16 16:06:22 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 22:56:49 by razamora         ###   ########.fr       */
+/*   Created: 2024/11/16 21:40:02 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/17 15:05:55 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../main.h"
+#include "../../main.h"
 
-int	parser_ambient(Scene *scene, char **data)
+double	ft_limit(double min, double max, double val)
 {
-
-	Color color = {0, 0, 0};
-	printf("Ambient function fichero para procesar\n");
-	scene->ambient = malloc(sizeof(Ambient));
-	scene->ambient->ratio = ft_limit(0, 1, ft_ratio(data[1]));
-	color = ft_color(data[2]);  
-	scene->ambient->color = rgb_to_color(color.r, color.g, color.b);
+	printf("min: %f, max: %f, val: %f\n", min, max, val);
+	if ( val < min || val > max)
+	{
+		printf(" max %f < val %f || val %f > min %f\n",max, val, val, min);
+		printf("Error el valor no se encuentre entre los limites [%f, %f]", min, max);
+		exit(1);
+	}
+	return (val);
 }

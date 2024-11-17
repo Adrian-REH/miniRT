@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_ambient.c                                   :+:      :+:    :+:   */
+/*   ft_sarrsize.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/16 16:06:22 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 22:56:49 by razamora         ###   ########.fr       */
+/*   Created: 2024/11/16 21:32:08 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/16 21:32:09 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../main.h"
+#include "../../main.h"
 
-int	parser_ambient(Scene *scene, char **data)
+int	ft_sarrsize(char **arr)
 {
+	int	size;
 
-	Color color = {0, 0, 0};
-	printf("Ambient function fichero para procesar\n");
-	scene->ambient = malloc(sizeof(Ambient));
-	scene->ambient->ratio = ft_limit(0, 1, ft_ratio(data[1]));
-	color = ft_color(data[2]);  
-	scene->ambient->color = rgb_to_color(color.r, color.g, color.b);
+	if (!arr)
+		return (0);
+	size = 0;
+	while (arr[size])
+		size++;
+	return (size);
 }

@@ -1,24 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_ambient.c                                   :+:      :+:    :+:   */
+/*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/16 16:06:22 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 22:56:49 by razamora         ###   ########.fr       */
+/*   Created: 2024/11/15 21:12:06 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/15 21:12:18 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../main.h"
+#include "../../main.h"
 
-int	parser_ambient(Scene *scene, char **data)
+void	*ft_realloc(void *ptr, size_t size_old, size_t size)
 {
+	void	*new;
 
-	Color color = {0, 0, 0};
-	printf("Ambient function fichero para procesar\n");
-	scene->ambient = malloc(sizeof(Ambient));
-	scene->ambient->ratio = ft_limit(0, 1, ft_ratio(data[1]));
-	color = ft_color(data[2]);  
-	scene->ambient->color = rgb_to_color(color.r, color.g, color.b);
+	new = malloc(size);
+	if (!new)
+		return (NULL);
+	if (ptr)
+	{
+		ft_memcpy(new, ptr, size_old);
+		free(ptr);
+	}
+	if (size > size_old)
+		ft_bzero(new + size_old, size - size_old);
+	return (new);
 }

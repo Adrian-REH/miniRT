@@ -1,24 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_ambient.c                                   :+:      :+:    :+:   */
+/*   cross_v3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/16 16:06:22 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 22:56:49 by razamora         ###   ########.fr       */
+/*   Created: 2024/11/16 21:22:47 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/16 21:23:36 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../main.h"
+#include "../../main.h"
 
-int	parser_ambient(Scene *scene, char **data)
+Vector3	cross_v3(Vector3 v1, Vector3 v2)
 {
-
-	Color color = {0, 0, 0};
-	printf("Ambient function fichero para procesar\n");
-	scene->ambient = malloc(sizeof(Ambient));
-	scene->ambient->ratio = ft_limit(0, 1, ft_ratio(data[1]));
-	color = ft_color(data[2]);  
-	scene->ambient->color = rgb_to_color(color.r, color.g, color.b);
+    return (Vector3){
+        v1.y * v2.z - v1.z * v2.y,
+        v1.z * v2.x - v1.x * v2.z,
+        v1.x * v2.y - v1.y * v2.x
+        };
 }
