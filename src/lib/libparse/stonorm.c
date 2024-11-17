@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_normalizate.c                                   :+:      :+:    :+:   */
+/*   stonorm.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-Vector3	ft_normalizate(char *argv)
+Vector3	stonorm(char *argv)
 {
 	Vector3 norm;
 	char **args = ft_split(argv, ',');

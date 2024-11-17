@@ -6,7 +6,8 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
     Color sample_color = {0, 0, 0};  // Color acumulado (R, G, B)
     float inv_samples = 1.0f / samples_per_pixel;
 
-    for (int s = 0; s < samples_per_pixel; s++) {
+    for (int s = 0; s < samples_per_pixel; s++)
+	{
         // Calcular pequeñas desviaciones aleatorias dentro del píxel (jittering)
         double u = (x + random_double()) / (double)WINX;
         double v = (y + random_double()) / (double)WINY;
@@ -16,20 +17,20 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 		double t = 0;
 		double min_dist = 90000000;
 		int type;
-		int id;
-		type = find_nearest_obj(*scene, &ray, &t, &id);
+		int id = 0;
+		int hit_color;
+		double d;
+		type = find_nearest_obj(*scene, &ray, &t, &id, 10);
 		Vector3 *hit_pt = hit_point(ray, t);
-		if (type == PLANE)
-			addint_to_color(&sample_color, render_plane(scene, *hit_pt, id));
-		if (type == SPHERE)
-			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));
-			
-		if (intersect_sphere(&ray, &scene->spheres[1], &t)) //para la esfera de luz
-		{
-			Vector3 *hit_pt = hit_point(ray, t);
-			addint_to_color(&sample_color, 0xFFFFFF);
-			free(hit_pt);
-		}
+		if (type == PLANE && id >= 0){
+			addint_to_color(&sample_color, render_plane(scene, *hit_pt, id));}
+		if (type == SPHERE && id >= 0){
+			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));}
+		if (type == TRIANGLE && id >= 0){
+			addint_to_color(&sample_color, render_triangle(scene, *hit_pt, id));}
+		if (type == CYLINDER && id >= 0){
+			addint_to_color(&sample_color, render_cylinder(scene, *hit_pt, id));}
+
         // Acumular el color de esta muestra
         final_color.r += sample_color.r;
         final_color.g += sample_color.g;

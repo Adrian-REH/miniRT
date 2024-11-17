@@ -12,11 +12,144 @@
 
 #include "main.h"
 
-//----------------------------COLOR----------------------------
+# include <X11/keysym.h>
+# include <X11/X.h>
 
-//OBJECT----------------------------------------------
+int	terminate_program(void *param)
+{
+	Scene	*scene;
 
-int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_point) 
+	scene = (Scene *)param;
+	mlx_destroy_image(scene->mlx, scene->img->img);
+	mlx_destroy_window(scene->mlx, scene->win);
+	mlx_destroy_display(scene->mlx);
+	//Free
+	/* free(scene->vars.mlx);
+	free(scene->map[0].points);
+	free(scene->map); */
+	exit(0);
+}
+
+/* 
+*	This function handle when a key is pressed
+*/
+//#define XK_Left                          0xff51  /* Move left, left arrow */
+//#define XK_Up                            0xff52  /* Move up, up arrow */
+//#define XK_Right                         0xff53  /* Move right, right arrow */
+//#define XK_Down                          0xff54  /* Move down, down arrow */
+int	key_press(int key, void *param)
+{
+	static n_intent = 0;
+	Scene	*scene;
+
+	if (n_intent >= 1)
+		return 0;
+	scene = (Scene *)param;
+	if (key == XK_a)
+	{
+		n_intent++;
+		scene->cameras->dir.x -= 0.1;
+		fmax(fmin(scene->cameras->dir.x, 1.0), -1.0);
+		if (!scene->cameras->dir.x)
+			scene->cameras->dir.x = -0.1;
+		render_scene(scene, N_SAMPLING);
+		n_intent--;
+		printf("A Left\n");
+	}
+	if (key == XK_d)
+	{
+		n_intent++;
+		scene->cameras->dir.x += 0.1;
+		fmax(fmin(scene->cameras->dir.x, 1.0), -1.0);
+		if (!scene->cameras->dir.x)
+			scene->cameras->dir.x = +0.1;
+		render_scene(scene, N_SAMPLING);
+		n_intent--;
+		printf("D Right\n");
+	}
+	if (key == XK_w)
+	{
+		n_intent++;
+		scene->cameras->dir.y -= 0.1;
+		fmax(fmin(scene->cameras->dir.y, 1.0), -1.0);
+		if (!scene->cameras->dir.y)
+			scene->cameras->dir.y = -0.1;
+		render_scene(scene, N_SAMPLING);
+		n_intent--;
+		printf("W Up\n");
+	}
+	if (key == XK_s)
+	{
+		n_intent++;
+		scene->cameras->dir.y += 0.1;
+		fmax(fmin(scene->cameras->dir.y, 1.0), -1.0);
+		if (!scene->cameras->dir.y)
+			scene->cameras->dir.y = 0.1;
+		render_scene(scene, N_SAMPLING);
+		n_intent--;
+		printf("S Down\n");
+	}
+	if (key == XK_Left)
+	{
+		n_intent++;
+		scene->cameras->pos.x -= 1;
+		fmax(fmin(scene->cameras->pos.x, 1.0), -1.0);
+		if (!scene->cameras->pos.x)
+			scene->cameras->pos.x = -0.1;
+		render_scene(scene, N_SAMPLING);
+		n_intent--;
+		printf("Left\n");
+	}
+	if (key == XK_Up)
+	{
+		n_intent++;
+		scene->cameras->pos.z -= 1.0;
+		fmax(fmin(scene->cameras->pos.z, 1.0), -1.0);
+		if (!scene->cameras->pos.z)
+			scene->cameras->pos.z = -0.1;
+		render_scene(scene, N_SAMPLING);
+		n_intent--;
+		printf("Up\n");
+	}
+	if (key == XK_Right)
+	{
+		n_intent++;
+		scene->cameras->pos.x += 1;
+		fmax(fmin(scene->cameras->pos.x, 1.0), -1.0);
+		if (!scene->cameras->pos.x)
+			scene->cameras->pos.x = 0.1;
+		render_scene(scene, N_SAMPLING);
+		n_intent--;
+		printf("Right\n");
+	}
+	if (key == XK_Down)
+	{
+		n_intent++;
+		scene->cameras->pos.z += 1;
+		fmax(fmin(scene->cameras->pos.z, 1.0), -1.0);
+		if (!scene->cameras->pos.z)
+			scene->cameras->pos.z = 0.1;
+		render_scene(scene, N_SAMPLING);
+		n_intent--;
+		printf("Down\n");
+	}
+	if (key == XK_Escape)
+		terminate_program(param);
+	return (0);
+}
+
+static void	mlx_listen_meta(Scene *scene)
+{
+/* 	mlx_hook(meta->vars.win, 4, 1L << 2, mouse_press, meta);
+	mlx_hook(meta->vars.win, 5, 1L << 3, mouse_release, meta);
+	mlx_hook(meta->vars.win, 6, 1L << 6, mouse_move, meta);
+*/
+	mlx_hook(scene->win, 2, 1, key_press, scene);
+	mlx_hook(scene->win, 17, 1, terminate_program, scene);
+	mlx_loop(scene->mlx);
+}
+
+int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point) 
 {
 	Ray shadow_ray;
 	shadow_ray.origin = hit_point;
@@ -24,10 +157,12 @@ int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_po
 
 	double light_dist = distance(hit_point, light_pos);
 	double t = 0;
+	int i;
 
  
 	 // Check intersection with all planes
-	for (int i = 0; i < plane_count; ++i) {
+	i = -1;
+	while (++i < scene.n_planes) {
 		if (intersect_plane(&shadow_ray, &scene.planes[i], &t)) {
 			if (t > 0 && t < light_dist) {
 				return t; // In shadow
@@ -35,12 +170,35 @@ int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_po
 		}
 	} 
    // Check intersection with the sphere
-	if (intersect_sphere(&shadow_ray, scene.spheres, &t)) {
-		if (t > 0 && t < light_dist) {
-			return t; // In shadow
+	i = -1;
+	while (++i < scene.n_spheres)
+	{
+		if (intersect_sphere(&shadow_ray, &scene.spheres[i], &t)) {
+			if (t > 0 && t < light_dist) {
+				return t; // In shadow
+			}
 		}
 	}
- 
+   // Check intersection with the triangle
+	i = -1;
+	while (++i < scene.n_triangles)
+	{
+		if (intersect_triangle(&shadow_ray, &scene.triangles[i], &t)) {
+			if (t > 0 && t < light_dist) {
+				return t; // In shadow
+			}
+		}
+	}
+   // Check intersection with the triangle
+	i = -1;
+	while (++i < scene.n_cylinders)
+	{
+		if (intersect_cylinder(&shadow_ray, &scene.cylinders[i], &t)) {
+			if (t > 0 && t < light_dist) {
+				return t; // In shadow
+			}
+		}
+	}
 	return 0; // Not in shadow
 }
 
@@ -72,15 +230,9 @@ int main()
 	scene->img = &img;
 	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
-
 	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	parser_obj(scene, init_file("mandatory.rt"));
-
-	
-	//render(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);
-	
-	//ft_memset(scene->img->buffer, 0 ,((WINY - 1)* WINX * 4) + ((WINX - 1) * 4));
-	render_scene(scene, 1);
-	free(scene->planes);
-	mlx_loop(scene->mlx);
+	render_scene(scene, N_SAMPLING);
+	//mlx_loop(scene->mlx);
+	mlx_listen_meta(scene);
 }

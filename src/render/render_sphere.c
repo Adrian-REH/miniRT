@@ -15,7 +15,7 @@ int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere){
 	if (intersect_sphere(&rayslight, scene.spheres, &d)) // Agrega esta verificación
 	{
 		//Tengo que hacer reflejo y acumular el color.
-		if (!is_in_shadow(scene, 5, scene.lights->point, hit_pt)) {
+		if (!is_in_shadow(scene, scene.lights->point, hit_pt)) {
 			// Cálculo de la luz difusa
 			double distance_light = distance(rayslight.origin, hit_pt);
 			double attenuation = calculate_attenuation(distance_light, 1, 0.01, 0.03);
@@ -43,83 +43,59 @@ int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere){
 	return current_color;
 }
 
-int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int current_pixel)
+int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 {
 	double t = 0;
 	double md = 900000000;
 	int j = -1;
 	Vector3 *hit_rfc;
-	int result = 0;
-	int hit_color;
+	int hit_color = 0;
 
 	while (++j < scene->n_spheres)
 	{
 		if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md)){
 			hit_rfc = hit_point(rayrfc, t);
-			if (!plane_solution_point(scene->planes[id], *hit_rfc))
+			if (!obj_solution_point(*scene, *hit_rfc, type, id))
 			{
 				md = t;
 				hit_color = render_point_sphere(*scene, *hit_rfc, j);
-				result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
 			}
 			free(hit_rfc);
 		}
 	}
-	return result;
+	return hit_color;
 }
 
 
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 {
-	Color sample_color = {0, 0, 0, 0};  // Color acumulado (R, G, B)
-	double md = 900000;
 	double t = 0;
 	int hit_color = 0;
-	Vector3 *hit_rfc;
-	Vector3 *dir_pt = normalize_withpoint(scene->cameras->pos , hit_pt);
-	Vector3 *n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
-	Vector3 *rfc = reflect(*dir_pt, *n_sphere);
-	if (dot(*n_sphere, *rfc) < 0)
-		invnormal(rfc);
-	Ray rayrfc = {hit_pt , *rfc};
+	int result = 0;
+	int idx = id;
 	int j = -1;
 	//Verificador de planos o objetos mas cercanos para optimizar
 	int current_pixel = render_point_sphere(*scene, hit_pt, id);
-	while (++j < scene->n_planes)
+	//Se confunde consigo mismo para buscar el mas cercano
+	//Solucion: Intentar identificar el cuerpo donde sale y hacer que no se autointersecte.
+	if (scene->spheres[id].mater_prop.reflect)
 	{
-		if (intersect_plane(&rayrfc, &scene->planes[j], &t) && (t < md))
+		Vector3 *n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
+		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, *n_sphere);
+		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, SPHERE);
+		if (type == PLANE)
 		{
-			hit_rfc = hit_point(rayrfc, t);
-			//El plano que emitio el rayo no deberia ser solucion para la reflexion
-			if (!sphere_solution_point(scene->spheres[id], *hit_rfc))
-			{
-				md = t;
-				hit_color = render_point_plane(*scene, *hit_rfc, j);
-				int result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene->spheres[id].mater_prop)->color;
-				addint_to_color(&sample_color, hit_color);
-			}
-			free(hit_rfc);
+			hit_color = render_reflect_plane(scene, *rayrfc, id, SPHERE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
 		}
-	}
-	j = -1;
-	while (++j < scene->n_spheres)
-	{
-		if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md))
+		if (type == SPHERE)
 		{
-			hit_rfc = hit_point(rayrfc, t);
-			//El plano que emitio el rayo no deberia ser solucion para la reflexion
-			if (!sphere_solution_point(scene->spheres[id], *hit_rfc))
-			{
-				md = t;
-				hit_color = render_point_sphere(*scene, *hit_rfc, j);
-				int result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.5, 0.9, 0, scene->spheres[id].mater_prop)->color;
-				addint_to_color(&sample_color, hit_color);
-			}
-			free(hit_rfc);
+			hit_color = render_reflect_sphere(scene, *rayrfc, id, SPHERE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
 		}
+		free(rayrfc);
+		free(n_sphere);
+		return hit_color;
 	}
-	free(dir_pt);
-	free(n_sphere);
-	free(rfc);
-	return sample_color.color;
+	return current_pixel;
 }
