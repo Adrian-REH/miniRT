@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:37 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/17 15:33:15 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/17 15:46:40 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,10 @@ int	parser_square(Scene *scene, char **data)
 
    // printf(" SQUARE ----->1|%s| 2|%s| 3|%s| 4|%s| 5 |%s| \n", data[0], data[1], data[2], data[3], data[4]);
     //CENTER
-    char **args = ft_split(data[1], ',');
-    if (ft_sarrsize(args) != 3)
-    {
-        printf("Error: %s not contain coor x, x ,y\n", data[1]);
-        exit(1);
-    }
-	scene->squares = ft_realloc(scene->squares, sizeof(Square) * scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
 
+	scene->squares = ft_realloc(scene->squares, sizeof(Square) * scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
     center = ft_coordinate(data[1]);
     normal = ft_normalizate(data[2]);
-
-    normal.x = atof(args[0]);
-    normal.y = atof(args[1]);
-    normal.z = atof(args[2]);
-
     side = side_square(data[3]);
     color = ft_color(data[4]);
 
