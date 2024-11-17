@@ -63,7 +63,7 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libmath/substract.c \
 				src/lib/libparse/ft_coordinate.c \
 				src/lib/libparse/ft_limit.c \
-				src/lib/libparse/ft_normalizate.c \
+				src/lib/libparse/stonorm.c \
 				src/lib/libparse/ft_ratio.c \
 				src/lib/libparse/ft_color.c \
 				src/lib/libutils/ft_free_p2.c \

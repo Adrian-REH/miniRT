@@ -231,12 +231,7 @@ int main()
 	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
 	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 	parser_obj(scene, init_file("mandatory.rt"));
-
-	
-	//render(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);
-
 	render_scene(scene, N_SAMPLING);
 	//mlx_loop(scene->mlx);
 	mlx_listen_meta(scene);

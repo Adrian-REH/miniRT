@@ -37,7 +37,7 @@ int	parser_square(Scene *scene, char **data)
 
 	scene->squares = ft_realloc(scene->squares, sizeof(Square) * scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
     center = ft_coordinate(data[1]);
-    normal = ft_normalizate(data[2]);
+    normal = stonorm(data[2]);
     side = side_square(data[3]);
     color = ft_color(data[4]);
 
@@ -49,35 +49,5 @@ int	parser_square(Scene *scene, char **data)
 	scene->squares[scene->n_squares].mater_prop.absorption[G] = 1 - scene->squares[scene->n_squares].mater_prop.vColor->g;
 	scene->squares[scene->n_squares].mater_prop.absorption[B] = 1 - scene->squares[scene->n_squares].mater_prop.vColor->b;
 	scene->squares[scene->n_squares].mater_prop.reflect = 0;
-    printf(" SQUARE %s %s %s %s",data[0], data[1], data[2], data[3]);
-
-    /*
-   
-:
-7. `sq 0,100,40 0,0,1.0 30 42,42,0`
-   - Defines a square with a center at (0, 100, 40),
-    a normal vector (0, 0, 1.0), 
-    a side length of 30, and a 
-    color (RGB: 42, 42, 0).
-
-9. `tr 10,20,10 10,10,20 20,10,10 0,0,255`
-   - Defines a triangle with vertices at 
-   (10, 20, 10), (10, 10, 20), and (20, 10, 10)
-    with a color (RGB: 0, 0, 255).
-
-    tr 10,20,10 10,10,20 20,10,10 0,0,255:
-
-This likely draws a triangle.
-Defined by the points 10,20,10, 10,10,20, and 20,10,10.
-Filled with the color 0,0,255 (blue).
-
-sq 0,100,40 0,0,1.0 30 42,42,0:
-
-This might draw a square or rectangle.
-Positioned at 0,100,40.
-With dimensions of 30 units.
-Filled with the color 42,42,0 (a dark green).
-    
-    */
-    printf("Square\n");
+    scene->n_squares++;
 }

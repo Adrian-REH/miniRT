@@ -22,20 +22,15 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 		double d;
 		type = find_nearest_obj(*scene, &ray, &t, &id, 10);
 		Vector3 *hit_pt = hit_point(ray, t);
-		if (type == PLANE && id >= 0)
-			addint_to_color(&sample_color, render_plane(scene, *hit_pt, id));
-		if (type == SPHERE && id >= 0)
-			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));
-		if (type == TRIANGLE && id >= 0)
-			addint_to_color(&sample_color, render_triangle(scene, *hit_pt, id));
-		if (type == CYLINDER && id >= 0)
-			addint_to_color(&sample_color, render_cylinder(scene, *hit_pt, id));
-		if (intersect_sphere(&ray, &scene->spheres[1], &t)) //para la esfera de luz
-		{
-			Vector3 *hit_pt = hit_point(ray, t);
-			addint_to_color(&sample_color, 0xFFFFFF);
-			free(hit_pt);
-		}
+		if (type == PLANE && id >= 0){
+			addint_to_color(&sample_color, render_plane(scene, *hit_pt, id));}
+		if (type == SPHERE && id >= 0){
+			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));}
+		if (type == TRIANGLE && id >= 0){
+			addint_to_color(&sample_color, render_triangle(scene, *hit_pt, id));}
+		if (type == CYLINDER && id >= 0){
+			addint_to_color(&sample_color, render_cylinder(scene, *hit_pt, id));}
+
         // Acumular el color de esta muestra
         final_color.r += sample_color.r;
         final_color.g += sample_color.g;

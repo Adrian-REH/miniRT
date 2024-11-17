@@ -88,10 +88,10 @@ typedef enum
 {
 	PLANE,
 	SPHERE,
+	TRIANGLE,
+	CYLINDER,
 	CAMERA,
 	LIGHT,
-	CYLINDER,
-	TRIANGLE,
 } e_obj;
 
 typedef enum
@@ -338,7 +338,7 @@ void	*ft_realloc(void *ptr, size_t size_old, size_t size);
 Vector3	ft_coordinate(char *argv);
 double	ft_ratio(char *str);
 Color ft_color(char *str);
-Vector3	ft_normalizate(char *argv);
+Vector3	stonorm(char *argv);
 Vector3	substract(Vector3 init, Vector3 end);
 int		init_file(char *file);
 

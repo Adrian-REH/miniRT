@@ -43,7 +43,7 @@ int	parser_plane(Scene *scene, char **data)
 
 
 
-	normal = ft_normalizate(data[2]);
+	normal = stonorm(data[2]);
 	point = ft_coordinate(data[1]);
 	color = ft_color(data[3]);
 	scene->planes[scene->n_planes].mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);

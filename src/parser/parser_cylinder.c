@@ -50,7 +50,7 @@ int	parser_cylinder(Scene *scene, char **data)
 	scene->cylinders = ft_realloc(scene->cylinders, sizeof(Cylinder) * scene->n_cylinders, sizeof(Cylinder) * (scene->n_cylinders + 2));
 
 	center = ft_coordinate(data[1]);
-	axis = ft_normalizate(data[2]);
+	axis = stonorm(data[2]);
 	diameter = diamenter_cylinder(data[3]);
 	height = height_cylinder(data[4]);
 	colornormal_to_int(color);
@@ -59,4 +59,5 @@ int	parser_cylinder(Scene *scene, char **data)
 	scene->cylinders[scene->n_cylinders].diameter = diameter;
 	scene->cylinders[scene->n_cylinders].height = height;
 	scene->cylinders[scene->n_cylinders].mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
+	scene->n_cylinders++;
 }

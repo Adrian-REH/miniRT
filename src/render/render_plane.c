@@ -13,7 +13,6 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 	double intensity = calculate_intensity(scene.planes[n_plane].normal, *cam_dir);
 	// Mezcla el color base con la intensidad calculada para la dirección de la cámara
 
-	printf("%d\n", n_plane);
 	current_color = vCurrentColor->color;
 	Vector3 *light_dir = normalize_withpoint(scene.lights->point, hit_pt);
 	Ray rayslight = {scene.lights->point, *light_dir};
