@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 21:21:28 by adherrer          #+#    #+#             */
-/*   Updated: 2024/06/26 16:18:04 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/13 20:37:23 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 32
+#endif
 typedef struct s_list
 {
 	void			*content;
@@ -68,5 +70,16 @@ void		ft_lstdelone(t_list *lst, void (*del)(void*));
 void		ft_lstclear(t_list **lst, void (*del)(void*));
 void		ft_lstiter(t_list *lst, void (*f)(void *));
 t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+/*GNL*/
+char		*gnl(int fd);
+char		*get_next_line(int fd);
+char		*ft_strjoin_gnl(char const *s1, char const *s2);
+int			ft_strlen_gnl(const char *s);
+void		ft_lenword_gnl(const char *s, int c, int *l_word);
+char		*ft_strchr_gnl(const char *s, int c);
+char		*ft_substr_gnl(char const *s, unsigned int start, size_t len);
+char		*ft_strdup_gnl(const char *s1);
+size_t		ft_strlcat_gnl(char *dst, const char *src, size_t dstsize);
 
 #endif

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
+#    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/28 08:06:16 by decerrit          #+#    #+#              #
-#    Updated: 2024/03/25 21:08:52 by adherrer         ###   ########.fr        #
+#    Updated: 2024/11/13 20:38:00 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,8 @@ CORE_FILES = \
 	ft_calloc.c		\
 	ft_strlcpy.c	\
 	ft_strlcat.c	\
+	get_next_line.c	\
+	get_next_line_utils.c
 
 UTILS_FILES = \
 	ft_itoa.c		\

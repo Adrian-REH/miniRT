@@ -1,0 +1,1 @@
+//Todas  las funciones para el aprendizaje del automata

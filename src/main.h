@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mathmatrix.c                                       :+:      :+:    :+:   */
+/*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/07/17 11:27:48 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:50:49 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <math.h>
 #define EPSILON 1e-8 // Margen de tolerancia para precisión flotante
+
 
 #define WINX 1280 
 #define WINY 720
@@ -81,12 +82,14 @@
 #define COL_T 5000 //Luz ligeramente calida
 #define INTSITY 0.8 // Material muy reflectante pero no perfecto
 #define REFLECT 0.95 // Intensidad de la luz
-
+#define PI 3.1415
 
 typedef enum
 {
 	PLANE,
 	SPHERE,
+	CAMERA,
+	LIGHT,
 	CYLINDER,
 	TRIANGLE,
 } e_obj;
@@ -102,7 +105,6 @@ typedef struct
 	double	x;
 	double	y;
 	double	z;
-	int	color;
 } Vector3;
 
 typedef struct
@@ -170,6 +172,9 @@ typedef struct
 	MaterialProperties	mater_prop;
 } Cylinder;
 
+
+
+
 typedef struct
 {
 	Vector3				normal;
@@ -188,10 +193,18 @@ typedef struct
 
 typedef struct
 {
+	Vector3	center;
+	Vector3	normal;
+	double	side;
+	MaterialProperties	mater_prop;
+} Square;
+
+typedef struct
+{
 	Vector3	point;
 	double	ratio;
 	Color	*color;
-} Light;
+}	Light;
 
 typedef struct {
 	Color	*color;
@@ -210,10 +223,15 @@ typedef struct
 typedef struct {
 	void		*mlx;
 	void		*win;
+	int			width;
+	int			height;
 	Img			*img;
 	Triangle	*triangle;
 	Camera		*cameras;
+	Ambient		*ambient;
 	Sphere		*spheres;
+	Square		*squares;
+	Triangle	*triangles;
 	Cylinder	*cylinders;
 	Plane		*planes;
 	Light		*lights;
@@ -221,11 +239,16 @@ typedef struct {
 	int			n_planes;
 	int			n_cylinders;
 	int			n_spheres;
+	int			n_squares;
 	int			n_triangles;
 	int			(*parser[10])(void *, void *);
 } Scene;
 
 //-----libcolor------
+double ft_limit(double min, double max, double val);
+Vector3 *reflect(Vector3 L, Vector3 N);
+int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_point) ;
+double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 int		colornormal_to_int(Color color);
 void	addint_to_color(Color *color, int src);
 void	fillcolor_by_int(Color *color, int src);
@@ -241,7 +264,7 @@ Vector3 scalev3(Vector3 v, float scalar);
 double		sin_v3(Vector3 v1, Vector3 v2);
 Vector3		cross_v3(Vector3 v1, Vector3 v2);
 Vector3	cross_v3(Vector3 v1, Vector3 v2);
-
+int		ft_sarrsize(char **arr);
 
 int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
 int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
@@ -261,6 +284,8 @@ Vector3 *normalize_withpoint(Vector3 init, Vector3 end);
 double specular_intensity(Vector3 reflection, Vector3 view_dir, double shininess, double ks);
 int solve_quadratic(double a, double b, double c, double* t0, double* t1);
 Vector3 *dir_withpoint(Vector3 init, Vector3 end);
+double	ft_atof(const char *str);
+
 int idxpixel(int x, int y);
 void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen_height, Vector2 *pxl);
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera);
@@ -284,10 +309,16 @@ int intersect_plane(const Ray *ray, const Plane *plane, double *t);
 //------PARSER------
 int	parser_cylinder(Scene *scene, char **data);
 int	parser_triangle(Scene *scene, char **data);
+int	parser_obj(Scene *scene, int fd);
 int	parser_camera(Scene *scene, char **data);
 int	parser_plane(Scene *scene, char **data);
 int	parser_light(Scene *scene, char **data);
 int	parser_sphere(Scene *scene, char **data);
+int	parser_resolution(Scene *scene, char **data);
+int	parser_ambient(Scene *scene, char **data);
+int	parser_cylinder(Scene *scene, char **data);
+int parser_triangle(Scene *scene, char **data);
+int parser_square(Scene *scene, char **data);
 //------RENDER------
 int	render_cylinder(Scene *scene, Vector3 hit_pt, int id);
 int find_nearest_triangle(Scene scene, Ray *ray, double *t, int id, int type);
@@ -302,5 +333,20 @@ int find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type);
 void render_scene(Scene *scene, int samples_per_pixel);
 int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type);
 int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type);
+
+
+
+// UTILS
+void	ft_free_p2(char **dst);
+void	*ft_realloc(void *ptr, size_t size_old, size_t size);
+Vector3	ft_coordinate(char *argv);
+double	ft_ratio(char *str);
+Color ft_color(char *str);
+Vector3	ft_normalizate(char *argv);
+Vector3	substract(Vector3 init, Vector3 end);
+Vector3	cross_v3(Vector3 v1, Vector3 v2);
+int		init_file(char *file);
+
+
 
 #endif
