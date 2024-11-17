@@ -142,7 +142,6 @@ int parser_obj(Scene *scene, int fd)
 		if (data == NULL || *data == NULL)
 			continue ;
 
-	
 		int state = idstr(alphabet, data[0]); //data[0]->"pl" entonces idstr debe devolver 0
 		printf("state: %d\n", state);
 		if (state == 11)
@@ -158,7 +157,6 @@ int parser_obj(Scene *scene, int fd)
 		ft_free_p2(data);
 		line = get_next_line(fd);
 	}
-	
 	printf("resolution: %d %d\n", scene->width, scene->height);
 
 	printf("ambient: %d\n", scene->ambient->ratio);
@@ -193,6 +191,5 @@ int parser_obj(Scene *scene, int fd)
 	printf(" diameter (%f )\n", scene->cylinders[0].diameter);
 	printf(" height (%f )\n", scene->cylinders[0].height);
 	//printf(" vColor (%f, %f, %f)\n", scene->cylinders[0].color.r, scene->cylinders[0].mater_prop.vColor->g, scene->cylinders[0].mater_prop.vColor->b);
-	exit(1);
 	//vas a splitear la linea
 }

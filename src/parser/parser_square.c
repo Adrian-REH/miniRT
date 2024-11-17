@@ -24,6 +24,7 @@ static double side_square(char *data)
     side = atof(data);
     return (side);
 }
+
 int	parser_square(Scene *scene, char **data)
 {
     Vector3 center = {0, 0, 0};

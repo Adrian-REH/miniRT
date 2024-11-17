@@ -75,20 +75,9 @@ int main()
 
 	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	parser_obj(scene, init_file("mandatory.rt"));
-	parser_plane(scene, NULL);
-	parser_light(scene, NULL);
-	parser_sphere(scene, NULL);
-	parser_camera(scene, NULL);
+
 	
 	//render(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);
-	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[0].mater_prop.vColor->r, scene->planes[0].mater_prop.vColor->g, scene->planes[0].mater_prop.vColor->b, scene->planes[0].mater_prop.vColor->color);
-	printf("ABS RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[0].mater_prop.absorption[R], scene->planes[0].mater_prop.absorption[G], scene->planes[0].mater_prop.absorption[B], scene->planes[0].mater_prop.vColor->color);
-	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[1].mater_prop.vColor->r, scene->planes[1].mater_prop.vColor->g, scene->planes[1].mater_prop.vColor->b, scene->planes[1].mater_prop.vColor->color);
-	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[2].mater_prop.vColor->r, scene->planes[2].mater_prop.vColor->g, scene->planes[2].mater_prop.vColor->b, scene->planes[2].mater_prop.vColor->color);
-	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[3].mater_prop.vColor->r, scene->planes[3].mater_prop.vColor->g, scene->planes[3].mater_prop.vColor->b, scene->planes[3].mater_prop.vColor->color);
-	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->planes[4].mater_prop.vColor->r, scene->planes[4].mater_prop.vColor->g, scene->planes[4].mater_prop.vColor->b, scene->planes[4].mater_prop.vColor->color);
-	printf("Original RGB: (%.2f, %.2f, %.2f) = %06X\n", scene->lights->color->r, scene->lights->color->g, scene->lights->color->b, scene->lights->color->color);
-	//RENDER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	//ft_memset(scene->img->buffer, 0 ,((WINY - 1)* WINX * 4) + ((WINX - 1) * 4));
 	render_scene(scene, 1);
