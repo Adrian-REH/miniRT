@@ -31,20 +31,7 @@ int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
 
 int triangle_solution_point(Triangle triangle, Vector3 hit_pt)
 {
-	double	res1;
-	double	res2;
-	double	res3;
-	Vector3 ap = subtract(triangle.vertex[0], hit_pt);
-	Vector3 bp = subtract(triangle.vertex[1], hit_pt);
-	Vector3 cp = subtract(triangle.vertex[2], hit_pt);
 
-	res1 = dot(*(triangle.dir[0]), ap);
-	res2 = dot(*(triangle.dir[1]), bp);
-	res3 = dot(*(triangle.dir[2]), cp);
-	if (res1 >= 0 && res2 >= 0 && res3 >= 0)
-		return 1;
-	if (res1 <= 0 && res2 <= 0 && res3 <= 0)
-		return 1;
 	return 0;// no pertenece al triangulo
 
 }
@@ -61,7 +48,7 @@ int find_nearest_triangle(Scene scene, Ray *ray, double *t, int id, int type)
 	{
 		if (id == i && type == TRIANGLE)
 			continue ;
-		if (intersect_triangle(ray, &scene.triangle[i], t) && (*t < min_dist))
+		if (intersect_triangle(ray, &scene.triangles[i], t) && (*t < min_dist))
 		{
 			min_dist = *t;
 			j = i;

@@ -88,10 +88,10 @@ typedef enum
 {
 	PLANE,
 	SPHERE,
+	TRIANGLE,
+	CYLINDER,
 	CAMERA,
 	LIGHT,
-	CYLINDER,
-	TRIANGLE,
 } e_obj;
 
 typedef enum
@@ -185,7 +185,6 @@ typedef struct
 typedef struct
 {
 	Vector3	vertex[3];
-	Vector3	*dir[3];
 	int		n_vertex;
 	Plane	*p_triangle;
 	MaterialProperties	mater_prop;
@@ -226,7 +225,6 @@ typedef struct {
 	int			width;
 	int			height;
 	Img			*img;
-	Triangle	*triangle;
 	Camera		*cameras;
 	Ambient		*ambient;
 	Sphere		*spheres;
@@ -247,7 +245,6 @@ typedef struct {
 //-----libcolor------
 double ft_limit(double min, double max, double val);
 Vector3 *reflect(Vector3 L, Vector3 N);
-int is_in_shadow(Scene scene, int plane_count, Vector3 light_pos, Vector3 hit_point) ;
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 int		colornormal_to_int(Color color);
 void	addint_to_color(Color *color, int src);
@@ -262,7 +259,6 @@ Color *illuminate_surface(Color *surface_color, Color *light_color, double inten
 //------libvector3------
 Vector3 scalev3(Vector3 v, float scalar);
 double		sin_v3(Vector3 v1, Vector3 v2);
-Vector3		cross_v3(Vector3 v1, Vector3 v2);
 Vector3	cross_v3(Vector3 v1, Vector3 v2);
 int		ft_sarrsize(char **arr);
 
@@ -342,9 +338,8 @@ void	*ft_realloc(void *ptr, size_t size_old, size_t size);
 Vector3	ft_coordinate(char *argv);
 double	ft_ratio(char *str);
 Color ft_color(char *str);
-Vector3	ft_normalizate(char *argv);
+Vector3	stonorm(char *argv);
 Vector3	substract(Vector3 init, Vector3 end);
-Vector3	cross_v3(Vector3 v1, Vector3 v2);
 int		init_file(char *file);
 
 

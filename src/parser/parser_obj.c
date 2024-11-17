@@ -128,20 +128,13 @@ int parser_obj(Scene *scene, int fd)
 	char **data;
 	int i=0;
 	char **alphabet = init_args();
-
-	//int i = 0;
-	//Abrir el archivo
-	//Leerlo
-	//Reconoce patrones los typos
-	//en caso de que encuetres un 'pl'en el argumento 0 del split vas a llamar
-	//para vos data es un split de los valores de la linea
 	char *line = get_next_line(fd);
+
 	while (line)//No olvidarse de poner una comprobacion o hacer brake
 	{
 		data = ft_split(line, ' '); //Esto te debe devolver data[0]->"pl" data[1]->"0.0,0.0,-10.0" data[2]->"0.0,1.0,0.0" data[3]->"0,0,225"
 		if (data == NULL || *data == NULL)
 			continue ;
-
 		int state = idstr(alphabet, data[0]); //data[0]->"pl" entonces idstr debe devolver 0
 		printf("state: %d\n", state);
 		if (state == 11)
@@ -157,39 +150,11 @@ int parser_obj(Scene *scene, int fd)
 		ft_free_p2(data);
 		line = get_next_line(fd);
 	}
-	printf("resolution: %d %d\n", scene->width, scene->height);
+	printf("n_l: %d\n", scene->n_lights);
+	printf("n_cy: %d\n", scene->n_cylinders);
+	printf("n_tr: %d\n", scene->n_triangles);
+	printf("n_pl: %d\n", scene->n_planes);
+	printf("n_sp: %d\n", scene->n_spheres);
+	printf("n_sq: %d\n", scene->n_squares);
 
-	printf("ambient: %d\n", scene->ambient->ratio);
-	//printf("color (%f, %f, %f)\n", scene->ambient->color.r, scene->ambient->color.g, scene->ambient->color.b);
-	printf("n_planes: %d\n", scene->n_planes);
-	printf(" norme (%f, %f, %f)\n", scene->planes[0].normal.x,scene->planes[0].normal.y,scene->planes[0].normal.z);
-	printf(" axis (%f, %f, %f)\n", scene->planes[0].point.x,scene->planes[0].point.y,scene->planes[0].point.z);
-	printf(" vCOlor (%f, %f, %f)\n", scene->planes[0].mater_prop.vColor->r, scene->planes[0].mater_prop.vColor->g, scene->planes[0].mater_prop.vColor->b);
-	
-
-	printf("CAMERA: \n");
-	printf(" pos (%f, %f, %f)\n", scene->cameras[0].pos.x,scene->cameras[0].pos.y,scene->cameras[0].pos.z);
-	printf(" dir (%f, %f, %f)\n", scene->cameras[0].dir.x,scene->cameras[0].dir.y,scene->cameras[0].dir.z);
-	printf(" fov (%f )\n", scene->cameras[0].fov);
-	
-
-	printf("SPHERE: %d\n", scene->n_planes);
-	printf(" norme (%f, %f, %f)\n", scene->spheres[0].center.x,scene->spheres[0].center.y,scene->spheres[0].center.z);
-	printf(" Radous (%f )\n", scene->spheres[0].radius);
-	printf(" vCOlor (%f, %f, %f)\n", scene->spheres[0].mater_prop.vColor->r, scene->spheres[0].mater_prop.vColor->g, scene->spheres[0].mater_prop.vColor->b);
-
-
-	printf("SQUERE: \n");
-	printf(" center (%f, %f, %f)\n", scene->squares[0].center.x,scene->squares[0].center.y,scene->squares[0].center.z);
-	printf(" normal (%f, %f, %f)\n", scene->squares[0].normal.x,scene->squares[0].normal.y,scene->squares[0].normal.z);
-	printf(" side (%f )\n", scene->squares[0].side);
-	//printf(" vColor (%f, %f, %f)\n", scene->squares[0].mater_prop.vColor->r, scene->squares[0].mater_prop.vColor->g, scene->squares[0].mater_prop.vColor->b);
-
-	printf("CYLINDER: %d\n", scene->n_cylinders);
-	printf(" center (%f, %f, %f)\n", scene->cylinders[0].center.x,scene->cylinders[0].center.y,scene->cylinders[0].center.z);
-	printf(" axis (%f, %f, %f)\n", scene->cylinders[0].axis.x,scene->cylinders[0].axis.y,scene->cylinders[0].axis.z);
-	printf(" diameter (%f )\n", scene->cylinders[0].diameter);
-	printf(" height (%f )\n", scene->cylinders[0].height);
-	//printf(" vColor (%f, %f, %f)\n", scene->cylinders[0].color.r, scene->cylinders[0].mater_prop.vColor->g, scene->cylinders[0].mater_prop.vColor->b);
-	//vas a splitear la linea
 }

@@ -173,7 +173,7 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 	i = -1;
 	while (++i < scene.n_spheres)
 	{
-		if (intersect_sphere(&shadow_ray, scene.spheres, &t)) {
+		if (intersect_sphere(&shadow_ray, &scene.spheres[i], &t)) {
 			if (t > 0 && t < light_dist) {
 				return t; // In shadow
 			}
@@ -183,7 +183,7 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 	i = -1;
 	while (++i < scene.n_triangles)
 	{
-		if (intersect_triangle(&shadow_ray, scene.triangle, &t)) {
+		if (intersect_triangle(&shadow_ray, &scene.triangles[i], &t)) {
 			if (t > 0 && t < light_dist) {
 				return t; // In shadow
 			}
@@ -193,7 +193,7 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 	i = -1;
 	while (++i < scene.n_cylinders)
 	{
-		if (intersect_cylinder(&shadow_ray, scene.cylinders, &t)) {
+		if (intersect_cylinder(&shadow_ray, &scene.cylinders[i], &t)) {
 			if (t > 0 && t < light_dist) {
 				return t; // In shadow
 			}
@@ -231,14 +231,7 @@ int main()
 	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
 	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 	parser_obj(scene, init_file("mandatory.rt"));
-
-	
-	printf("ang(dircmr, dirtr): %f\n", dot(scene->cameras->dir, scene->triangle[0].p_triangle->normal) * ( 180/ M_PI));
-	//render(mlx, win, WINX, WINY, sphere, plans, camera_pos, buffer);
-
-	
 	render_scene(scene, N_SAMPLING);
 	//mlx_loop(scene->mlx);
 	mlx_listen_meta(scene);

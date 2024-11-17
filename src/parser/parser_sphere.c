@@ -42,8 +42,8 @@ int	parser_sphere(Scene *scene, char **data)
 	scene->spheres[scene->n_spheres].mater_prop.absorption[G] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->g;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[B] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->b;
 	scene->spheres[scene->n_spheres].center = center;
-	scene->spheres[scene->n_spheres].radius = diamenter_sphere(data[2]);
-	//scene->n_spheres++;
+	scene->spheres[scene->n_spheres].radius = diamenter_sphere(data[2]) / 2;
+	scene->n_spheres++;
 	//ft_bzero(&scene->spheres, sizeof(Plane));
 	return (1);
 

@@ -61,10 +61,9 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libsarr/ft_sarrsize.c \
 				src/lib/libmath/ft_atof.c \
 				src/lib/libmath/substract.c \
-				src/lib/libmath/cross_v3.c \
 				src/lib/libparse/ft_coordinate.c \
 				src/lib/libparse/ft_limit.c \
-				src/lib/libparse/ft_normalizate.c \
+				src/lib/libparse/stonorm.c \
 				src/lib/libparse/ft_ratio.c \
 				src/lib/libparse/ft_color.c \
 				src/lib/libutils/ft_free_p2.c \
@@ -74,14 +73,11 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/parser/parser_light.c \
 				src/parser/parser_cylinder.c \
 				src/parser/parser_plane.c \
-				src/parser/parser_scene.c \
 				src/parser/parser_sphere.c \
-				src/parser/parser_triangle.c \
 				src/render/render_plane.c \
 				src/render/render_sphere.c \
 				src/render/render_triangle.c \
 				src/parser/parser_obj.c \
-				src/parser/parser_sphere.c \
 				src/parser/parser_triangle.c \
 				src/parser/parser_square.c \
 				src/parser/parser_utils.c \

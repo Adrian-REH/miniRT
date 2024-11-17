@@ -65,7 +65,7 @@ int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 
 	while (++j < scene->n_triangles)
 	{
-		if (intersect_cylinder(&rayrfc, &scene->triangle[j], &t) && (t < md))
+		if (intersect_cylinder(&rayrfc, &scene->triangles[j], &t) && (t < md))
 		{
 			hit_rfc = hit_point(rayrfc, t);
 			if (!obj_solution_point(*scene, *hit_rfc, type, id))
@@ -90,7 +90,7 @@ int	render_cylinder(Scene *scene, Vector3 hit_pt, int id)
 
 	if (scene->cylinders[id].mater_prop.reflect)
 	{
-		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangle[id].p_triangle->normal);
+		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangles[id].p_triangle->normal);
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, CYLINDER);
 		if (type == PLANE)
 		{

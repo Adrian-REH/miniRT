@@ -34,17 +34,17 @@ int parser_triangle(Scene *scene, char **data)
     Vector3 dir1 = substract(vertex1, vertex2);
     Vector3 dir2 = substract(vertex1, vertex3);
     //scene->triangles->color = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
-    scene->triangles->vertex1 = &vertex1;
-    scene->triangles->vertex2 = &vertex2;
-    scene->triangles->vertex3 = &vertex3;
-    scene->triangles->p_triangle = malloc(sizeof(Plane));
-    scene->triangles->p_triangle->normal = cross_v3(dir1, dir2);
-    scene->triangles->p_triangle->point = vertex1;
-	scene->triangles->mater_prop.vColor = rgb_to_color(color.r, color.g, color.b);
-	scene->triangles->mater_prop.reflect = 1;
-	scene->triangles->mater_prop.absorption[R] = 1 - scene->triangles->mater_prop.vColor->r;
-	scene->triangles->mater_prop.absorption[G] = 1 - scene->triangles->mater_prop.vColor->g;
-	scene->triangles->mater_prop.absorption[B] = 1 - scene->triangles->mater_prop.vColor->b;
+    scene->triangles[scene->n_triangles].vertex[0] = vertex1;
+    scene->triangles[scene->n_triangles].vertex[1] = vertex2;
+    scene->triangles[scene->n_triangles].vertex[2] = vertex3;
+    scene->triangles[scene->n_triangles].p_triangle = malloc(sizeof(Plane));
+    scene->triangles[scene->n_triangles].p_triangle->normal = cross_v3(dir1, dir2);
+    scene->triangles[scene->n_triangles].p_triangle->point = vertex1;
+	scene->triangles[scene->n_triangles].mater_prop.vColor = rgb_to_color(color.r, color.g, color.b);
+	scene->triangles[scene->n_triangles].mater_prop.reflect = 1;
+	scene->triangles[scene->n_triangles].mater_prop.absorption[R] = 1 - scene->triangles[scene->n_triangles].mater_prop.vColor->r;
+	scene->triangles[scene->n_triangles].mater_prop.absorption[G] = 1 - scene->triangles[scene->n_triangles].mater_prop.vColor->g;
+	scene->triangles[scene->n_triangles].mater_prop.absorption[B] = 1 - scene->triangles[scene->n_triangles].mater_prop.vColor->b;
     scene->n_triangles++;
 
 
