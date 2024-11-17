@@ -128,7 +128,6 @@ int parser_obj(Scene *scene, int fd)
 	char **data;
 	int i=0;
 	char **alphabet = init_args();
-
 	//int i = 0;
 	//Abrir el archivo
 	//Leerlo
@@ -190,6 +189,11 @@ int parser_obj(Scene *scene, int fd)
 	printf(" axis (%f, %f, %f)\n", scene->cylinders[0].axis.x,scene->cylinders[0].axis.y,scene->cylinders[0].axis.z);
 	printf(" diameter (%f )\n", scene->cylinders[0].diameter);
 	printf(" height (%f )\n", scene->cylinders[0].height);
+
+	printf("TRIANGLE: %d\n", scene->n_triangles);
+	printf(" v0 (%f, %f, %f)\n", scene->triangles[0].vertex[0].x, scene->triangles[0].vertex[0].y,scene->triangles[0].vertex[0].z);
+	printf(" v1 (%f, %f, %f)\n", scene->triangles[0].vertex[1].x, scene->triangles[0].vertex[1].y,scene->triangles[0].vertex[1].z);
+	printf(" v2 (%f, %f, %f)\n", scene->triangles[0].vertex[2].x, scene->triangles[0].vertex[2].y,scene->triangles[0].vertex[2].z);
 	//printf(" vColor (%f, %f, %f)\n", scene->cylinders[0].color.r, scene->cylinders[0].mater_prop.vColor->g, scene->cylinders[0].mater_prop.vColor->b);
 	//vas a splitear la linea
 }

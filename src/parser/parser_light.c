@@ -23,7 +23,7 @@ int	parser_light(Scene *scene, char **data)
 
 	scene->lights = malloc(sizeof(Light));
 	if (!scene->lights)
-		return NULL;
+		return 0;
 	point = ft_coordinate(data[1]);
 	color = ft_color(data[3]);
 	scene->lights->color = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
