@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 23:12:23 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/18 18:22:30 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/18 18:42:43 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,15 +253,14 @@ int main(int argc, char **argv)
 	{
 		Scene *scene = malloc(sizeof(Scene));
 		ft_bzero(scene, sizeof(Scene));
-		parser_obj(scene, init_file(ft_strjoin("maps/",argv[1])));
-		
-		review_scene(scene);
 		scene->mlx = mlx_init();
 		scene->win = mlx_new_window(scene->mlx, WINX, WINY, "miniRT!");
 		Img img;
 		scene->img = &img;
 		scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
 		scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
+		parser_obj(scene, init_file(ft_strjoin("maps/",argv[1])));
+		review_scene(scene);
 		//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		render_scene(scene, N_SAMPLING);
 		//mlx_loop(scene->mlx);
