@@ -57,10 +57,20 @@ void init_render(Scene *scene)
 	scene->render[4] = NULL; // NULL 
 }
 
+void init_intersect(Scene *scene)
+{
+	scene->isc[0] = intersect_plane;//posicion 0
+	scene->isc[1] = intersect_sphere;//posicion 1
+	scene->isc[2] = intersect_triangle;//posicion 2
+	scene->isc[3] = intersect_cylinder;//posicion 3
+	scene->isc[4] = NULL; // NULL 
+}
+
 void render_scene(Scene *scene, int samples_per_pixel)
 {
 	init_rfc_render(scene);
 	init_render(scene);
+	init_intersect(scene);
 	time_t start, end;
 	double min_dist;
 	int alpha = 0;

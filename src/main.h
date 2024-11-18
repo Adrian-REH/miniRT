@@ -239,6 +239,7 @@ typedef struct {
 	int			n_spheres;
 	int			n_squares;
 	int			n_triangles;
+	int			(*isc[10])(const void *, const void *, double *);
 	int			(*rfc[10])(void *, Ray, int, int);
 	int			(*render[10])(void *, Vector3, int);
 	int			(*parser[10])(void *, void *);

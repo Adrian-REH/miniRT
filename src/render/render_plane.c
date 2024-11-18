@@ -1,5 +1,113 @@
 #include "../main.h"
+typedef double (*IntensityFunc)(Vector3, Vector3);
+typedef double (*AttenuationFunc)(double, double, double, double);
+typedef Vector3* (*ReflectFunc)(Vector3, Vector3);
 
+typedef struct {
+	IntensityFunc calculate_intensity;
+	AttenuationFunc calculate_attenuation;
+	ReflectFunc reflect;
+} LightingFunctions;
+
+typedef struct {
+	Scene *scene;
+	Vector3 hit_pt;
+	Vector3 normal;
+	MaterialProperties mater_prop;
+	LightingFunctions funcs;
+} RenderContext;
+
+Color* apply_lighting(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, double t) {
+	Light *light = ctx->scene->lights;
+	
+	double distance_light = distance(light->point, ctx->hit_pt);
+	double attenuation = ctx->funcs.calculate_attenuation(distance_light, L_P_KC, L_P_KL, L_P_KQ);
+	double diffuse_intensity = ctx->funcs.calculate_intensity(ctx->normal, *light_dir);
+	diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
+	
+	Vector3 *reflect_dir = ctx->funcs.reflect(*light_dir, ctx->normal);
+	double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
+	specular = fmin(fmax(specular, 0.0), 1.0);
+	
+	Color *current_color = ctx->mater_prop.vColor;
+	current_color = illuminate_surface(current_color, light->color, 
+		fmin(0.8, fmax(0.0, (1 - (diffuse_intensity * attenuation)))), 0.95, 0, ctx->mater_prop);
+	normalize_color(current_color);
+	
+	current_color = illuminate_surface(current_color, light->color, 
+		fmin(1, fmax(0.0, (1 - (specular * attenuation * diffuse_intensity)))), 0.95, 0, ctx->mater_prop);
+	normalize_color(current_color);
+	
+	Color *ambient_color = int_to_color(0);
+	current_color = illuminate_surface(ambient_color, current_color, 
+		fmin(1, fmax(0.0, (1 - (attenuation * diffuse_intensity)))), 0.9, 0, ctx->mater_prop);
+	normalize_color(current_color);
+	
+	free(reflect_dir);
+	free(ambient_color);
+	return current_color;
+}
+
+Color* apply_shadow(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, double t) {
+	Light *light = ctx->scene->lights;
+	
+	Vector3 *hit_shadow = hit_point((Ray){light->point, *light_dir}, t);
+	double distance_light = distance(ctx->hit_pt, *hit_shadow);
+	double attenuation = ctx->funcs.calculate_attenuation(distance_light, L_P_KC, L_P_KL, L_P_KQ);
+	double diffuse_intensity = ctx->funcs.calculate_intensity(ctx->normal, *light_dir);
+	diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
+
+	Vector3 *reflect_dir = ctx->funcs.reflect(*light_dir, ctx->normal);
+	double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
+	specular = fmin(fmax(specular, 0.0), 1.0);
+
+	Color *ambient_color = int_to_color(0);
+	Color *current_color = illuminate_surface(ctx->mater_prop.vColor, ambient_color, 
+		fmin(1, fmax(0.0, (diffuse_intensity * attenuation))), 0.95, 0, ctx->mater_prop);
+	normalize_color(current_color);
+	free(hit_shadow);
+	free(reflect_dir);
+	free(ambient_color);
+	return current_color;
+}
+
+int	render_point_plane(Scene scene, Vector3 hit_pt, int n_plane) {
+	const RenderContext	ctx = {
+		.scene = &scene,
+		.mater_prop = scene.planes[n_plane].mater_prop,
+		.normal = scene.planes[n_plane].normal,
+		.hit_pt = hit_pt,
+		.funcs = {
+			.calculate_intensity = calculate_intensity,
+			.calculate_attenuation = calculate_attenuation,
+			.reflect = reflect
+		}
+	};
+
+	Vector3 *cam_dir = normalize_withpoint(scene.cameras->pos, hit_pt);
+	Vector3 *light_dir = normalize_withpoint(scene.lights->point, hit_pt);
+	Ray rayslight = {scene.lights->point, *light_dir};
+
+	double d;
+	Color *current_color;
+	if (intersect_plane(&rayslight, &scene.planes[n_plane], &d)) {
+		double t = is_in_shadow(scene, scene.lights->point, hit_pt);
+		if (t) {
+			current_color = apply_shadow(&ctx, light_dir, cam_dir, t);
+		} else {
+			current_color = apply_lighting(&ctx, light_dir, cam_dir, t);
+		}
+	} else {
+		current_color = scene.planes[n_plane].mater_prop.vColor;
+	}
+
+	int result = current_color->color;
+	free(cam_dir);
+	free(light_dir);
+	free(current_color);
+	return result;
+}
+/* 
 int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 {
 	double d;
@@ -63,7 +171,7 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 	free(light_dir);
 	return current_color;
 }
-
+ */
 int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 {
 	double t = 0;

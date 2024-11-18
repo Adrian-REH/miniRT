@@ -14,7 +14,7 @@ int render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
 	current_color = vCurrentColor->color;
 	Vector3 *light_dir = normalize_withpoint(scene.lights->point, hit_pt);
 	Ray rayslight = {scene.lights->point, *light_dir};
-	if (intersect_cylinder(&rayslight, &scene.cylinders[n_cyl], &d))
+	if (intersect_cylinder(&rayslight, &scene.cylinders[n_cyl], &d))//pointer to function to inter
 	{
 		double t = is_in_shadow(scene, scene.lights->point, hit_pt);
 		if (!t)
