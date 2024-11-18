@@ -47,6 +47,8 @@ int	parser_cylinder(Scene *scene, char **data)
 	Color color = {0, 0, 0};
 
 	Cylinder cylinder_null;
+	printf("Cylinder\n");
+	printf("Cylinder ------->: |%s| |%s| |%s| |%s|\n",data[0],data[1],data[2], data[3]);
 	scene->cylinders = ft_realloc(scene->cylinders, sizeof(Cylinder) * scene->n_cylinders, sizeof(Cylinder) * (scene->n_cylinders + 2));
 
 	center = ft_coordinate(data[1]);

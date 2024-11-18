@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 23:12:23 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/17 22:40:39 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/18 18:22:30 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,8 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 
 int init_file(char *file)
 {
+	// printf("File: %s\n", file);
+	// exit(1);
 	int fd;
 	int len_file = ft_strlen(file);
 	if (file[len_file - 1] != 't' && file[len_file - 2] != 'r' && file[len_file - 3] != '.')
@@ -240,20 +242,29 @@ static void review_scene(Scene *scene)
 	}
 
 }
-int main()
+int main(int argc, char **argv)
 {
-	Scene *scene = malloc(sizeof(Scene));
-	ft_bzero(scene, sizeof(Scene));
-	scene->mlx = mlx_init();
-	scene->win = mlx_new_window(scene->mlx, WINX, WINY, "miniRT!");
-	Img img;
-	scene->img = &img;
-	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
-	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
-	parser_obj(scene, init_file("old.rt"));
-	review_scene(scene);
-	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	render_scene(scene, N_SAMPLING);
-	//mlx_loop(scene->mlx);
-	mlx_listen_meta(scene);
+	if (argc != 2)
+	{
+		printf("Error: Argumentos invalidos\n");
+		exit(1);
+	}
+	else 
+	{
+		Scene *scene = malloc(sizeof(Scene));
+		ft_bzero(scene, sizeof(Scene));
+		parser_obj(scene, init_file(ft_strjoin("maps/",argv[1])));
+		
+		review_scene(scene);
+		scene->mlx = mlx_init();
+		scene->win = mlx_new_window(scene->mlx, WINX, WINY, "miniRT!");
+		Img img;
+		scene->img = &img;
+		scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
+		scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
+		//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		render_scene(scene, N_SAMPLING);
+		//mlx_loop(scene->mlx);
+		mlx_listen_meta(scene);
+	}
 }
