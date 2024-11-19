@@ -5,7 +5,7 @@ Color *illuminate_surface(Color *surface_color, Color *light_color, double inten
 {
     Color *result = malloc(sizeof(Color));
     if (!result)
-		return 0;
+      return 0;
     result->r = surface_color->r * light_color->r * (1.0 - prop.absorption[R]);
     result->g = surface_color->g * light_color->g * (1.0 - prop.absorption[G]);
     result->b = surface_color->b * light_color->b * (1.0 - prop.absorption[B]) ;

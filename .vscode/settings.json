@@ -29,6 +29,7 @@
 		"x.h": "c",
 		"bit": "c",
 		"*.tcc": "c",
-		"cmath": "c"
+		"cmath": "c",
+		"keysym.h": "c"
 	}
 }
