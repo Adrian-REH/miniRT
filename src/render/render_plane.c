@@ -35,14 +35,14 @@ Color* apply_lighting(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, 
 	normalize_color(current_color);
 	
 	current_color = illuminate_surface(current_color, light->color, 
-		fmin(1, fmax(0.0, (1 - (specular * attenuation * diffuse_intensity)))), 0.95, 0, ctx->mater_prop);
+		fmin(1, fmax(0.0, (1 - (specular)))), 0.95, 0, ctx->mater_prop);
 	normalize_color(current_color);
 	
 	Color *ambient_color = int_to_color(0);
 	current_color = illuminate_surface(ambient_color, current_color, 
-		fmin(1, fmax(0.0, (1 - (attenuation * diffuse_intensity)))), 0.9, 0, ctx->mater_prop);
-	normalize_color(current_color);
+		fmin(1, fmax(0.0, (1 - ( diffuse_intensity)))), 0.7, 0, ctx->mater_prop);
 	
+	normalize_color(current_color);
 	free(reflect_dir);
 	free(ambient_color);
 	return current_color;
@@ -89,7 +89,7 @@ int	render_point_plane(Scene scene, Vector3 hit_pt, int n_plane) {
 	Ray rayslight = {scene.lights->point, *light_dir};
 
 	double d;
-	Color *current_color;
+	Color *current_color = NULL;
 	if (intersect_plane(&rayslight, &scene.planes[n_plane], &d)) {
 		double t = is_in_shadow(scene, scene.lights->point, hit_pt);
 		if (t) {
@@ -104,9 +104,9 @@ int	render_point_plane(Scene scene, Vector3 hit_pt, int n_plane) {
 	int result = current_color->color;
 	free(cam_dir);
 	free(light_dir);
-	free(current_color);
 	return result;
 }
+
 /* 
 int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 {

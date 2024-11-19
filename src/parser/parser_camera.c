@@ -38,11 +38,11 @@ int	parser_camera(Scene *scene, char **data)
 	scene->cameras->plane_half_width = scene->cameras->aspect_ratio * scene->cameras->plane_distance; // Ajuste según el aspecto
 	scene->cameras->plane_half_height = 1.0 * scene->cameras->plane_distance;         // Altura basada en la distancia
 	
-	scene->cameras->horizontal = (Vector3){1, 0, 0};      // Apunta hacia la derecha
-	scene->cameras->vertical = (Vector3){0, -1, 0};         // Apunta hacia arriba
 
-
-
+	Vector3 tmp = (Vector3){0, 1, 0};
+	Vector3 right = cross_v3(tmp, dir);
+	scene->cameras->horizontal = right;
+	scene->cameras->vertical = cross_v3(dir, right);
 
 
 	// Ajusta el tamaño del plano de proyección en función de la relación de aspecto

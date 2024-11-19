@@ -249,21 +249,18 @@ int main(int argc, char **argv)
 		printf("Error: Argumentos invalidos\n");
 		exit(1);
 	}
-	else 
-	{
-		Scene *scene = malloc(sizeof(Scene));
-		ft_bzero(scene, sizeof(Scene));
-		scene->mlx = mlx_init();
-		scene->win = mlx_new_window(scene->mlx, WINX, WINY, "miniRT!");
-		Img img;
-		scene->img = &img;
-		scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
-		scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
-		parser_obj(scene, init_file(ft_strjoin("maps/",argv[1])));
-		review_scene(scene);
-		//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		render_scene(scene, N_SAMPLING);
-		//mlx_loop(scene->mlx);
-		mlx_listen_meta(scene);
-	}
+	Scene *scene = malloc(sizeof(Scene));
+	ft_bzero(scene, sizeof(Scene));
+	scene->mlx = mlx_init();
+	scene->win = mlx_new_window(scene->mlx, WINX, WINY, "miniRT!");
+	Img img;
+	scene->img = &img;
+	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
+	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
+	parser_obj(scene, init_file(argv[1]));
+	review_scene(scene);
+	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	render_scene(scene, N_SAMPLING);
+	//mlx_loop(scene->mlx);
+	mlx_listen_meta(scene);
 }
