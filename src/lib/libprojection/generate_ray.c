@@ -12,27 +12,19 @@ Vector3	pxtopy(Camera camera, Vector3 v)
 }
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera)
 {
-    // Inicializa el rayo y su origen
     Ray *ray = malloc(sizeof(Ray));
     if (!ray) {
         return NULL; // Manejo de memoria
     }
     ray->origin = camera.pos;
 
-    // Calcula las coordenadas del punto en el plano de proyección
     double px = ((2.0 * x / (double)screen_width) - 1.0) * camera.aspect_ratio * camera.plane_distance;
     double py = (1.0 - 2.0 * y / (double)screen_height) * camera.plane_distance;
 
-
-    // Calcula el punto en el plano de proyección usando los vectores de la cámara
     Vector3 point_on_plane = pxtopy(camera, (Vector3){px, py, 0.5});
-	// Calcula la dirección del rayo desde la cámara al punto en el plano de proyección
 	ray->direction.x = point_on_plane.x;
 	ray->direction.y = point_on_plane.y;
 	ray->direction.z = point_on_plane.z;
-//para 8 es 2.5
-//para 10 es 2
-	// Normaliza la dirección del rayo para obtener un vector unitario
 	normalize(&(ray->direction));
 	return ray;
 }
