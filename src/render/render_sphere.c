@@ -1,46 +1,39 @@
 #include "../main.h"
 
-int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere){
+int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere)
+{
+	RenderContext	ctx;
+	Vector3 cam_dir;
+	Vector3 light_dir;
+	Color *current_color;
+	Ray rayslight;
 	double d;
-	int current_color = 0; // Color base de la esfera
-	int ambient_color = 0; // Color gris para la luz ambiental
-	Color *vCurrentColor = scene.spheres[nb_sphere].mater_prop.vColor;
-	MaterialProperties prop = scene.spheres[nb_sphere].mater_prop;
 
-	Vector3 *n_sphere = normalize_withpoint( scene.spheres->center, hit_pt);
-	Vector3 *cam_dir = normalize_withpoint(scene.cameras->pos, hit_pt );
-	current_color = mix_colors(ambient_color, current_color, AMBIENT_INTENSITY);
-	Ray rayslight = {scene.lights->point, *normalize_withpoint(scene.lights->point, hit_pt)};
-	// Calcula la intersección del plano con el rayo de luz
-	if (intersect_sphere(&rayslight, scene.spheres, &d)) // Agrega esta verificación
-	{
-		//Tengo que hacer reflejo y acumular el color.
-		if (!is_in_shadow(scene, scene.lights->point, hit_pt)) {
-			// Cálculo de la luz difusa
-			double distance_light = distance(rayslight.origin, hit_pt);
-			double attenuation = calculate_attenuation(distance_light, 1, 0.01, 0.03);
-			double diffuse_intensity = calculate_intensity(*n_sphere, rayslight.direction);
-			Vector3 *reflect_dir = reflect(rayslight.direction, *n_sphere);
-			diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1);
-			double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
-			specular = fmin(fmax(specular, 0.0), 1.0);
-						//La cantidad de luz que aplico sobre el color del material
-			vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(0.8, fmax(0.0, ( 1 - (diffuse_intensity * attenuation )))) , 0.95, 0, prop);
-			normalize_color(vCurrentColor);
-			//current_color = mix_colors(scene.planes[n_plane].mater_prop.color[1], current_color, diffuse_intensity * attenuation);
-			vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(1, fmax(0.0, ( 1- (specular * attenuation * diffuse_intensity)))) , 0.95, 0, prop);
-			normalize_color(vCurrentColor);
-			
-			vCurrentColor = illuminate_surface(int_to_color(ambient_color), vCurrentColor, fmin(1, fmax(0.0, ( 1 - ( attenuation * diffuse_intensity)))) , 0.9, 0, prop);
-			normalize_color(vCurrentColor);
-			current_color = vCurrentColor->color;
-			free(reflect_dir);
+	ctx = (RenderContext){
+		.scene = &scene,
+		.mater_prop = scene.spheres[nb_sphere].mater_prop,
+		.normal = norm_subtract(scene.spheres[nb_sphere].center, hit_pt),
+		.hit_pt = hit_pt,
+		.funcs = {
+			.calculate_intensity = calculate_intensity,
+			.calculate_attenuation = calculate_attenuation,
+			.reflect = reflect
 		}
-		else
-			current_color = ambient_color;
+	};
+	cam_dir = norm_subtract(scene.cameras->pos, hit_pt);
+	light_dir = norm_subtract(scene.lights->point, hit_pt);
+	rayslight = (Ray){scene.lights->point, light_dir};
+	if (intersect_sphere(&rayslight, scene.spheres, &d))
+	{
+		d = is_in_shadow(scene, scene.lights->point, hit_pt);
+		if (d)
+			current_color = apply_shadow(&ctx, &light_dir, &cam_dir, hit_point(rayslight, d));
+		else 
+			current_color = apply_lighting(&ctx, &light_dir, &cam_dir);
 	}
-	free(cam_dir);
-	return current_color;
+	else
+		current_color = apply_ambient(&ctx);
+	return current_color->color;
 }
 
 int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)

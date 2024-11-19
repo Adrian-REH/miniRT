@@ -85,6 +85,9 @@
 #define PI 3.1415
 
 
+
+
+
 typedef enum
 {
 	PLANE,
@@ -254,7 +257,30 @@ typedef struct {
 	int			(*render[10])(void *, Vector3, int);
 	int			(*parser[10])(void *, void *);
 } Scene;
+typedef double (*IntensityFunc)(Vector3, Vector3);
+typedef double (*AttenuationFunc)(double, double, double, double);
+typedef Vector3* (*ReflectFunc)(Vector3, Vector3);
 
+typedef struct {
+	IntensityFunc calculate_intensity;
+	AttenuationFunc calculate_attenuation;
+	ReflectFunc reflect;
+} LightingFunctions;
+
+typedef struct {
+	Scene *scene;
+	Vector3 hit_pt;
+	Vector3 normal;
+	MaterialProperties mater_prop;
+	LightingFunctions funcs;
+} RenderContext;
+
+
+
+Color *darken_surface(Color *surface_color, double darkness_intensity);
+//-----RENDER APPLY-----
+Color* apply_lighting(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir);
+Color* apply_shadow(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt);
 
 //------libsarr----
 int		ft_sarrprint(char **arr);
@@ -285,6 +311,7 @@ int line_solution_point(Ray ray, Vector3 point);
 int triangle_solution_point(Triangle triangle, Vector3 hit_pt);
 double	mod(Vector3 v);
 Vector3		*reflect(Vector3 L, Vector3 N);
+Vector3 norm_subtract(Vector3 init, Vector3 end);
 Vector3 subtract(Vector3 init, Vector3 end);
 int		is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point) ;
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);

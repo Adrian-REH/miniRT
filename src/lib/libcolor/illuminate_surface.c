@@ -36,3 +36,27 @@ Color *illuminate_surface(Color *surface_color, Color *light_color, double inten
 
     return result;
 }
+
+Color *darken_surface(Color *surface_color, double darkness_intensity)
+{
+
+    // Crear un nuevo color para el resultado
+    Color *result = malloc(sizeof(Color));
+    if (!result)
+        return NULL;
+
+    // Oscurecer los canales de color
+    result->r = surface_color->r * (1.0 - darkness_intensity);
+    result->g = surface_color->g * (1.0 - darkness_intensity);
+    result->b = surface_color->b * (1.0 - darkness_intensity);
+
+    // Asegurar que los valores están en el rango [0, 255]
+    result->r = fmin(1.0, fmax(0.0, result->r))* 255;
+    result->g = fmin(1.0, fmax(0.0, result->g))* 255;
+    result->b = fmin(1.0, fmax(0.0, result->b))* 255;
+
+    // Calcular el color en formato hexadecimal
+    result->color = (((int)result->r << 16) | ((int)result->g << 8) | (int)result->b);
+
+    return result;
+}

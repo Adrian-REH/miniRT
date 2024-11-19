@@ -87,6 +87,9 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/parser/parser_resolution.c \
 				src/render/render_cylinder.c \
 				src/render/render_scene.c \
+				src/render/apply_shadow.c \
+				src/render/apply_light.c \
+				src/render/apply_ambient.c \
 				src/object/ambient.c \
 				src/object/camera.c \
 				src/object/cylinder.c \

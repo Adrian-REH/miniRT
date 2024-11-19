@@ -55,6 +55,7 @@ int	key_press(int key, void *param)
 		n_intent++;
 		map_fun.func(param);
 		n_intent--;
+		printf("press\n");
 	}
 	return (0);
 }
