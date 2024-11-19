@@ -84,6 +84,7 @@
 #define REFLECT 0.95 // Intensidad de la luz
 #define PI 3.1415
 
+
 typedef enum
 {
 	PLANE,
@@ -100,6 +101,7 @@ typedef enum
 	G,
 	B
 } e_col;
+
 typedef struct
 {
 	double	x;
@@ -162,6 +164,14 @@ typedef struct
 	int					color;
 	MaterialProperties	mater_prop;
 } Sphere;
+
+
+typedef struct
+{
+	unsigned long key;
+	void (*func)(void *);
+}	t_map_fun;
+
 
 typedef struct
 {
@@ -295,6 +305,20 @@ Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camer
 Vector3 *hit_point(Ray ray, double t);
 double mix(double a, double b, double t);
 Ray *generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal);
+//------LIB/LIBMAPFUN------
+t_map_fun map_fun_get(t_map_fun *map_fun, int key);
+//------CONTROL_CAMERA----
+void control_a(Scene *scene);
+void control_s(Scene *scene);
+void control_d(Scene *scene);
+void control_w(Scene *scene);
+void control_left(Scene *scene);
+void control_right(Scene *scene);
+void control_down(Scene *scene);
+void control_up(Scene *scene);
+//------CONTROL_QUITE----
+
+void control_escape(Scene *scene);
 //------RANDOM------
 double random_double();
 //------OBJECT------

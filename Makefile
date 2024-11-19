@@ -11,30 +11,30 @@
 # **************************************************************************** #
 
 
-NAME        := miniRT
-SRC_DIR     := src/
-OBJ_DIRS     := obj/
-CC          := gcc
-CFLAGS      := -g3 -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
-FSANITIZE   := 
-RM          := rm -rf
+NAME		:= miniRT
+SRC_DIR		:= src/
+OBJ_DIRS	:= obj/
+CC			:= gcc
+CFLAGS		:= -g3 -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
+FSANITIZE	:= 
+RM			:= rm -rf
 
-INC         := inc/
-LIB         := lib/
-PRINTF_DIR  := $(LIB)ft_printf/
-PRINTF      := $(PRINTF_DIR)libftprintf.a
-MINILIBX_DIR := $(LIB)minilibx-linux/
-MINILIBX    := $(MINILIBX_DIR)libmlx.a
-LIBFT_DIR   := $(LIB)libft/
-LIBFT       := $(LIBFT_DIR)libft.a
+INC			:= inc/
+LIB			:= lib/
+PRINTF_DIR	:= $(LIB)ft_printf/
+PRINTF		:= $(PRINTF_DIR)libftprintf.a
+MINILIBX_DIR:= $(LIB)minilibx-linux/
+MINILIBX	:= $(MINILIBX_DIR)libmlx.a
+LIBFT_DIR	:= $(LIB)libft/
+LIBFT		:= $(LIBFT_DIR)libft.a
 
-CYAN = \033[0;96m
-DEF_COLOR = \033[0;49m
-MINILIBXCC  := -I $(MINILIBX_DIR) -L $(MINILIBX_DIR) -lmlx
-HEADER      := -I$(LIBFT_DIR) -I$(MINILIBX_DIR)
-FLAGSVISUAL := -L$(LIBFT_DIR) -lft -lm -lX11 -lXext  -lXt
+CYAN		:= \033[0;96m
+DEF_COLOR	:= \033[0;49m
+MINILIBXCC	:= -I $(MINILIBX_DIR) -L $(MINILIBX_DIR) -lmlx
+HEADER		:= -I$(LIBFT_DIR) -I$(MINILIBX_DIR)
+FLAGSVISUAL	:= -L$(LIBFT_DIR) -lft -lm -lX11 -lXext  -lXt
 
-SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
+SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libcolor/color_to_int.c \
 				src/lib/libcolor/fill_color_by_int.c \
 				src/lib/libcolor/get_color.c \
@@ -70,6 +70,7 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libparse/ft_color.c \
 				src/lib/libutils/ft_free_p2.c \
 				src/lib/libutils/ft_realloc.c \
+				src/lib/libmapfun/map_fun_get.c \
 				src/parser/parser_ambient.c \
 				src/parser/parser_camera.c \
 				src/parser/parser_light.c \
@@ -95,15 +96,33 @@ SRC_FILES   =	src/lib/libcolor/calculate_attenuation.c \
 				src/object/scene.c \
 				src/object/sphere.c \
 				src/object/line.c \
+				src/control_camera/control_a.c \
+				src/control_camera/control_s.c \
+				src/control_camera/control_d.c \
+				src/control_camera/control_w.c \
+				src/control_camera/control_left.c \
+				src/control_camera/control_right.c \
+				src/control_camera/control_up.c \
+				src/control_camera/control_down.c \
+				src/control_quite/control_escape.c \
 				src/main.c \
 
-OBJ_DIRS := obj/src/lib/libcolor obj/src/lib/libprojection obj/src/lib/libvector3 obj/src/lib/libbrdf \
-            obj/src/parser obj/src/render obj/src/object obj/src/lib/librandom obj/src/lib/libsarr \
-			obj/src/lib/libmath obj/src/lib/libutils obj/src/lib/libparse
+OBJ_DIRS := obj/src/lib/libcolor \
+			obj/src/lib/libprojection \
+			obj/src/lib/libvector3 \
+			obj/src/lib/libbrdf \
+			obj/src/parser \
+			obj/src/render \
+			obj/src/object \
+			obj/src/lib/librandom \
+			obj/src/lib/libsarr \
+			obj/src/lib/libmapfun \
+			obj/src/lib/libmath \
+			obj/src/lib/libutils \
+			obj/src/lib/libparse \
+			obj/src/control_camera \
+			obj/src/control_quite
 
-# Regla para crear los directorios de objetos
-$(OBJ_DIRS):
-	@mkdir -p $@
 
 # Definir los objetos
 OBJ := $(patsubst %.c,obj/%.o,$(SRC_FILES))
@@ -112,6 +131,10 @@ OBJ := $(patsubst %.c,obj/%.o,$(SRC_FILES))
 obj/%.o: %.c | $(OBJ_DIRS)
 	@echo "🍩 $(YELLOW)Compiling: $< $(DEF_COLOR)"
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+# Regla para crear los directorios de objetos
+$(OBJ_DIRS):
+	@mkdir -p $@
 
 -include	${DEPS}
 -include $(OBJ:.o=.d)

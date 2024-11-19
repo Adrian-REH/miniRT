@@ -30,111 +30,32 @@ int	terminate_program(void *param)
 	exit(0);
 }
 
-/* 
-*	This function handle when a key is pressed
-*/
-//#define XK_Left                          0xff51  /* Move left, left arrow */
-//#define XK_Up                            0xff52  /* Move up, up arrow */
-//#define XK_Right                         0xff53  /* Move right, right arrow */
-//#define XK_Down                          0xff54  /* Move down, down arrow */
 int	key_press(int key, void *param)
 {
 	static n_intent = 0;
-	Scene	*scene;
+	t_map_fun map_fun;
+	const t_map_fun controls[10] = {
+		{XK_a, control_a},
+		{XK_d, control_d},
+		{XK_w, control_w},
+		{XK_s, control_s},
+		{XK_Left, control_left},
+		{XK_Up, control_up},
+		{XK_Right, control_right},
+		{XK_Down, control_down},
+		{XK_Escape, control_escape},
+		{0, NULL}
+	};
 
 	if (n_intent >= 1)
 		return 0;
-	scene = (Scene *)param;
-	if (key == XK_a)
+	map_fun = map_fun_get(controls, key);
+	if (map_fun.func)
 	{
 		n_intent++;
-		scene->cameras->dir.x -= 0.1;
-		fmax(fmin(scene->cameras->dir.x, 1.0), -1.0);
-		if (!scene->cameras->dir.x)
-			scene->cameras->dir.x = -0.1;
-		render_scene(scene, N_SAMPLING);
+		map_fun.func(param);
 		n_intent--;
-		printf("A Left\n");
 	}
-	if (key == XK_d)
-	{
-		n_intent++;
-		scene->cameras->dir.x += 0.1;
-		fmax(fmin(scene->cameras->dir.x, 1.0), -1.0);
-		if (!scene->cameras->dir.x)
-			scene->cameras->dir.x = +0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("D Right\n");
-	}
-	if (key == XK_w)
-	{
-		n_intent++;
-		scene->cameras->dir.y -= 0.1;
-		fmax(fmin(scene->cameras->dir.y, 1.0), -1.0);
-		if (!scene->cameras->dir.y)
-			scene->cameras->dir.y = -0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("W Up\n");
-	}
-	if (key == XK_s)
-	{
-		n_intent++;
-		scene->cameras->dir.y += 0.1;
-		fmax(fmin(scene->cameras->dir.y, 1.0), -1.0);
-		if (!scene->cameras->dir.y)
-			scene->cameras->dir.y = 0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("S Down\n");
-	}
-	if (key == XK_Left)
-	{
-		n_intent++;
-		scene->cameras->pos.x -= 1;
-		fmax(fmin(scene->cameras->pos.x, 1.0), -1.0);
-		if (!scene->cameras->pos.x)
-			scene->cameras->pos.x = -0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("Left\n");
-	}
-	if (key == XK_Up)
-	{
-		n_intent++;
-		scene->cameras->pos.z -= 1.0;
-		fmax(fmin(scene->cameras->pos.z, 1.0), -1.0);
-		if (!scene->cameras->pos.z)
-			scene->cameras->pos.z = -0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("Up\n");
-	}
-	if (key == XK_Right)
-	{
-		n_intent++;
-		scene->cameras->pos.x += 1;
-		fmax(fmin(scene->cameras->pos.x, 1.0), -1.0);
-		if (!scene->cameras->pos.x)
-			scene->cameras->pos.x = 0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("Right\n");
-	}
-	if (key == XK_Down)
-	{
-		n_intent++;
-		scene->cameras->pos.z += 1;
-		fmax(fmin(scene->cameras->pos.z, 1.0), -1.0);
-		if (!scene->cameras->pos.z)
-			scene->cameras->pos.z = 0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("Down\n");
-	}
-	if (key == XK_Escape)
-		terminate_program(param);
 	return (0);
 }
 
@@ -158,9 +79,8 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 	double light_dist = distance(hit_point, light_pos);
 	double t = 0;
 	int i;
-
  
-	 // Check intersection with all planes
+	// Check intersection with all planes
 	i = -1;
 	while (++i < scene.n_planes) {
 		if (intersect_plane(&shadow_ray, &scene.planes[i], &t)) {
@@ -195,30 +115,24 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 	{
 		if (intersect_cylinder(&shadow_ray, &scene.cylinders[i], &t)) {
 			if (t > 0 && t < light_dist) {
-				return t; // In shadow
+				return t;
 			}
 		}
 	}
-	return 0; // Not in shadow
+	return 0;
 }
 
 int init_file(char *file)
 {
-	// printf("File: %s\n", file);
-	// exit(1);
 	int fd;
-	int len_file = ft_strlen(file);
+	int len_file;
+	
+	len_file = ft_strlen(file);
 	if (file[len_file - 1] != 't' && file[len_file - 2] != 'r' && file[len_file - 3] != '.')
-	{
-		printf("Error: El archivo no es un archivo .rt\n");
-		exit(1);
-	}
-	fd = open(file, 0);	
+		(printf("Error: El archivo no es un archivo .rt\n"), exit(1));
+	fd = open(file, 0);
 	if (fd < 0)
-	{
-		printf("Error al abrir el archivo\n");
-		exit(1);
-	}
+		(printf("Error al abrir el archivo\n"), exit(1));
 	return (fd);
 }
 
@@ -242,6 +156,7 @@ static void review_scene(Scene *scene)
 	}
 
 }
+
 int main(int argc, char **argv)
 {
 	if (argc != 2)
