@@ -13,9 +13,8 @@ Vector3	pxtopy(Camera camera, Vector3 v)
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera)
 {
     Ray *ray = malloc(sizeof(Ray));
-    if (!ray) {
-        return NULL; // Manejo de memoria
-    }
+    if (!ray)
+        return (NULL);
     ray->origin = camera.pos;
 
     double px = ((2.0 * x / (double)screen_width) - 1.0) * camera.aspect_ratio * camera.plane_distance;
