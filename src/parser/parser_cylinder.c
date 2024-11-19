@@ -48,7 +48,7 @@ int	parser_cylinder(Scene *scene, char **data)
 
 	Cylinder cylinder_null;
 	printf("Cylinder\n");
-	printf("Cylinder ------->: |%s| |%s| |%s| |%s| |%s|\n",data[0],data[1],data[2], data[3], data[4]);
+	printf("Cylinder ------->: |%s| |%s| |%s| |%s| |%s|\n", data[0],data[1],data[2], data[3], data[4]);
 
 	scene->cylinders = ft_realloc(scene->cylinders, sizeof(Cylinder) * scene->n_cylinders, sizeof(Cylinder) * (scene->n_cylinders + 2));
 
@@ -56,11 +56,15 @@ int	parser_cylinder(Scene *scene, char **data)
 	axis = stonorm(data[2]);
 	diameter = diamenter_cylinder(data[3]);
 	height = height_cylinder(data[4]);
-	colornormal_to_int(color);
+	color = ft_color(data[5]);
 	scene->cylinders[scene->n_cylinders].center = center;
 	scene->cylinders[scene->n_cylinders].axis = axis;
 	scene->cylinders[scene->n_cylinders].diameter = diameter;
 	scene->cylinders[scene->n_cylinders].height = height;
 	scene->cylinders[scene->n_cylinders].mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
+	scene->cylinders[scene->n_cylinders].mater_prop.reflect = 0;
+	scene->cylinders[scene->n_cylinders].mater_prop.absorption[R] = 1 - scene->cylinders[scene->n_cylinders].mater_prop.vColor->r;
+	scene->cylinders[scene->n_cylinders].mater_prop.absorption[G] = 1 - scene->cylinders[scene->n_cylinders].mater_prop.vColor->g;
+	scene->cylinders[scene->n_cylinders].mater_prop.absorption[B] = 1 - scene->cylinders[scene->n_cylinders].mater_prop.vColor->b;
 	scene->n_cylinders++;
 }

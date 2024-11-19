@@ -1,58 +1,43 @@
 #include "../main.h"
 
+
 int render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
 {
+	RenderContext	ctx;
+	Vector3 cam_dir;
+	Vector3 light_dir;
+	Color *current_color;
+	Ray rayslight;
 	double d;
-	int current_color = scene.cylinders[n_cyl].mater_prop.color[0];
-	Color *vCurrentColor = scene.cylinders[n_cyl].mater_prop.vColor;
-	MaterialProperties prop = scene.cylinders[n_cyl].mater_prop;
-	int ambient_color = 0;
-	Vector3 *cam_dir = normalize_withpoint(scene.cameras->pos, hit_pt);
-	
-	Vector3 *dir_cyl = normal_cylinder(hit_pt, scene.cylinders[n_cyl]);
-	double intensity = calculate_intensity(*dir_cyl, *cam_dir);
-	current_color = vCurrentColor->color;
-	Vector3 *light_dir = normalize_withpoint(scene.lights->point, hit_pt);
-	Ray rayslight = {scene.lights->point, *light_dir};
-	if (intersect_cylinder(&rayslight, &scene.cylinders[n_cyl], &d))//pointer to function to inter
+	Vector3 *dir_cyl;
+
+	dir_cyl = normal_cylinder(hit_pt, scene.cylinders[n_cyl]);
+	ctx = (RenderContext){
+		.scene = &scene,
+		.mater_prop = scene.cylinders[n_cyl].mater_prop,
+		.normal = *dir_cyl,
+		.hit_pt = hit_pt,
+		.funcs = {
+			.calculate_intensity = calculate_intensity,
+			.calculate_attenuation = calculate_attenuation,
+			.reflect = reflect
+		}
+	};
+	cam_dir = norm_subtract(scene.cameras->pos, hit_pt);
+	light_dir = norm_subtract(scene.lights->point, hit_pt);
+	rayslight = (Ray){scene.lights->point, light_dir};
+	if (intersect_cylinder(&rayslight, &scene.cylinders[n_cyl], &d))
 	{
-		double t = is_in_shadow(scene, scene.lights->point, hit_pt);
-		if (!t)
-		{
-				double distance_light = distance(rayslight.origin, hit_pt);
-				double attenuation = calculate_attenuation(distance_light, L_P_KC, L_P_KL, L_P_KQ);
-				double diffuse_intensity = calculate_intensity(*dir_cyl, rayslight.direction);
-				diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
-				Vector3 *reflect_dir = reflect(rayslight.direction, *dir_cyl);
-				double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
-				specular = fmin(fmax(specular, 0.0), 1.0);
-				vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(0.8, fmax(0.0, ( 1 - (diffuse_intensity * attenuation )))) , 0.95, 0, prop);
-				normalize_color(vCurrentColor);
-				vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(1, fmax(0.0, ( 1- (specular * attenuation * diffuse_intensity)))) , 0.95, 0, prop);
-				normalize_color(vCurrentColor);
-				vCurrentColor = illuminate_surface(int_to_color(ambient_color), vCurrentColor, fmin(1, fmax(0.0, ( 1 - ( attenuation * diffuse_intensity)))) , 0.9, 0, prop);
-				normalize_color(vCurrentColor);
-				current_color = vCurrentColor->color;
-		}
-		else
-		{
-			Vector3 *hit_shadow = hit_point(rayslight, t);
-			double distance_light = distance(hit_pt, *hit_shadow);
-			double attenuation = calculate_attenuation(distance_light, L_P_KC, L_P_KL, L_P_KQ);
-			double diffuse_intensity = calculate_intensity(*dir_cyl, rayslight.direction);
-			diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
-			Vector3 *reflect_dir = reflect(rayslight.direction, *dir_cyl);
-			double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
-			specular = fmin(fmax(specular, 0.0), 1.0);
-			vCurrentColor = illuminate_surface(vCurrentColor, int_to_color(ambient_color) , fmin(1, fmax(0.0, (diffuse_intensity * attenuation ))) , 0.95, 0, prop);
-			normalize_color(vCurrentColor);
-			current_color = vCurrentColor->color;
-		}
+		d = is_in_shadow(scene, scene.lights->point, hit_pt);
+		if (d)
+			current_color = apply_shadow(&ctx, &light_dir, &cam_dir, hit_point(rayslight, d));
+		else 
+			current_color = apply_lighting(&ctx, &light_dir, &cam_dir);
 	}
+	else
+		current_color = apply_ambient(&ctx);
 	free(dir_cyl);
-	free(cam_dir);
-	free(light_dir);
-	return current_color;
+	return current_color->color;
 }
 
 int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
