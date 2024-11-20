@@ -23,17 +23,19 @@ int	render_point(Scene *scene, int x, int y)
 
 int sampling(int x, int y, Scene *scene, int samples_per_pixel)
 {
-	Color final_color = {0, 0, 0};  // Color acumulado (R, G, B)
-	Color sample_color = {0, 0, 0};  // Color acumulado (R, G, B)
+	Color final_color = {0, 0, 0};
+	Color sample_color = {0, 0, 0};
 	float inv_samples = 1.0f / samples_per_pixel;
 	double u;
 	double v;
+	int s;
 
-	for (int s = 0; s < samples_per_pixel; s++)
+	s = -1;
+	while (++s < samples_per_pixel)
 	{
 		// Calcular pequeñas desviaciones aleatorias dentro del píxel (jittering)
-		u = (x + random_double()) / (double)WINX;
-		v = (y + random_double()) / (double)WINY;
+		u = (x + random_double()) / (double)scene->width;
+		v = (y + random_double()) / (double)scene->height;
 		addint_to_color(&sample_color, render_point(scene, x + u, y + v));
 		final_color.r += sample_color.r;
 		final_color.g += sample_color.g;
@@ -42,7 +44,6 @@ int sampling(int x, int y, Scene *scene, int samples_per_pixel)
 	final_color.r *= inv_samples;
 	final_color.g *= inv_samples;
 	final_color.b *= inv_samples;
-
 	return (colornormal_to_int(final_color));
 }
 
@@ -55,10 +56,10 @@ void render_scene(Scene *scene, int samples_per_pixel)
 	double min_dist;
 	int alpha = 0;
 	start = clock();
-    for (int y = 0; y < WINY ; y++) {
-        for (int x = 0; x < WINX ; x++) {
+    for (int y = 0; y < scene->height ; y++) {
+        for (int x = 0; x < scene->width ; x++) {
          	int color = sampling(x, y, scene, samples_per_pixel);
-          set_color(&scene->img->buffer[idxpixel(x, y)], 0, color, 0);
+          set_color(&scene->img->buffer[idxpixel(scene->width, x, y)], 0, color, 0);
         }
     }
 	mlx_put_image_to_window(scene->mlx, scene->win, scene->img->img, 0, 0);

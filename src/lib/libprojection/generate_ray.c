@@ -1,7 +1,6 @@
 #include "../../main.h"
 
-
-Vector3	pxtopy(Camera camera, Vector3 v)
+static Vector3	pxtopy(Camera camera, Vector3 v)
 {
 	Vector3	dst;
 
@@ -10,6 +9,7 @@ Vector3	pxtopy(Camera camera, Vector3 v)
 	dst.z = v.x * camera.horizontal.z + v.y *  camera.vertical.z + v.z * camera.dir.z;
 	return (dst);
 }
+
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera)
 {
 	Ray *ray;

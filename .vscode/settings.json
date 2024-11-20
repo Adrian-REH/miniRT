@@ -32,6 +32,7 @@
 		"cmath": "c",
 		"keysym.h": "c",
 		"string": "c",
-		"string_view": "c"
+		"string_view": "c",
+		"stdlib.h": "c"
 	}
 }
