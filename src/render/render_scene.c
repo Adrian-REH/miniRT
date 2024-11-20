@@ -1,6 +1,6 @@
 #include "../main.h"
 
-int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
+int sampling(int x, int y, Scene *scene, int samples_per_pixel)
 {
     Color final_color = {0, 0, 0};  // Color acumulado (R, G, B)
     Color sample_color = {0, 0, 0};  // Color acumulado (R, G, B)
@@ -45,39 +45,11 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 	return colornormal_to_int(final_color);
 }
 
-void init_rfc_render(Scene *scene)
-{
-	scene->rfc[0] = (int (*)(void *, Ray,  int,  int))render_reflect_plane;//posicion 0
-	scene->rfc[1] = (int (*)(void *, Ray,  int,  int))render_reflect_sphere;//posicion 1
-	scene->rfc[2] = (int (*)(void *, Ray,  int,  int))render_reflect_triangle;//posicion 2
-	scene->rfc[3] = (int (*)(void *, Ray,  int,  int))render_reflect_cylinder;//posicion 3
-	scene->rfc[4] = NULL; // NULL 
-
-}
-
-void init_render(Scene *scene)
-{
-	scene->render[0] = (int (*)(void *, Vector3,  int))render_plane;//posicion 0
-	scene->render[1] = (int (*)(void *, Vector3,  int))render_sphere;//posicion 1
-	scene->render[2] = (int (*)(void *, Vector3,  int))render_triangle;//posicion 2
-	scene->render[3] = (int (*)(void *, Vector3,  int))render_cylinder;//posicion 3
-	scene->render[4] = NULL; // NULL 
-}
-
-void init_intersect(Scene *scene)
-{
-	scene->isc[0] = (int (*)(const void *, const void *, double *))intersect_plane;//posicion 0
-	scene->isc[1] = (int (*)(const void *, const void *, double *))intersect_sphere;//posicion 1
-	scene->isc[2] = (int (*)(const void *, const void *, double *))intersect_triangle;//posicion 2
-	scene->isc[3] = (int (*)(const void *, const void *, double *))intersect_cylinder;//posicion 3
-	scene->isc[4] = NULL; // NULL 
-}
-
 void render_scene(Scene *scene, int samples_per_pixel)
 {
-	init_rfc_render(scene);
-	init_render(scene);
-	init_intersect(scene);
+	init_rfc_render_fun(scene);
+	init_render_fun(scene);
+	init_intersect_fun(scene);
 	time_t start, end;
 	double min_dist;
 	int alpha = 0;
@@ -85,7 +57,7 @@ void render_scene(Scene *scene, int samples_per_pixel)
     for (int y = 0; y < WINY ; y++) {
         for (int x = 0; x < WINX ; x++) {
             // Calcula el color del píxel con multiple-sampling (anti-aliasing)
-         	int color = render_sampling(x, y, scene, samples_per_pixel);
+         	int color = sampling(x, y, scene, samples_per_pixel);
             // Guardar o mostrar el color final del píxel
           set_color(&scene->img->buffer[idxpixel(x, y)], 0, color, 0);
         }

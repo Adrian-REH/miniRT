@@ -283,6 +283,13 @@ typedef struct {
 	LightingFunctions funcs;
 } RenderContext;
 
+//------FSM-------
+void init_intersect_fun(Scene *scene);
+char **init_args();
+void init_parser_fun(Scene *scene);
+void init_render_fun(Scene *scene);
+void init_rfc_render_fun(Scene *scene);
+
 Vector3 rotate_v3(Vector3 v, Vector3 axis, double angle);
 void	rot_camera(Scene *scene, Vector3 dir, int ang);
 void	rot_triangle(Scene *scene, Vector3 dir, int ang);
@@ -409,7 +416,7 @@ int	render_triangle(Scene *scene, Vector3 hit_pt, int id);
 int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t);
 int	render_plane(Scene *scene,Vector3 hit_pt, int id);
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id);
-int render_sampling(int x, int y, Scene *scene, int samples_per_pixel);
+int sampling(int x, int y, Scene *scene, int samples_per_pixel);
 int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere);
 int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane);
 int find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type);

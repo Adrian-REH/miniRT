@@ -89,7 +89,6 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/parser/parser_obj.c \
 				src/parser/parser_triangle.c \
 				src/parser/parser_square.c \
-				src/parser/parser_utils.c \
 				src/parser/parser_resolution.c \
 				src/render/render_cylinder.c \
 				src/render/render_scene.c \
@@ -105,6 +104,11 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/object/scene.c \
 				src/object/sphere.c \
 				src/object/line.c \
+				src/fsm/init_intersect_fun.c \
+				src/fsm/init_parser_alpha.c \
+				src/fsm/init_parser_fun.c \
+				src/fsm/init_render_fun.c \
+				src/fsm/init_rfc_render_fun.c \
 				src/control/key_press.c \
 				src/control/mause_press.c \
 				src/control/control_camera/control_a.c \
@@ -124,6 +128,7 @@ OBJ_DIRS := obj/src/lib/libcolor \
 			obj/src/lib/libbrdf \
 			obj/src/parser \
 			obj/src/render \
+			obj/src/fsm \
 			obj/src/object \
 			obj/src/lib/librandom \
 			obj/src/lib/libsarr \

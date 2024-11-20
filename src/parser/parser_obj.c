@@ -25,42 +25,6 @@ int	idstr(char *alphabet[], char *str)
 }
 
 /**
- * Terminar de
- */
-void init_parser(Scene *scene)
-{
-	scene->parser[0] = (int (*)(void *, void *))parser_resolution;//posicion 0
-	scene->parser[1] = (int (*)(void *, void *))parser_ambient;//posicion 1
-	scene->parser[2] = (int (*)(void *, void *))parser_camera;//posicion 2
-	scene->parser[3] = (int (*)(void *, void *))parser_light;//posicion 3
-	scene->parser[4] = (int (*)(void *, void *))parser_plane;//posicion 4
-	scene->parser[5] = (int (*)(void *, void *))parser_sphere;//posicion 5
-	scene->parser[6] = (int (*)(void *, void *))parser_square;//posicion 6
-	scene->parser[7] = (int (*)(void *, void *))parser_cylinder;//posicion 7
-	scene->parser[8] = (int (*)(void *, void *))parser_triangle;//posicion 8
-	scene->parser[9] = NULL; // NULL 
-
-}
-
-/**
- * Terminar de llenar el alphabet de objetos
- */
-char **init_args()
-{
-	char **alphabet;
-	alphabet = ft_sarradd(alphabet, "R"); //posicion 0 Resolution
-	alphabet = ft_sarradd(alphabet, "A");//posicion 1 Ambient
-	alphabet = ft_sarradd(alphabet, "C");//posicion 2	camara
-	alphabet = ft_sarradd(alphabet, "L");//posicion 2	Light
-	alphabet = ft_sarradd(alphabet, "pl");//posicion 4 Plane
-	alphabet = ft_sarradd(alphabet, "sp"); //posicion 5 Sphere
-	alphabet = ft_sarradd(alphabet, "sq");//posicion 6 Square
-	alphabet = ft_sarradd(alphabet, "cy");//posicion 7 Cylinder
-	alphabet = ft_sarradd(alphabet, "tr");//posicion 8 Triangle
-	return (alphabet);
-}
-
-/**
  * Aqui va el codigo de automata para resolver 
  * el parseo
  */
@@ -81,7 +45,7 @@ int	ft_countword(const char *s, int c)
 
 int parser_obj(Scene *scene, int fd)
 {
-	init_parser(scene);
+	init_parser_fun(scene);
 	char **data;
 	int i=0;
 	char **alphabet = init_args();

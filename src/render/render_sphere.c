@@ -59,7 +59,6 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 	return hit_color;
 }
 
-
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 {
 	double t = 0;
