@@ -16,6 +16,8 @@ PACK = ar rcs
 CFLAGS = -Wall -Wextra -Werror -g
 FRM = rm -rf
 CORE_FILES = \
+	ft_isspaces.c	\
+	ft_split_space.c\
 	ft_memset.c		\
 	ft_bzero.c		\
 	ft_memcpy.c		\

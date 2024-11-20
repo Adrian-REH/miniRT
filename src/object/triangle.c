@@ -57,3 +57,20 @@ int find_nearest_triangle(Scene scene, Ray *ray, double *t, int id, int type)
 	*t = min_dist;
 	return j;
 }
+
+void	rot_triangle(Scene *scene, Vector3 dir, int ang)
+{
+	Triangle *triangle;
+	triangle = &(scene->triangles[scene->pos_obj->idx]);
+	//Por el momento no encontre un algoritmo para hacerlo
+
+}
+
+void	pos_triangle(Scene *scene, Vector3 dir)
+{
+	Triangle *triangle;
+	triangle = &(scene->triangles[scene->pos_obj->idx]);
+	triangle->vertex[0] = add_vector3_to_vector3(dir, triangle->vertex[0]);
+	triangle->vertex[1] = add_vector3_to_vector3(dir, triangle->vertex[1]);
+	triangle->vertex[2] = add_vector3_to_vector3(dir, triangle->vertex[2]);
+}

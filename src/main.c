@@ -6,14 +6,11 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 23:12:23 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/13 23:38:53 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/18 18:42:43 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
-
-# include <X11/keysym.h>
-# include <X11/X.h>
 
 int	terminate_program(void *param)
 {
@@ -30,117 +27,10 @@ int	terminate_program(void *param)
 	exit(0);
 }
 
-/* 
-*	This function handle when a key is pressed
-*/
-//#define XK_Left                          0xff51  /* Move left, left arrow */
-//#define XK_Up                            0xff52  /* Move up, up arrow */
-//#define XK_Right                         0xff53  /* Move right, right arrow */
-//#define XK_Down                          0xff54  /* Move down, down arrow */
-int	key_press(int key, void *param)
-{
-	static n_intent = 0;
-	Scene	*scene;
-
-	if (n_intent >= 1)
-		return 0;
-	scene = (Scene *)param;
-	if (key == XK_a)
-	{
-		n_intent++;
-		scene->cameras->dir.x -= 0.1;
-		fmax(fmin(scene->cameras->dir.x, 1.0), -1.0);
-		if (!scene->cameras->dir.x)
-			scene->cameras->dir.x = -0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("A Left\n");
-	}
-	if (key == XK_d)
-	{
-		n_intent++;
-		scene->cameras->dir.x += 0.1;
-		fmax(fmin(scene->cameras->dir.x, 1.0), -1.0);
-		if (!scene->cameras->dir.x)
-			scene->cameras->dir.x = +0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("D Right\n");
-	}
-	if (key == XK_w)
-	{
-		n_intent++;
-		scene->cameras->dir.y -= 0.1;
-		fmax(fmin(scene->cameras->dir.y, 1.0), -1.0);
-		if (!scene->cameras->dir.y)
-			scene->cameras->dir.y = -0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("W Up\n");
-	}
-	if (key == XK_s)
-	{
-		n_intent++;
-		scene->cameras->dir.y += 0.1;
-		fmax(fmin(scene->cameras->dir.y, 1.0), -1.0);
-		if (!scene->cameras->dir.y)
-			scene->cameras->dir.y = 0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("S Down\n");
-	}
-	if (key == XK_Left)
-	{
-		n_intent++;
-		scene->cameras->pos.x -= 1;
-		fmax(fmin(scene->cameras->pos.x, 1.0), -1.0);
-		if (!scene->cameras->pos.x)
-			scene->cameras->pos.x = -0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("Left\n");
-	}
-	if (key == XK_Up)
-	{
-		n_intent++;
-		scene->cameras->pos.z -= 1.0;
-		fmax(fmin(scene->cameras->pos.z, 1.0), -1.0);
-		if (!scene->cameras->pos.z)
-			scene->cameras->pos.z = -0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("Up\n");
-	}
-	if (key == XK_Right)
-	{
-		n_intent++;
-		scene->cameras->pos.x += 1;
-		fmax(fmin(scene->cameras->pos.x, 1.0), -1.0);
-		if (!scene->cameras->pos.x)
-			scene->cameras->pos.x = 0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("Right\n");
-	}
-	if (key == XK_Down)
-	{
-		n_intent++;
-		scene->cameras->pos.z += 1;
-		fmax(fmin(scene->cameras->pos.z, 1.0), -1.0);
-		if (!scene->cameras->pos.z)
-			scene->cameras->pos.z = 0.1;
-		render_scene(scene, N_SAMPLING);
-		n_intent--;
-		printf("Down\n");
-	}
-	if (key == XK_Escape)
-		terminate_program(param);
-	return (0);
-}
-
 static void	mlx_listen_meta(Scene *scene)
 {
-/* 	mlx_hook(meta->vars.win, 4, 1L << 2, mouse_press, meta);
+ 	mlx_hook(scene->win, 4, 1L << 2, mouse_press, scene);
+	/*
 	mlx_hook(meta->vars.win, 5, 1L << 3, mouse_release, meta);
 	mlx_hook(meta->vars.win, 6, 1L << 6, mouse_move, meta);
 */
@@ -158,9 +48,8 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 	double light_dist = distance(hit_point, light_pos);
 	double t = 0;
 	int i;
-
  
-	 // Check intersection with all planes
+	// Check intersection with all planes
 	i = -1;
 	while (++i < scene.n_planes) {
 		if (intersect_plane(&shadow_ray, &scene.planes[i], &t)) {
@@ -195,44 +84,86 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 	{
 		if (intersect_cylinder(&shadow_ray, &scene.cylinders[i], &t)) {
 			if (t > 0 && t < light_dist) {
-				return t; // In shadow
+				return t;
 			}
 		}
 	}
-	return 0; // Not in shadow
+	return 0;
 }
 
 int init_file(char *file)
 {
 	int fd;
-	int len_file = ft_strlen(file);
+	int len_file;
+	
+	len_file = ft_strlen(file);
 	if (file[len_file - 1] != 't' && file[len_file - 2] != 'r' && file[len_file - 3] != '.')
-	{
-		printf("Error: El archivo no es un archivo .rt\n");
-		exit(1);
-	}
-	fd = open(file, 0);	
+		(printf("Error: El archivo no es un archivo .rt\n"), exit(1));
+	fd = open(file, 0);
 	if (fd < 0)
-	{
-		printf("Error al abrir el archivo\n");
-		exit(1);
-	}
+		(printf("Error al abrir el archivo\n"), exit(1));
 	return (fd);
 }
 
-int main()
+static void review_scene(Scene *scene)
 {
+	if (!scene->width || !scene->height)
+	{
+		scene->width = WINX;
+		scene->height = WINY;
+	}
+	if (scene->n_lights <= 0)
+	{
+		printf("Error: No hay Luz en la escena\n");
+		exit(1);
+	}
+	if (!scene->cameras)
+	{
+		printf("Error: No hay camaras en la escena\n");
+		exit(1);
+	}
+	if (!scene->ambient)
+	{
+		printf("Error: No hay Ambiente en la escena\n");
+		exit(1);
+	}
+
+}
+void init_pos_obj_fun(Scene *scene)
+{
+	scene->pos_obj->type = CAMERA;
+	scene->pos_obj->idx = 0;
+	scene->pos_obj->pos[PLANE] = (void (*)(void *, Vector3))pos_plane;
+	scene->pos_obj->pos[SPHERE] = (void (*)(void *, Vector3))pos_sphere;
+	scene->pos_obj->pos[TRIANGLE] = (void (*)(void *, Vector3))pos_triangle;
+	scene->pos_obj->pos[CYLINDER] = (void (*)(void *, Vector3))pos_cylinder;
+	scene->pos_obj->pos[CAMERA] = (void (*)(void *, Vector3))pos_camera;
+	scene->pos_obj->rot[PLANE] = (void (*)(void *, Vector3, int))rot_plane;
+	scene->pos_obj->rot[SPHERE] = NULL;
+	scene->pos_obj->rot[TRIANGLE] = (void (*)(void *, Vector3, int))rot_triangle;
+	scene->pos_obj->rot[CYLINDER] = (void (*)(void *, Vector3, int))rot_cylinder;
+	scene->pos_obj->rot[CAMERA] = (void (*)(void *, Vector3, int))rot_camera;
+}
+int main(int argc, char **argv)
+{
+	if (argc != 2)
+	{
+		printf("Error: Argumentos invalidos\n");
+		exit(1);
+	}
 	Scene *scene = malloc(sizeof(Scene));
-	ft_bzero(scene, sizeof(Scene));
-	scene->mlx = mlx_init();
-	scene->win = mlx_new_window(scene->mlx, WINX, WINY, "miniRT!");
 	Img img;
+	ft_bzero(scene, sizeof(Scene));
+	parser_obj(scene, init_file(argv[1]));
+	review_scene(scene);
+	scene->pos_obj = malloc(sizeof(s_pos_obj));
+	ft_bzero(scene->pos_obj, sizeof(s_pos_obj));
+	init_pos_obj_fun(scene);
+	scene->mlx = mlx_init();
+	scene->win = mlx_new_window(scene->mlx, scene->width, scene->height, "miniRT!");
 	scene->img = &img;
-	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
+	scene->img->img = mlx_new_image(scene->mlx, scene->width, scene->height);
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
-	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	parser_obj(scene, init_file("mandatory.rt"));
 	render_scene(scene, N_SAMPLING);
-	//mlx_loop(scene->mlx);
 	mlx_listen_meta(scene);
 }

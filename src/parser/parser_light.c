@@ -15,7 +15,6 @@
 
 int	parser_light(Scene *scene, char **data)
 {
-
 	Vector3		point = {0, 0, 0};
 	double		ratio = 0;
 	Color		color = {0, 0, 0};
@@ -27,11 +26,7 @@ int	parser_light(Scene *scene, char **data)
 	point = ft_coordinate(data[1]);
 	color = ft_color(data[3]);
 	scene->lights->color = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
-//	scene->lights->color = int_to_color(0xFFFFFF);
 	scene->lights->point =  point;
 	scene->lights->ratio =  ft_limit(0, 1, ft_ratio(data[2]));	
 	scene->n_lights++;
-	// printf("----> |%f| |%f| |%f| |%f|\n", scene->lights->point.x, scene->lights->point.y, scene->lights->point.z, scene->lights->ratio);
-	// printf("----> |%f| |%f| |%f|\n", scene->lights->color->r, scene->lights->color->g, scene->lights->color->b);
-	//exit (1);
 }

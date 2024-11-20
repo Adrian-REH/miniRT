@@ -92,7 +92,7 @@ int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 	{
         if (y1 < 0)
 			return 0;
-        double th = t0 + (t1 - t0) * y0 / (y0 - y1);
+        double th = t0 + (t1 - t0) * (y0) / (y0 - y1);
         if (th <= 0)
 			return 0;
         *t = th;
@@ -132,4 +132,20 @@ int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type)
 	}
 	*t = min_dist;
 	return j;
+}
+
+void	rot_cylinder(Scene *scene, Vector3 dir, int ang)
+{
+	Cylinder *cylinder;
+	cylinder = &(scene->cylinders[scene->pos_obj->idx]);
+	cylinder->axis = rotate_v3(cylinder->axis, dir, ang);
+
+    normalize(&cylinder->axis);
+}
+
+void	pos_cylinder(Scene *scene, Vector3 dir)
+{
+	Cylinder *cylinder;
+	cylinder = &(scene->cylinders[scene->pos_obj->idx]);
+	cylinder->center = add_vector3_to_vector3(cylinder->center, dir);
 }

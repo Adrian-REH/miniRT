@@ -13,12 +13,15 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+# include <X11/keysym.h>
+# include <X11/X.h>
 #include "../lib/minilibx-linux/mlx.h"
 #include "../lib/libft/libft.h"
 #include "../lib/minilibx_opengl/mlx_opengl.h"
 #include <float.h>
 #include <stdint.h>
 #include <math.h>
+#include <fcntl.h>
 #define EPSILON 1e-8 // Margen de tolerancia para precisión flotante
 
 
@@ -84,15 +87,14 @@
 #define REFLECT 0.95 // Intensidad de la luz
 #define PI 3.1415
 
-typedef enum
-{
-	PLANE,
-	SPHERE,
-	TRIANGLE,
-	CYLINDER,
-	CAMERA,
-	LIGHT,
-} e_obj;
+
+#define PLANE 0
+#define SPHERE 1
+#define TRIANGLE 2
+#define CYLINDER 3
+#define CAMERA 4
+#define LIGHT 5
+
 
 typedef enum
 {
@@ -100,6 +102,7 @@ typedef enum
 	G,
 	B
 } e_col;
+
 typedef struct
 {
 	double	x;
@@ -138,6 +141,15 @@ typedef struct
 	Vector3	direction;
 } Ray;
 
+typedef struct
+{
+	void	*img;
+	char	*buffer;
+	int		bitxpixel;
+	int		lines;
+	int		endian;
+} Img;
+
 typedef struct t_materialProperties
 {
     double reflect;                    // Reflexión
@@ -148,7 +160,7 @@ typedef struct t_materialProperties
     double iridescence;                // Iridescencia
     double emission;                   // Emisión
     double subsurface_scattering;      // SSS
-    char texture[MAX_TEXTURE_SIZE];    // Textura
+    Img texture;    // Textura
     double refraction_index;           // Índice de refracción
     int color[MAX_COLOR_SIZE];        // Color
 	Color *vColor;
@@ -162,6 +174,14 @@ typedef struct
 	int					color;
 	MaterialProperties	mater_prop;
 } Sphere;
+
+
+typedef struct
+{
+	unsigned long key;
+	void (*func)(void *);
+}	t_map_fun;
+
 
 typedef struct
 {
@@ -210,14 +230,14 @@ typedef struct {
 	double	ratio;
 } Ambient;
 
-typedef struct
-{
-	char	*buffer;
-	int		bitxpixel;
-	void	*img;
-	int		lines;
-	int		endian;
-} Img;
+
+typedef struct {
+	int type;
+	int idx;
+	void (*rot[10])(void *, Vector3, int);
+	void (*pos[10])(void *, Vector3);
+
+} s_pos_obj;
 
 typedef struct {
 	void		*mlx;
@@ -239,9 +259,60 @@ typedef struct {
 	int			n_spheres;
 	int			n_squares;
 	int			n_triangles;
+	s_pos_obj	*pos_obj;
+	int			(*isc[10])(const void *, const void *, double *);
+	int			(*rfc[10])(void *, Ray, int, int);
+	int			(*render[10])(void *, Vector3, int);
 	int			(*parser[10])(void *, void *);
 } Scene;
+typedef double (*IntensityFunc)(Vector3, Vector3);
+typedef double (*AttenuationFunc)(double, double, double, double);
+typedef Vector3* (*ReflectFunc)(Vector3, Vector3);
 
+typedef struct {
+	IntensityFunc calculate_intensity;
+	AttenuationFunc calculate_attenuation;
+	ReflectFunc reflect;
+} LightingFunctions;
+
+typedef struct {
+	Scene *scene;
+	Vector3 hit_pt;
+	Vector3 normal;
+	MaterialProperties mater_prop;
+	LightingFunctions funcs;
+} RenderContext;
+
+Vector3 rotate_v3(Vector3 v, Vector3 axis, double angle);
+void	rot_camera(Scene *scene, Vector3 dir, int ang);
+void	rot_triangle(Scene *scene, Vector3 dir, int ang);
+void	rot_plane(Scene *scene, Vector3 dir, int ang);
+void	rot_cylinder(Scene *scene, Vector3 dir, int ang);
+
+void	pos_camera(Scene *scene, Vector3 dir);
+void	pos_triangle(Scene *scene, Vector3 dir);
+void	pos_plane(Scene *scene, Vector3 dir);
+void	pos_cylinder(Scene *scene, Vector3 dir);
+void	pos_sphere(Scene *scene, Vector3 dir);
+
+int	terminate_program(void *param);
+
+Vector3 rotate_x(Vector3 v, double angle);
+Vector3 rotate_z(Vector3 v, double angle);
+Vector3 rotate_y(Vector3 v, double angle);
+//CONTROL
+int	key_press(int key, void *param);
+int	mouse_press(int button, int x, int y, void *param);
+
+Color *darken_surface(Color *surface_color, double darkness_intensity);
+//-----RENDER APPLY-----
+Color* apply_lighting(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir);
+Color* apply_shadow(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt);
+Color *apply_ambient(const RenderContext *ctx);
+//------libsarr----
+int		ft_sarrprint(char **arr);
+char	**ft_sarradd(char **arr, char *string);
+int		ft_sarrsize(char **arr);
 //-----libcolor------
 double ft_limit(double min, double max, double val);
 Vector3 *reflect(Vector3 L, Vector3 N);
@@ -260,14 +331,16 @@ Color *illuminate_surface(Color *surface_color, Color *light_color, double inten
 Vector3 scalev3(Vector3 v, float scalar);
 double		sin_v3(Vector3 v1, Vector3 v2);
 Vector3	cross_v3(Vector3 v1, Vector3 v2);
-int		ft_sarrsize(char **arr);
-
+Vector3 add_scalar_to_vector3(Vector3 init, double scale);
+Vector3 add_vector3_to_vector3(Vector3 init, Vector3 end);
+Vector3 multiplyv3(Vector3 v, Vector3 u);
 int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
 int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
 int line_solution_point(Ray ray, Vector3 point);
 int triangle_solution_point(Triangle triangle, Vector3 hit_pt);
 double	mod(Vector3 v);
 Vector3		*reflect(Vector3 L, Vector3 N);
+Vector3 norm_subtract(Vector3 init, Vector3 end);
 Vector3 subtract(Vector3 init, Vector3 end);
 int		is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point) ;
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
@@ -288,6 +361,20 @@ Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camer
 Vector3 *hit_point(Ray ray, double t);
 double mix(double a, double b, double t);
 Ray *generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal);
+//------LIB/LIBMAPFUN------
+t_map_fun map_fun_get(const t_map_fun *map_fun, int key);
+//------CONTROL_CAMERA----
+void control_a(Scene *scene);
+void control_s(Scene *scene);
+void control_d(Scene *scene);
+void control_w(Scene *scene);
+void control_left(Scene *scene);
+void control_right(Scene *scene);
+void control_down(Scene *scene);
+void control_up(Scene *scene);
+//------CONTROL_QUITE----
+
+void control_escape(Scene *scene);
 //------RANDOM------
 double random_double();
 //------OBJECT------
@@ -329,8 +416,8 @@ int find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type);
 void render_scene(Scene *scene, int samples_per_pixel);
 int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type);
 int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type);
-
-
+int	render_reflect_triangle(Scene *scene, Ray rayrfc, int id, int type);
+int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type);
 
 // UTILS
 void	ft_free_p2(char **dst);

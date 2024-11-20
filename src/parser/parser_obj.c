@@ -12,20 +12,6 @@
 
 #include "../main.h"
 
-int	ft_sarrprint(char **arr)
-{
-	int	i;
-
-	if (!arr || !arr[0])
-		return (0);
-	i = -1;
-	while (arr[++i])
-	{
-		ft_putstr_fd(arr[i], 1);
-		ft_putstr_fd("\n", 1);
-	}
-	return (i);
-}
 
 int	idstr(char *alphabet[], char *str)
 {
@@ -38,49 +24,20 @@ int	idstr(char *alphabet[], char *str)
 	return (9); //devolver el ultimo + 1 idx del alphabet
 }
 
-char	**ft_sarradd(char **arr, char *string)
-{
-	int		size;
-	char	**new_arr;
-
-	if (!string)
-		return (arr);
-	size = ft_sarrsize(arr) + 2;
-	new_arr = malloc(sizeof(char *) * (size));
-	if (!new_arr)
-		return (NULL);
-	size = 0;
-	if (arr)
-	{
-		while (arr[size])
-		{
-			new_arr[size] = ft_strdup(arr[size]);
-			if (!new_arr[size++])
-				return (ft_free_p2(new_arr), NULL);
-		}
-		ft_free_p2(arr);
-	}
-	new_arr[size++] = ft_strdup(string);
-	if (!new_arr[size - 1])
-		return (ft_free_p2(new_arr), NULL);
-	new_arr[size] = NULL;
-	return (new_arr);
-}
-
 /**
  * Terminar de
  */
 void init_parser(Scene *scene)
 {
-	scene->parser[0] = parser_resolution;//posicion 0
-	scene->parser[1] = parser_ambient;//posicion 1
-	scene->parser[2] = parser_camera;//posicion 2
-	scene->parser[3] = parser_light;//posicion 3
-	scene->parser[4] = parser_plane;//posicion 4
-	scene->parser[5] = parser_sphere;//posicion 5
-	scene->parser[6] = parser_square;//posicion 6
-	scene->parser[7] = parser_cylinder;//posicion 7
-	scene->parser[8] = parser_triangle;//posicion 8
+	scene->parser[0] = (int (*)(void *, void *))parser_resolution;//posicion 0
+	scene->parser[1] = (int (*)(void *, void *))parser_ambient;//posicion 1
+	scene->parser[2] = (int (*)(void *, void *))parser_camera;//posicion 2
+	scene->parser[3] = (int (*)(void *, void *))parser_light;//posicion 3
+	scene->parser[4] = (int (*)(void *, void *))parser_plane;//posicion 4
+	scene->parser[5] = (int (*)(void *, void *))parser_sphere;//posicion 5
+	scene->parser[6] = (int (*)(void *, void *))parser_square;//posicion 6
+	scene->parser[7] = (int (*)(void *, void *))parser_cylinder;//posicion 7
+	scene->parser[8] = (int (*)(void *, void *))parser_triangle;//posicion 8
 	scene->parser[9] = NULL; // NULL 
 
 }
@@ -93,8 +50,8 @@ char **init_args()
 	char **alphabet;
 	alphabet = ft_sarradd(alphabet, "R"); //posicion 0 Resolution
 	alphabet = ft_sarradd(alphabet, "A");//posicion 1 Ambient
-	alphabet = ft_sarradd(alphabet, "c");//posicion 2	camara
-	alphabet = ft_sarradd(alphabet, "l");//posicion 2	Light
+	alphabet = ft_sarradd(alphabet, "C");//posicion 2	camara
+	alphabet = ft_sarradd(alphabet, "L");//posicion 2	Light
 	alphabet = ft_sarradd(alphabet, "pl");//posicion 4 Plane
 	alphabet = ft_sarradd(alphabet, "sp"); //posicion 5 Sphere
 	alphabet = ft_sarradd(alphabet, "sq");//posicion 6 Square
@@ -132,20 +89,22 @@ int parser_obj(Scene *scene, int fd)
 
 	while (line)//No olvidarse de poner una comprobacion o hacer brake
 	{
-		data = ft_split(line, ' '); //Esto te debe devolver data[0]->"pl" data[1]->"0.0,0.0,-10.0" data[2]->"0.0,1.0,0.0" data[3]->"0,0,225"
+		data = ft_split_space(line); //Esto te debe devolver data[0]->"pl" data[1]->"0.0,0.0,-10.0" data[2]->"0.0,1.0,0.0" data[3]->"0,0,225"
 		if (data == NULL || *data == NULL)
+		{
+			free(line);
+			line = get_next_line(fd);
 			continue ;
+		}
 		int state = idstr(alphabet, data[0]); //data[0]->"pl" entonces idstr debe devolver 0
-		printf("state: %d\n", state);
 		if (state == 11)
 		{
 			printf("Error: %s no es un typo valido\n", data[0]);
 			exit(1);
 		}
-		//if (state == 8) entonces tienes que dar error.
-		if (scene->parser[state]) //por tanto state es 0.
-			scene->parser[state](scene, data); //ejecuto la funciond e la posicion 0, que en este caso seria parser_plane
-		ft_sarrprint(data);
+		if (scene->parser[state]){
+			printf("%s\n", data[0]);
+			scene->parser[state](scene, data);}
 		free(line);
 		ft_free_p2(data);
 		line = get_next_line(fd);

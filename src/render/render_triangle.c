@@ -2,54 +2,38 @@
 
 int render_point_triangle(Scene scene, Vector3 hit_pt, int n_triangle)
 {
+	RenderContext	ctx;
+	Vector3 cam_dir;
+	Vector3 light_dir;
+	Color *current_color;
+	Ray rayslight;
 	double d;
-	int current_color = scene.triangles[n_triangle].mater_prop.color[0];
-	Color *vCurrentColor = scene.triangles[n_triangle].mater_prop.vColor;
-	MaterialProperties prop = scene.triangles[n_triangle].mater_prop;
-	int ambient_color = 0;
-	Vector3 *cam_dir = normalize_withpoint(scene.cameras->pos, hit_pt);
-	double intensity = calculate_intensity(scene.triangles[n_triangle].p_triangle->normal, *cam_dir);
-	current_color = vCurrentColor->color;
-	Vector3 *light_dir = normalize_withpoint(scene.lights->point, hit_pt);
-	Ray rayslight = {scene.lights->point, *light_dir};
+
+	ctx = (RenderContext){
+		.scene = &scene,
+		.mater_prop = scene.triangles[n_triangle].mater_prop,
+		.normal = scene.triangles[n_triangle].p_triangle->normal,
+		.hit_pt = hit_pt,
+		.funcs = {
+			.calculate_intensity = calculate_intensity,
+			.calculate_attenuation = calculate_attenuation,
+			.reflect = reflect
+		}
+	};
+	cam_dir = norm_subtract(scene.cameras->pos, hit_pt);
+	light_dir = norm_subtract(scene.lights->point, hit_pt);
+	rayslight = (Ray){scene.lights->point, light_dir};
 	if (intersect_triangle(&rayslight, &scene.triangles[n_triangle], &d))
 	{
-		double t = is_in_shadow(scene, scene.lights->point, hit_pt);
-		if (!t)
-		{
-				double distance_light = distance(rayslight.origin, hit_pt);
-				double attenuation = calculate_attenuation(distance_light, L_P_KC, L_P_KL, L_P_KQ);
-				double diffuse_intensity = calculate_intensity(scene.triangles[n_triangle].p_triangle->normal, rayslight.direction);
-				diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
-				Vector3 *reflect_dir = reflect(rayslight.direction, scene.triangles[n_triangle].p_triangle->normal);
-				double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
-				specular = fmin(fmax(specular, 0.0), 1.0);
-				vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(0.8, fmax(0.0, ( 1 - (diffuse_intensity * attenuation )))) , 0.95, 0, prop);
-				normalize_color(vCurrentColor);
-				vCurrentColor = illuminate_surface(vCurrentColor, scene.lights->color, fmin(1, fmax(0.0, ( 1- (specular * attenuation * diffuse_intensity)))) , 0.95, 0, prop);
-				normalize_color(vCurrentColor);
-				vCurrentColor = illuminate_surface(int_to_color(ambient_color), vCurrentColor, fmin(1, fmax(0.0, ( 1 - ( attenuation * diffuse_intensity)))) , 0.9, 0, prop);
-				normalize_color(vCurrentColor);
-				current_color = vCurrentColor->color;
-		}
-		else
-		{
-			Vector3 *hit_shadow = hit_point(rayslight, t);
-			double distance_light = distance(hit_pt, *hit_shadow);
-			double attenuation = calculate_attenuation(distance_light, L_P_KC, L_P_KL, L_P_KQ);
-			double diffuse_intensity = calculate_intensity(scene.planes[n_triangle].normal, rayslight.direction);
-			diffuse_intensity = fmin(fmax(diffuse_intensity, 0.0), 1.0);
-			Vector3 *reflect_dir = reflect(rayslight.direction, scene.planes[n_triangle].normal);
-			double specular = specular_intensity(*reflect_dir, *cam_dir, SHININESS, KS);
-			specular = fmin(fmax(specular, 0.0), 1.0);
-			vCurrentColor = illuminate_surface(vCurrentColor, int_to_color(ambient_color) , fmin(1, fmax(0.0, (diffuse_intensity * attenuation ))) , 0.95, 0, prop);
-			normalize_color(vCurrentColor);
-			current_color = vCurrentColor->color;
-		}
+		d = is_in_shadow(scene, scene.lights->point, hit_pt);
+		if (d){
+			current_color = apply_shadow(&ctx, &light_dir, &cam_dir, hit_point(rayslight, d));}
+		else 
+			current_color = apply_lighting(&ctx, &light_dir, &cam_dir);
 	}
-	free(cam_dir);
-	free(light_dir);
-	return current_color;
+	else
+		current_color = apply_ambient(&ctx);
+	return current_color->color;
 }
 
 int	render_reflect_triangle(Scene *scene, Ray rayrfc, int id, int type)
@@ -79,7 +63,7 @@ int	render_reflect_triangle(Scene *scene, Ray rayrfc, int id, int type)
 int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 {
 	double t = 0;
-	double idx = id;
+	int idx = id;
 	int hit_color = 0;
 	int tmp[2] = {0 , 0};
 	int result = 0;
@@ -89,21 +73,11 @@ int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 	{
 		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangles[id].p_triangle->normal);
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, TRIANGLE);
-		if (type == PLANE)
+		if (scene->rfc[type])
 		{
-			hit_color = render_reflect_plane(scene, *rayrfc, id, TRIANGLE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.6, 0.9, 0, scene->planes[id].mater_prop)->color;
+			hit_color = scene->rfc[type](scene, *rayrfc, id, TRIANGLE);
+			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.6, 0.9, 0, scene->triangles[id].mater_prop)->color;
 		}
-		if (type == SPHERE)
-		{
-			hit_color = render_reflect_sphere(scene, *rayrfc, id, TRIANGLE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-		} 
-		if (type == TRIANGLE)
-		{
-			hit_color = render_reflect_triangle(scene, *rayrfc, id, TRIANGLE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-		} 
 		free(rayrfc);
 		return hit_color;
 	}

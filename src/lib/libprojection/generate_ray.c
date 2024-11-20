@@ -1,31 +1,30 @@
 #include "../../main.h"
 
+
+Vector3	pxtopy(Camera camera, Vector3 v)
+{
+	Vector3	dst;
+
+	dst.x = v.x * camera.horizontal.x + v.y * camera.vertical.x + v.z * camera.dir.x;
+	dst.y = v.x * camera.horizontal.y + v.y *  camera.vertical.y + v.z * camera.dir.y;
+	dst.z = v.x * camera.horizontal.z + v.y *  camera.vertical.z + v.z * camera.dir.z;
+	return (dst);
+}
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera)
 {
-    // Inicializa el rayo y su origen
-    Ray *ray = malloc(sizeof(Ray));
-    if (!ray) {
-        return NULL; // Manejo de memoria
-    }
-    ray->origin = camera.pos;
+	Ray *ray;
 
-    // Calcula las coordenadas del punto en el plano de proyección
-    double px = (2.0 * x / (double)screen_width - 1.0) * camera.aspect_ratio * camera.plane_distance;
+    ray = malloc(sizeof(Ray));
+    if (!ray)
+        return (NULL);
+    ray->origin = camera.pos;
+    double px = ((2.0 * x / (double)screen_width) - 1.0) * camera.aspect_ratio * camera.plane_distance;
     double py = (1.0 - 2.0 * y / (double)screen_height) * camera.plane_distance;
 
-    // Calcula el punto en el plano de proyección usando los vectores de la cámara
-    Vector3 point_on_plane = {
-        camera.dir.x + camera.horizontal.x * px + camera.vertical.x * py,
-        camera.dir.y + camera.horizontal.y * px + camera.vertical.y * py,
-        camera.dir.z + camera.horizontal.z * px + camera.vertical.z * py
-    };
-	// Calcula la dirección del rayo desde la cámara al punto en el plano de proyección
-	ray->direction.x = point_on_plane.x ;
+    Vector3 point_on_plane = pxtopy(camera, (Vector3){px, py, 0.5});
+	ray->direction.x = point_on_plane.x;
 	ray->direction.y = point_on_plane.y;
-	ray->direction.z = point_on_plane.z ;
-//para 8 es 2.5
-//para 10 es 2
-	// Normaliza la dirección del rayo para obtener un vector unitario
+	ray->direction.z = point_on_plane.z;
 	normalize(&(ray->direction));
 	return ray;
 }

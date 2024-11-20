@@ -63,3 +63,18 @@ int find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type)
 	*t = min_dist;
 	return j;
 }
+void	rot_plane(Scene *scene, Vector3 dir, int ang)
+{
+	Plane *plane;
+	plane = &(scene->planes[scene->pos_obj->idx]);
+	plane->normal = rotate_v3(plane->normal, dir, ang);
+
+    normalize(&plane->normal);
+}
+
+void	pos_plane(Scene *scene, Vector3 dir)
+{
+	Plane *plane;
+	plane = &(scene->planes[scene->pos_obj->idx]);
+	plane->point = add_vector3_to_vector3(plane->point, dir);
+}

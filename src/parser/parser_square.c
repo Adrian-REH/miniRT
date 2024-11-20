@@ -32,15 +32,11 @@ int	parser_square(Scene *scene, char **data)
     double side = 0;
     Color color = {0, 0, 0};
 
-   // printf(" SQUARE ----->1|%s| 2|%s| 3|%s| 4|%s| 5 |%s| \n", data[0], data[1], data[2], data[3], data[4]);
-    //CENTER
-
 	scene->squares = ft_realloc(scene->squares, sizeof(Square) * scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
     center = ft_coordinate(data[1]);
     normal = stonorm(data[2]);
     side = side_square(data[3]);
     color = ft_color(data[4]);
-
     scene->squares->center = center;
     scene->squares->normal = normal;
     scene->squares->side = side;

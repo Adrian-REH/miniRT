@@ -13,28 +13,29 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
         double v = (y + random_double()) / (double)WINY;
 
         // Generar rayo para la posición u, v dentro del píxel
-		Ray ray = *generate_ray(x + u, y + v, WINX, WINY, *scene->cameras); 
+		Ray *ray = generate_ray(x + u, y + v, WINX, WINY, *scene->cameras);
+		if (!ray)
+			return 0;
 		double t = 0;
 		double min_dist = 90000000;
 		int type;
 		int id = 0;
 		int hit_color;
 		double d;
-		type = find_nearest_obj(*scene, &ray, &t, &id, 10);
-		Vector3 *hit_pt = hit_point(ray, t);
-		if (type == PLANE && id >= 0){
-			addint_to_color(&sample_color, render_plane(scene, *hit_pt, id));}
-		if (type == SPHERE && id >= 0){
-			addint_to_color(&sample_color, render_sphere(scene, *hit_pt, id));}
-		if (type == TRIANGLE && id >= 0){
-			addint_to_color(&sample_color, render_triangle(scene, *hit_pt, id));}
-		if (type == CYLINDER && id >= 0){
-			addint_to_color(&sample_color, render_cylinder(scene, *hit_pt, id));}
+		type = find_nearest_obj(*scene, ray, &t, &id, 10);
+		if (x == 5 && y == 5)
+		{
+			printf("Select: Type: %d, idx: %d, pos: %d, %d \n", type, id, x,y);
+		}
+		Vector3 *hit_pt = hit_point(*ray, t);
+		if (scene->render[type] && id >= 0)
+			addint_to_color(&sample_color, scene->render[type](scene, *hit_pt, id));
 
         // Acumular el color de esta muestra
         final_color.r += sample_color.r;
         final_color.g += sample_color.g;
         final_color.b += sample_color.b;
+		free(ray);
     }
     // Promediar el color acumulado dividiendo por el número de muestras
 	final_color.r *= inv_samples;
@@ -44,8 +45,39 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 	return colornormal_to_int(final_color);
 }
 
+void init_rfc_render(Scene *scene)
+{
+	scene->rfc[0] = (int (*)(void *, Ray,  int,  int))render_reflect_plane;//posicion 0
+	scene->rfc[1] = (int (*)(void *, Ray,  int,  int))render_reflect_sphere;//posicion 1
+	scene->rfc[2] = (int (*)(void *, Ray,  int,  int))render_reflect_triangle;//posicion 2
+	scene->rfc[3] = (int (*)(void *, Ray,  int,  int))render_reflect_cylinder;//posicion 3
+	scene->rfc[4] = NULL; // NULL 
+
+}
+
+void init_render(Scene *scene)
+{
+	scene->render[0] = (int (*)(void *, Vector3,  int))render_plane;//posicion 0
+	scene->render[1] = (int (*)(void *, Vector3,  int))render_sphere;//posicion 1
+	scene->render[2] = (int (*)(void *, Vector3,  int))render_triangle;//posicion 2
+	scene->render[3] = (int (*)(void *, Vector3,  int))render_cylinder;//posicion 3
+	scene->render[4] = NULL; // NULL 
+}
+
+void init_intersect(Scene *scene)
+{
+	scene->isc[0] = (int (*)(const void *, const void *, double *))intersect_plane;//posicion 0
+	scene->isc[1] = (int (*)(const void *, const void *, double *))intersect_sphere;//posicion 1
+	scene->isc[2] = (int (*)(const void *, const void *, double *))intersect_triangle;//posicion 2
+	scene->isc[3] = (int (*)(const void *, const void *, double *))intersect_cylinder;//posicion 3
+	scene->isc[4] = NULL; // NULL 
+}
+
 void render_scene(Scene *scene, int samples_per_pixel)
 {
+	init_rfc_render(scene);
+	init_render(scene);
+	init_intersect(scene);
 	time_t start, end;
 	double min_dist;
 	int alpha = 0;
@@ -60,6 +92,6 @@ void render_scene(Scene *scene, int samples_per_pixel)
     }
 	mlx_put_image_to_window(scene->mlx, scene->win, scene->img->img, 0, 0);
 	end = clock();
-	double elapsed = (double)(end - start) / CLOCKS_PER_SEC * 1000; // Convertido a milisegundos
-	printf("Elapsed time: %.3f milliseconds\n", elapsed);
+	double elapsed = (double)(end - start) / CLOCKS_PER_SEC ; // Convertido a milisegundos
+	printf("Elapsed time: %.3f sec\n", elapsed);
 }

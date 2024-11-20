@@ -18,7 +18,7 @@ Vector3	stonorm(char *argv)
 	char **args = ft_split(argv, ',');
 	if (ft_sarrsize(args) != 3)
 	{
-		printf("Error: %s not contain norme x, x ,y\n");
+		printf("Error: Not contain norme x, x ,y\n");
 		exit(1);
 	}
 	norm.x = ft_limit(-1,1,atof(args[0]));

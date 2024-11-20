@@ -1,5 +1,41 @@
 #include "../main.h"
 
+int	render_point_plane(Scene scene, Vector3 hit_pt, int n_plane) {
+	const RenderContext	ctx = {
+		.scene = &scene,
+		.mater_prop = scene.planes[n_plane].mater_prop,
+		.normal = scene.planes[n_plane].normal,
+		.hit_pt = hit_pt,
+		.funcs = {
+			.calculate_intensity = calculate_intensity,
+			.calculate_attenuation = calculate_attenuation,
+			.reflect = reflect
+		}
+	};
+
+	Vector3 *cam_dir = normalize_withpoint(scene.cameras->pos, hit_pt);
+	Vector3 *light_dir = normalize_withpoint(scene.lights->point, hit_pt);
+	Ray rayslight = {scene.lights->point, *light_dir};
+
+	double d;
+	Color *current_color;
+	if (intersect_plane(&rayslight, &scene.planes[n_plane], &d)) {
+		double t = is_in_shadow(scene, scene.lights->point, hit_pt);
+		if (t) {
+			current_color = apply_shadow(&ctx, light_dir, cam_dir, hit_point(rayslight, t));
+		} else {
+			current_color = apply_lighting(&ctx, light_dir, cam_dir);
+		}
+	}
+	else
+		current_color = apply_ambient(&ctx);
+	int result = current_color->color;
+	free(cam_dir);
+	free(light_dir);
+	return result;
+}
+
+/* 
 int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 {
 	double d;
@@ -63,7 +99,7 @@ int render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 	free(light_dir);
 	return current_color;
 }
-
+ */
 int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 {
 	double t = 0;
@@ -93,7 +129,7 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 {
 	double t = 0;
-	double idx = id;
+	int idx = id;
 	int hit_color = 0;
 	int tmp[2] = {0 , 0};
 	int result = 0;
@@ -108,14 +144,9 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 		Vector3 *hit_rfc;
 		int j = -1;
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, PLANE);
-		if (type == PLANE)
+		if (scene->rfc[type])
 		{
-			hit_color = render_reflect_plane(scene, *rayrfc, id, PLANE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
-		}
-		if (type == SPHERE)
-		{
-			hit_color = render_reflect_sphere(scene, *rayrfc, id, PLANE);
+			hit_color = scene->rfc[type](scene, *rayrfc, id, PLANE);
 			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
 		}
 		free(rayrfc);

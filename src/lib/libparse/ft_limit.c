@@ -14,7 +14,6 @@
 
 double	ft_limit(double min, double max, double val)
 {
-	printf("min: %f, max: %f, val: %f\n", min, max, val);
 	if ( val < min || val > max)
 	{
 		printf(" max %f < val %f || val %f > min %f\n",max, val, val, min);
