@@ -63,6 +63,7 @@ int find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type)
 	*t = min_dist;
 	return j;
 }
+
 void	rot_plane(Scene *scene, Vector3 dir, int ang)
 {
 	Plane *plane;

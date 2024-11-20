@@ -302,6 +302,13 @@ void	pos_plane(Scene *scene, Vector3 dir);
 void	pos_cylinder(Scene *scene, Vector3 dir);
 void	pos_sphere(Scene *scene, Vector3 dir);
 
+
+//------MATH-------
+int solve_quadratic(double a, double b, double c, double* t0, double* t1);
+
+
+
+
 int	terminate_program(void *param);
 
 Vector3 rotate_x(Vector3 v, double angle);
@@ -344,7 +351,6 @@ Vector3 multiplyv3(Vector3 v, Vector3 u);
 int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
 int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
 int line_solution_point(Ray ray, Vector3 point);
-int triangle_solution_point(Triangle triangle, Vector3 hit_pt);
 double	mod(Vector3 v);
 Vector3		*reflect(Vector3 L, Vector3 N);
 Vector3 norm_subtract(Vector3 init, Vector3 end);

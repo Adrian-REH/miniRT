@@ -69,12 +69,9 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 	int result = 0;
 	int current_pixel = render_point_plane(*scene, hit_pt, id);
 
-	//Si hay reflexion entonces ...
-	//Genero un ray
 	if (scene->planes[id].mater_prop.reflect)
 	{
 		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->planes[id].normal);
-		//Hago la reflexion
 		Vector3 *hit_rfc;
 		int j = -1;
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, PLANE);

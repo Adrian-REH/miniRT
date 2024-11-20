@@ -49,7 +49,6 @@ int sphere_solution_point(Sphere sphere, Vector3 point) {
     }
 }
 
-
 Vector3 *normal_sphere(Vector3 hit_point, Sphere sphere) {
 	Vector3 *normal = malloc(sizeof(Vector3));
 	normal->x = hit_point.x - sphere.center.x;
@@ -88,8 +87,6 @@ int find_nearest_sphere(Scene scene, Ray *ray, double *t, int id, int type)
 	*t = min_dist;
 	return j;
 }
-
-
 
 void	pos_sphere(Scene *scene, Vector3 dir)
 {

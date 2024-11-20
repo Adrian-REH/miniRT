@@ -29,13 +29,6 @@ int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
 	return 0;
 }
 
-int triangle_solution_point(Triangle triangle, Vector3 hit_pt)
-{
-
-	return 0;// no pertenece al triangulo
-
-}
-
 int find_nearest_triangle(Scene scene, Ray *ray, double *t, int id, int type)
 {
 	int i;

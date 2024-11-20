@@ -66,14 +66,15 @@ int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 	int result = 0;
 	int idx = id;
 	int j = -1;
-	//Verificador de planos o objetos mas cercanos para optimizar
-	int current_pixel = render_point_sphere(*scene, hit_pt, id);
-	//Se confunde consigo mismo para buscar el mas cercano
-	//Solucion: Intentar identificar el cuerpo donde sale y hacer que no se autointersecte.
+	int current_pixel;
+	Vector3 *n_sphere;
+	Ray *rayrfc;
+
+	current_pixel = render_point_sphere(*scene, hit_pt, id);
 	if (scene->spheres[id].mater_prop.reflect)
 	{
-		Vector3 *n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
-		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, *n_sphere);
+		n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
+		rayrfc = generate_reflect_ray(scene, hit_pt, *n_sphere);
 		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, SPHERE);
 		if (scene->rfc[type])
 		{
