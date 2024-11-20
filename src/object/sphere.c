@@ -88,3 +88,12 @@ int find_nearest_sphere(Scene scene, Ray *ray, double *t, int id, int type)
 	*t = min_dist;
 	return j;
 }
+
+
+
+void	pos_sphere(Scene *scene, Vector3 dir)
+{
+	Sphere *sphere;
+	sphere = &(scene->spheres[scene->pos_obj->idx]);
+	sphere->center = add_vector3_to_vector3(sphere->center, dir);
+}

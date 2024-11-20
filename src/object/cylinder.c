@@ -133,3 +133,19 @@ int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type)
 	*t = min_dist;
 	return j;
 }
+
+void	rot_cylinder(Scene *scene, Vector3 dir, int ang)
+{
+	Cylinder *cylinder;
+	cylinder = &(scene->cylinders[scene->pos_obj->idx]);
+	cylinder->axis = rotate_v3(cylinder->axis, dir, ang);
+
+    normalize(&cylinder->axis);
+}
+
+void	pos_cylinder(Scene *scene, Vector3 dir)
+{
+	Cylinder *cylinder;
+	cylinder = &(scene->cylinders[scene->pos_obj->idx]);
+	cylinder->center = add_vector3_to_vector3(cylinder->center, dir);
+}

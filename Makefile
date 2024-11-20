@@ -48,6 +48,10 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libprojection/generate_ray.c \
 				src/lib/libprojection/idxpixel.c \
 				src/lib/libprojection/project3_to_pixel.c \
+				src/lib/libprojection/rotate_x.c \
+				src/lib/libprojection/rotate_y.c \
+				src/lib/libprojection/rotate_z.c \
+				src/lib/libprojection/rotate_v3.c \
 				src/lib/libvector3/calculate_intensity.c \
 				src/lib/libvector3/distancev3.c \
 				src/lib/libvector3/dotv3.c \
@@ -56,6 +60,8 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libvector3/crossv3.c \
 				src/lib/libvector3/scalev3.c \
 				src/lib/libvector3/mod.c \
+				src/lib/libvector3/addv3.c \
+				src/lib/libvector3/multiplyv3.c \
 				src/lib/libbrdf/reflect.c \
 				src/lib/librandom/random_double.c \
 				src/lib/libsarr/ft_sarrsize.c \
@@ -99,15 +105,17 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/object/scene.c \
 				src/object/sphere.c \
 				src/object/line.c \
-				src/control_camera/control_a.c \
-				src/control_camera/control_s.c \
-				src/control_camera/control_d.c \
-				src/control_camera/control_w.c \
-				src/control_camera/control_left.c \
-				src/control_camera/control_right.c \
-				src/control_camera/control_up.c \
-				src/control_camera/control_down.c \
-				src/control_quite/control_escape.c \
+				src/control/key_press.c \
+				src/control/mause_press.c \
+				src/control/control_camera/control_a.c \
+				src/control/control_camera/control_s.c \
+				src/control/control_camera/control_d.c \
+				src/control/control_camera/control_w.c \
+				src/control/control_camera/control_left.c \
+				src/control/control_camera/control_right.c \
+				src/control/control_camera/control_up.c \
+				src/control/control_camera/control_down.c \
+				src/control/control_quite/control_escape.c \
 				src/main.c \
 
 OBJ_DIRS := obj/src/lib/libcolor \
@@ -123,8 +131,8 @@ OBJ_DIRS := obj/src/lib/libcolor \
 			obj/src/lib/libmath \
 			obj/src/lib/libutils \
 			obj/src/lib/libparse \
-			obj/src/control_camera \
-			obj/src/control_quite
+			obj/src/control/control_camera \
+			obj/src/control/control_quite
 
 
 # Definir los objetos

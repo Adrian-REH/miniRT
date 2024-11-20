@@ -13,6 +13,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+# include <X11/keysym.h>
+# include <X11/X.h>
 #include "../lib/minilibx-linux/mlx.h"
 #include "../lib/libft/libft.h"
 #include "../lib/minilibx_opengl/mlx_opengl.h"
@@ -85,18 +87,13 @@
 #define PI 3.1415
 
 
+#define PLANE 0
+#define SPHERE 1
+#define TRIANGLE 2
+#define CYLINDER 3
+#define CAMERA 4
+#define LIGHT 5
 
-
-
-typedef enum
-{
-	PLANE,
-	SPHERE,
-	TRIANGLE,
-	CYLINDER,
-	CAMERA,
-	LIGHT,
-} e_obj;
 
 typedef enum
 {
@@ -233,6 +230,13 @@ typedef struct {
 } Ambient;
 
 
+typedef struct {
+	int type;
+	int idx;
+	void (*rot[10])(void *, Vector3, int);
+	void (*pos[10])(void *, Vector3);
+
+} s_pos_obj;
 
 typedef struct {
 	void		*mlx;
@@ -254,6 +258,7 @@ typedef struct {
 	int			n_spheres;
 	int			n_squares;
 	int			n_triangles;
+	s_pos_obj	*pos_obj;
 	int			(*isc[10])(const void *, const void *, double *);
 	int			(*rfc[10])(void *, Ray, int, int);
 	int			(*render[10])(void *, Vector3, int);
@@ -277,7 +282,25 @@ typedef struct {
 	LightingFunctions funcs;
 } RenderContext;
 
+Vector3 rotate_v3(Vector3 v, Vector3 axis, double angle);
+void	rot_camera(Scene *scene, Vector3 dir, int ang);
+void	rot_triangle(Scene *scene, Vector3 dir, int ang);
+void	rot_plane(Scene *scene, Vector3 dir, int ang);
+void	rot_cylinder(Scene *scene, Vector3 dir, int ang);
 
+void	pos_camera(Scene *scene, Vector3 dir);
+void	pos_triangle(Scene *scene, Vector3 dir);
+void	pos_plane(Scene *scene, Vector3 dir);
+void	pos_cylinder(Scene *scene, Vector3 dir);
+void	pos_sphere(Scene *scene, Vector3 dir);
+
+
+Vector3 rotate_x(Vector3 v, double angle);
+Vector3 rotate_z(Vector3 v, double angle);
+Vector3 rotate_y(Vector3 v, double angle);
+//CONTROL
+int	key_press(int key, void *param);
+int	mouse_press(int button, int x, int y, void *param);
 
 Color *darken_surface(Color *surface_color, double darkness_intensity);
 //-----RENDER APPLY-----
@@ -306,7 +329,9 @@ Color *illuminate_surface(Color *surface_color, Color *light_color, double inten
 Vector3 scalev3(Vector3 v, float scalar);
 double		sin_v3(Vector3 v1, Vector3 v2);
 Vector3	cross_v3(Vector3 v1, Vector3 v2);
-
+Vector3 add_scalar_to_vector3(Vector3 init, double scale);
+Vector3 add_vector3_to_vector3(Vector3 init, Vector3 end);
+Vector3 multiplyv3(Vector3 v, Vector3 u);
 int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
 int find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
 int line_solution_point(Ray ray, Vector3 point);

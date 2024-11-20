@@ -13,15 +13,21 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
         double v = (y + random_double()) / (double)WINY;
 
         // Generar rayo para la posición u, v dentro del píxel
-		Ray ray = *generate_ray(x + u, y + v, WINX, WINY, *scene->cameras); 
+		Ray *ray = generate_ray(x + u, y + v, WINX, WINY, *scene->cameras);
+		if (!ray)
+			return NULL;
 		double t = 0;
 		double min_dist = 90000000;
 		int type;
 		int id = 0;
 		int hit_color;
 		double d;
-		type = find_nearest_obj(*scene, &ray, &t, &id, 10);
-		Vector3 *hit_pt = hit_point(ray, t);
+		type = find_nearest_obj(*scene, ray, &t, &id, 10);
+		if (x == 5 && y == 5)
+		{
+			printf("Select: Type: %d, idx: %d, pos: %d, %d \n", type, id, x,y);
+		}
+		Vector3 *hit_pt = hit_point(*ray, t);
 		if (scene->render[type] && id >= 0)
 			addint_to_color(&sample_color, scene->render[type](scene, *hit_pt, id));
 
@@ -29,6 +35,7 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
         final_color.r += sample_color.r;
         final_color.g += sample_color.g;
         final_color.b += sample_color.b;
+		free(ray);
     }
     // Promediar el color acumulado dividiendo por el número de muestras
 	final_color.r *= inv_samples;

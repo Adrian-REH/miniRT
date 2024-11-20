@@ -12,9 +12,6 @@
 
 #include "main.h"
 
-# include <X11/keysym.h>
-# include <X11/X.h>
-
 int	terminate_program(void *param)
 {
 	Scene	*scene;
@@ -30,38 +27,10 @@ int	terminate_program(void *param)
 	exit(0);
 }
 
-int	key_press(int key, void *param)
-{
-	static n_intent = 0;
-	t_map_fun map_fun;
-	const t_map_fun controls[10] = {
-		{XK_a, control_a},
-		{XK_d, control_d},
-		{XK_w, control_w},
-		{XK_s, control_s},
-		{XK_Left, control_left},
-		{XK_Up, control_up},
-		{XK_Right, control_right},
-		{XK_Down, control_down},
-		{XK_Escape, control_escape},
-		{0, NULL}
-	};
-
-	if (n_intent >= 1)
-		return 0;
-	map_fun = map_fun_get(controls, key);
-	if (map_fun.func)
-	{
-		n_intent++;
-		map_fun.func(param);
-		n_intent--;
-	}
-	return (0);
-}
-
 static void	mlx_listen_meta(Scene *scene)
 {
-/* 	mlx_hook(meta->vars.win, 4, 1L << 2, mouse_press, meta);
+ 	mlx_hook(scene->win, 4, 1L << 2, mouse_press, scene);
+	/*
 	mlx_hook(meta->vars.win, 5, 1L << 3, mouse_release, meta);
 	mlx_hook(meta->vars.win, 6, 1L << 6, mouse_move, meta);
 */
@@ -160,7 +129,21 @@ static void review_scene(Scene *scene)
 	}
 
 }
-
+void init_pos_obj_fun(Scene *scene)
+{
+	scene->pos_obj->type = CAMERA;
+	scene->pos_obj->idx = 0;
+	scene->pos_obj->pos[PLANE] = pos_plane;
+	scene->pos_obj->pos[SPHERE] = pos_sphere;
+	scene->pos_obj->pos[TRIANGLE] = pos_triangle;
+	scene->pos_obj->pos[CYLINDER] = pos_cylinder;
+	scene->pos_obj->pos[CAMERA] = pos_camera;
+	scene->pos_obj->rot[PLANE] = rot_plane;
+	scene->pos_obj->rot[SPHERE] = NULL;
+	scene->pos_obj->rot[TRIANGLE] = rot_triangle;
+	scene->pos_obj->rot[CYLINDER] = rot_cylinder;
+	scene->pos_obj->rot[CAMERA] = rot_camera;
+}
 int main(int argc, char **argv)
 {
 	if (argc != 2)
@@ -173,6 +156,9 @@ int main(int argc, char **argv)
 	ft_bzero(scene, sizeof(Scene));
 	parser_obj(scene, init_file(argv[1]));
 	review_scene(scene);
+	scene->pos_obj = malloc(sizeof(s_pos_obj));
+	ft_bzero(scene->pos_obj, sizeof(s_pos_obj));
+	init_pos_obj_fun(scene);
 	scene->mlx = mlx_init();
 	scene->win = mlx_new_window(scene->mlx, scene->width, scene->height, "miniRT!");
 	scene->img = &img;
