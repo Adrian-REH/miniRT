@@ -92,7 +92,7 @@ int intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 	{
         if (y1 < 0)
 			return 0;
-        double th = t0 + (t1 - t0) * y0 / (y0 - y1);
+        double th = t0 + (t1 - t0) * (y0) / (y0 - y1);
         if (th <= 0)
 			return 0;
         *t = th;

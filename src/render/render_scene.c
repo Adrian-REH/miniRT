@@ -85,6 +85,6 @@ void render_scene(Scene *scene, int samples_per_pixel)
     }
 	mlx_put_image_to_window(scene->mlx, scene->win, scene->img->img, 0, 0);
 	end = clock();
-	double elapsed = (double)(end - start) / CLOCKS_PER_SEC * 1000; // Convertido a milisegundos
-	printf("Elapsed time: %.3f milliseconds\n", elapsed);
+	double elapsed = (double)(end - start) / CLOCKS_PER_SEC ; // Convertido a milisegundos
+	printf("Elapsed time: %.3f sec\n", elapsed);
 }

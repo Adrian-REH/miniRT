@@ -89,20 +89,22 @@ int parser_obj(Scene *scene, int fd)
 
 	while (line)//No olvidarse de poner una comprobacion o hacer brake
 	{
-		data = ft_split(line, ' '); //Esto te debe devolver data[0]->"pl" data[1]->"0.0,0.0,-10.0" data[2]->"0.0,1.0,0.0" data[3]->"0,0,225"
+		data = ft_split_space(line); //Esto te debe devolver data[0]->"pl" data[1]->"0.0,0.0,-10.0" data[2]->"0.0,1.0,0.0" data[3]->"0,0,225"
 		if (data == NULL || *data == NULL)
+		{
+			free(line);
+			line = get_next_line(fd);
 			continue ;
+		}
 		int state = idstr(alphabet, data[0]); //data[0]->"pl" entonces idstr debe devolver 0
-		printf("state: %d\n", state);
 		if (state == 11)
 		{
 			printf("Error: %s no es un typo valido\n", data[0]);
 			exit(1);
 		}
-		//if (state == 8) entonces tienes que dar error.
-		if (scene->parser[state]) //por tanto state es 0.
-			scene->parser[state](scene, data); //ejecuto la funciond e la posicion 0, que en este caso seria parser_plane
-		ft_sarrprint(data);
+		if (scene->parser[state]){
+			printf("%s\n", data[0]);
+			scene->parser[state](scene, data);}
 		free(line);
 		ft_free_p2(data);
 		line = get_next_line(fd);

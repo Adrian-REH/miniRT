@@ -143,6 +143,15 @@ typedef struct
 	Vector3	direction;
 } Ray;
 
+typedef struct
+{
+	void	*img;
+	char	*buffer;
+	int		bitxpixel;
+	int		lines;
+	int		endian;
+} Img;
+
 typedef struct t_materialProperties
 {
     double reflect;                    // Reflexión
@@ -153,7 +162,7 @@ typedef struct t_materialProperties
     double iridescence;                // Iridescencia
     double emission;                   // Emisión
     double subsurface_scattering;      // SSS
-    char texture[MAX_TEXTURE_SIZE];    // Textura
+    Img texture;    // Textura
     double refraction_index;           // Índice de refracción
     int color[MAX_COLOR_SIZE];        // Color
 	Color *vColor;
@@ -223,14 +232,7 @@ typedef struct {
 	double	ratio;
 } Ambient;
 
-typedef struct
-{
-	char	*buffer;
-	int		bitxpixel;
-	void	*img;
-	int		lines;
-	int		endian;
-} Img;
+
 
 typedef struct {
 	void		*mlx;

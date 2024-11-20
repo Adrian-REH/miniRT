@@ -39,19 +39,14 @@ static double height_cylinder(char *data)
 
 int	parser_cylinder(Scene *scene, char **data)
 {
-
 	Vector3		center =  {0.0, 0.0, 0.0};
 	Vector3		axis = {0.0, 0.0, 0.0};
 	double	diameter;
 	double	height;
 	Color color = {0, 0, 0};
-
 	Cylinder cylinder_null;
-	printf("Cylinder\n");
-	printf("Cylinder ------->: |%s| |%s| |%s| |%s| |%s|\n", data[0],data[1],data[2], data[3], data[4]);
 
 	scene->cylinders = ft_realloc(scene->cylinders, sizeof(Cylinder) * scene->n_cylinders, sizeof(Cylinder) * (scene->n_cylinders + 2));
-
 	center = ft_coordinate(data[1]);
 	axis = stonorm(data[2]);
 	diameter = diamenter_cylinder(data[3]);

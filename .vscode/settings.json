@@ -30,6 +30,8 @@
 		"bit": "c",
 		"*.tcc": "c",
 		"cmath": "c",
-		"keysym.h": "c"
+		"keysym.h": "c",
+		"string": "c",
+		"string_view": "c"
 	}
 }

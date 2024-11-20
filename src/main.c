@@ -55,7 +55,6 @@ int	key_press(int key, void *param)
 		n_intent++;
 		map_fun.func(param);
 		n_intent--;
-		printf("press\n");
 	}
 	return (0);
 }
@@ -139,8 +138,12 @@ int init_file(char *file)
 
 static void review_scene(Scene *scene)
 {
-
-	if (scene->n_lights == 0)
+	if (!scene->width || !scene->height)
+	{
+		scene->width = WINX;
+		scene->height = WINY;
+	}
+	if (scene->n_lights <= 0)
 	{
 		printf("Error: No hay Luz en la escena\n");
 		exit(1);
@@ -166,17 +169,17 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	Scene *scene = malloc(sizeof(Scene));
-	ft_bzero(scene, sizeof(Scene));
-	scene->mlx = mlx_init();
-	scene->win = mlx_new_window(scene->mlx, WINX, WINY, "miniRT!");
 	Img img;
-	scene->img = &img;
-	scene->img->img = mlx_new_image(scene->mlx, WINX, WINY);
-	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
+	ft_bzero(scene, sizeof(Scene));
 	parser_obj(scene, init_file(argv[1]));
 	review_scene(scene);
-	//PARSER----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	scene->mlx = mlx_init();
+	scene->win = mlx_new_window(scene->mlx, scene->width, scene->height, "miniRT!");
+	scene->img = &img;
+	scene->img->img = mlx_new_image(scene->mlx, scene->width, scene->height);
+	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
+
 	render_scene(scene, N_SAMPLING);
-	//mlx_loop(scene->mlx);
+
 	mlx_listen_meta(scene);
 }

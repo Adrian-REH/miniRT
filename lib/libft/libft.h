@@ -25,6 +25,8 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
+int			ft_isspaces(char str);
+char		**ft_split_space(char const *s);
 int			ft_isalnum(int c);
 int			ft_isalpha(int c);
 int			ft_isascii(int c);

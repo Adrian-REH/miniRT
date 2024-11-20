@@ -29,12 +29,7 @@ int	parser_sphere(Scene *scene, char **data)
 
 	Vector3 center = {0, 0, 0};
 	Color color = {0, 0, 0};
-
-	printf(" spehere ----->0|%s| 1|%s| 2|%s| 3|%s|  \n", data[0], data[1], data[2], data[3]);
-	
-	//scene->spheres = malloc(sizeof(Sphere) * 1);
 	scene->spheres = ft_realloc(scene->spheres, sizeof(Sphere) * scene->n_spheres, sizeof(Sphere) * (scene->n_spheres + 2));
-	printf(" 2 \n");
 	center = ft_coordinate(data[1]);
 	color = ft_color(data[3]);
 	scene->spheres[scene->n_spheres].mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
@@ -44,7 +39,6 @@ int	parser_sphere(Scene *scene, char **data)
 	scene->spheres[scene->n_spheres].center = center;
 	scene->spheres[scene->n_spheres].radius = diamenter_sphere(data[2]) / 2;
 	scene->n_spheres++;
-	//ft_bzero(&scene->spheres, sizeof(Plane));
 	return (1);
 
 }
