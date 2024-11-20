@@ -68,20 +68,19 @@ int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 	int j = -1;
 	int current_pixel;
 	Vector3 *n_sphere;
-	Ray *rayrfc;
+	Ray rayrfc;
 
 	current_pixel = render_point_sphere(*scene, hit_pt, id);
 	if (scene->spheres[id].mater_prop.reflect)
 	{
 		n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
 		rayrfc = generate_reflect_ray(scene, hit_pt, *n_sphere);
-		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, SPHERE);
+		int type = find_nearest_obj(*scene, &rayrfc, &t, &idx, SPHERE);
 		if (scene->rfc[type])
 		{
-			hit_color = scene->rfc[type](scene, *rayrfc, id, SPHERE);
+			hit_color = scene->rfc[type](scene, rayrfc, id, SPHERE);
 			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->spheres[id].mater_prop)->color;
 		}
-		free(rayrfc);
 		free(n_sphere);
 		return hit_color;
 	}

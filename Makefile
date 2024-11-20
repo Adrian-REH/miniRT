@@ -69,6 +69,7 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libsarr/ft_sarradd.c \
 				src/lib/libmath/ft_atof.c \
 				src/lib/libmath/substract.c \
+				src/lib/libmath/solve_quadratic.c \
 				src/lib/libparse/ft_coordinate.c \
 				src/lib/libparse/ft_limit.c \
 				src/lib/libparse/stonorm.c \
@@ -95,10 +96,8 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/render/apply_shadow.c \
 				src/render/apply_light.c \
 				src/render/apply_ambient.c \
-				src/object/ambient.c \
 				src/object/camera.c \
 				src/object/cylinder.c \
-				src/object/light.c \
 				src/object/plane.c \
 				src/object/triangle.c \
 				src/object/scene.c \

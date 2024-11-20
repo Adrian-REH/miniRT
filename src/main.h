@@ -364,7 +364,6 @@ void normalize(Vector3 *v);
 Vector3 *invnormal(Vector3 *normal);
 Vector3 *normalize_withpoint(Vector3 init, Vector3 end);
 double specular_intensity(Vector3 reflection, Vector3 view_dir, double shininess, double ks);
-int solve_quadratic(double a, double b, double c, double* t0, double* t1);
 Vector3 *dir_withpoint(Vector3 init, Vector3 end);
 double	ft_atof(const char *str);
 
@@ -373,7 +372,7 @@ void point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen
 Ray *generate_ray(double x, double y, int screen_width, int screen_height, Camera camera);
 Vector3 *hit_point(Ray ray, double t);
 double mix(double a, double b, double t);
-Ray *generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal);
+Ray generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal);
 //------LIB/LIBMAPFUN------
 t_map_fun map_fun_get(const t_map_fun *map_fun, int key);
 //------CONTROL_CAMERA----
