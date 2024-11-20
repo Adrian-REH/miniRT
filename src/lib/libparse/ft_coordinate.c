@@ -19,7 +19,7 @@ Vector3	ft_coordinate(char *argv)
 	char **args = ft_split(argv, ',');
 	if (ft_sarrsize(args) != 3)
 	{
-		printf("Error: %s not contain coor x, x ,y\n");
+		printf("Error: Not contain coor x, x ,y\n");
 		exit(1);
 	}
 	coord.x = atof(args[0]);

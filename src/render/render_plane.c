@@ -129,7 +129,7 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 {
 	double t = 0;
-	double idx = id;
+	int idx = id;
 	int hit_color = 0;
 	int tmp[2] = {0 , 0};
 	int result = 0;

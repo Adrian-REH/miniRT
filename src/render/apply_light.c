@@ -1,6 +1,6 @@
 #include "../main.h"
 
-Color* apply_lighting(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir)
+Color* apply_lighting(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir)
 {
 	Light *light = ctx->scene->lights;
 	

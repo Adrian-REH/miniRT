@@ -1,6 +1,6 @@
 #include "../../main.h"
 
-t_map_fun map_fun_get(t_map_fun *map_fun, int key)
+t_map_fun map_fun_get(const t_map_fun *map_fun, int key)
 {
 	int i;
 

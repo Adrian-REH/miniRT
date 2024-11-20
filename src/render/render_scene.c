@@ -15,7 +15,7 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
         // Generar rayo para la posición u, v dentro del píxel
 		Ray *ray = generate_ray(x + u, y + v, WINX, WINY, *scene->cameras);
 		if (!ray)
-			return NULL;
+			return 0;
 		double t = 0;
 		double min_dist = 90000000;
 		int type;
@@ -47,29 +47,29 @@ int render_sampling(int x, int y, Scene *scene, int samples_per_pixel)
 
 void init_rfc_render(Scene *scene)
 {
-	scene->rfc[0] = render_reflect_plane;//posicion 0
-	scene->rfc[1] = render_reflect_sphere;//posicion 1
-	scene->rfc[2] = render_reflect_triangle;//posicion 2
-	scene->rfc[3] = render_reflect_cylinder;//posicion 3
+	scene->rfc[0] = (int (*)(void *, Ray,  int,  int))render_reflect_plane;//posicion 0
+	scene->rfc[1] = (int (*)(void *, Ray,  int,  int))render_reflect_sphere;//posicion 1
+	scene->rfc[2] = (int (*)(void *, Ray,  int,  int))render_reflect_triangle;//posicion 2
+	scene->rfc[3] = (int (*)(void *, Ray,  int,  int))render_reflect_cylinder;//posicion 3
 	scene->rfc[4] = NULL; // NULL 
 
 }
 
 void init_render(Scene *scene)
 {
-	scene->render[0] = render_plane;//posicion 0
-	scene->render[1] = render_sphere;//posicion 1
-	scene->render[2] = render_triangle;//posicion 2
-	scene->render[3] = render_cylinder;//posicion 3
+	scene->render[0] = (int (*)(void *, Vector3,  int))render_plane;//posicion 0
+	scene->render[1] = (int (*)(void *, Vector3,  int))render_sphere;//posicion 1
+	scene->render[2] = (int (*)(void *, Vector3,  int))render_triangle;//posicion 2
+	scene->render[3] = (int (*)(void *, Vector3,  int))render_cylinder;//posicion 3
 	scene->render[4] = NULL; // NULL 
 }
 
 void init_intersect(Scene *scene)
 {
-	scene->isc[0] = intersect_plane;//posicion 0
-	scene->isc[1] = intersect_sphere;//posicion 1
-	scene->isc[2] = intersect_triangle;//posicion 2
-	scene->isc[3] = intersect_cylinder;//posicion 3
+	scene->isc[0] = (int (*)(const void *, const void *, double *))intersect_plane;//posicion 0
+	scene->isc[1] = (int (*)(const void *, const void *, double *))intersect_sphere;//posicion 1
+	scene->isc[2] = (int (*)(const void *, const void *, double *))intersect_triangle;//posicion 2
+	scene->isc[3] = (int (*)(const void *, const void *, double *))intersect_cylinder;//posicion 3
 	scene->isc[4] = NULL; // NULL 
 }
 

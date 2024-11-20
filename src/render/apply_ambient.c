@@ -1,7 +1,7 @@
 
 #include "../main.h"
 
-Color *apply_ambient(RenderContext *ctx)
+Color *apply_ambient(const RenderContext *ctx)
 {
 	Color *current_color = 0;
 	//Aplico ambiente y color, ya que la luz no incide sobre el material porque pertenece al plano

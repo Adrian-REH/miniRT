@@ -21,6 +21,7 @@
 #include <float.h>
 #include <stdint.h>
 #include <math.h>
+#include <fcntl.h>
 #define EPSILON 1e-8 // Margen de tolerancia para precisión flotante
 
 
@@ -294,6 +295,7 @@ void	pos_plane(Scene *scene, Vector3 dir);
 void	pos_cylinder(Scene *scene, Vector3 dir);
 void	pos_sphere(Scene *scene, Vector3 dir);
 
+int	terminate_program(void *param);
 
 Vector3 rotate_x(Vector3 v, double angle);
 Vector3 rotate_z(Vector3 v, double angle);
@@ -304,9 +306,9 @@ int	mouse_press(int button, int x, int y, void *param);
 
 Color *darken_surface(Color *surface_color, double darkness_intensity);
 //-----RENDER APPLY-----
-Color* apply_lighting(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir);
-Color* apply_shadow(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt);
-
+Color* apply_lighting(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir);
+Color* apply_shadow(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt);
+Color *apply_ambient(const RenderContext *ctx);
 //------libsarr----
 int		ft_sarrprint(char **arr);
 char	**ft_sarradd(char **arr, char *string);
@@ -360,7 +362,7 @@ Vector3 *hit_point(Ray ray, double t);
 double mix(double a, double b, double t);
 Ray *generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal);
 //------LIB/LIBMAPFUN------
-t_map_fun map_fun_get(t_map_fun *map_fun, int key);
+t_map_fun map_fun_get(const t_map_fun *map_fun, int key);
 //------CONTROL_CAMERA----
 void control_a(Scene *scene);
 void control_s(Scene *scene);

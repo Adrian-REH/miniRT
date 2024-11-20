@@ -50,7 +50,7 @@ int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 
 	while (++j < scene->n_triangles)
 	{
-		if (intersect_cylinder(&rayrfc, &scene->triangles[j], &t) && (t < md))
+		if (intersect_cylinder(&rayrfc, &scene->cylinders[j], &t) && (t < md))
 		{
 			hit_rfc = hit_point(rayrfc, t);
 			if (!obj_solution_point(*scene, *hit_rfc, type, id))
@@ -67,7 +67,7 @@ int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 int	render_cylinder(Scene *scene, Vector3 hit_pt, int id)
 {
 	double t = 0;
-	double idx = id;
+	int idx = id;
 	int hit_color = 0;
 	int tmp[2] = {0 , 0};
 	int result = 0;

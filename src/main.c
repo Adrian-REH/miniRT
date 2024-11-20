@@ -133,16 +133,16 @@ void init_pos_obj_fun(Scene *scene)
 {
 	scene->pos_obj->type = CAMERA;
 	scene->pos_obj->idx = 0;
-	scene->pos_obj->pos[PLANE] = pos_plane;
-	scene->pos_obj->pos[SPHERE] = pos_sphere;
-	scene->pos_obj->pos[TRIANGLE] = pos_triangle;
-	scene->pos_obj->pos[CYLINDER] = pos_cylinder;
-	scene->pos_obj->pos[CAMERA] = pos_camera;
-	scene->pos_obj->rot[PLANE] = rot_plane;
+	scene->pos_obj->pos[PLANE] = (void (*)(void *, Vector3))pos_plane;
+	scene->pos_obj->pos[SPHERE] = (void (*)(void *, Vector3))pos_sphere;
+	scene->pos_obj->pos[TRIANGLE] = (void (*)(void *, Vector3))pos_triangle;
+	scene->pos_obj->pos[CYLINDER] = (void (*)(void *, Vector3))pos_cylinder;
+	scene->pos_obj->pos[CAMERA] = (void (*)(void *, Vector3))pos_camera;
+	scene->pos_obj->rot[PLANE] = (void (*)(void *, Vector3, int))rot_plane;
 	scene->pos_obj->rot[SPHERE] = NULL;
-	scene->pos_obj->rot[TRIANGLE] = rot_triangle;
-	scene->pos_obj->rot[CYLINDER] = rot_cylinder;
-	scene->pos_obj->rot[CAMERA] = rot_camera;
+	scene->pos_obj->rot[TRIANGLE] = (void (*)(void *, Vector3, int))rot_triangle;
+	scene->pos_obj->rot[CYLINDER] = (void (*)(void *, Vector3, int))rot_cylinder;
+	scene->pos_obj->rot[CAMERA] = (void (*)(void *, Vector3, int))rot_camera;
 }
 int main(int argc, char **argv)
 {
@@ -164,8 +164,6 @@ int main(int argc, char **argv)
 	scene->img = &img;
 	scene->img->img = mlx_new_image(scene->mlx, scene->width, scene->height);
 	scene->img->buffer = mlx_get_data_addr(scene->img->img, &(scene->img->bitxpixel), &(scene->img->lines), &(scene->img->endian));
-
 	render_scene(scene, N_SAMPLING);
-
 	mlx_listen_meta(scene);
 }

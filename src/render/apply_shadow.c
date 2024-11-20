@@ -1,6 +1,6 @@
 #include "../main.h"
 
-Color* apply_shadow(RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt) 
+Color* apply_shadow(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt) 
 {
 
 	Light *light = ctx->scene->lights;
