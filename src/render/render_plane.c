@@ -73,7 +73,6 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 	if (scene->planes[id].mater_prop.reflect)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, scene->planes[id].normal);
-		Vector3 *hit_rfc;
 		int j = -1;
 		int type = find_nearest_obj(*scene, &rayrfc, &t, &idx, PLANE);
 		if (scene->rfc[type])

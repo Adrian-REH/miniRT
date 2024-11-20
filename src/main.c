@@ -21,9 +21,20 @@ int	terminate_program(void *param)
 	mlx_destroy_window(scene->mlx, scene->win);
 	mlx_destroy_display(scene->mlx);
 	//Free
-	/* free(scene->vars.mlx);
-	free(scene->map[0].points);
-	free(scene->map); */
+	if (scene->n_cylinders)
+		free(scene->cylinders);
+	if (scene->n_triangles)
+		free(scene->triangles);
+	if (scene->n_planes)
+		free(scene->planes);
+	if (scene->n_spheres)
+		free(scene->spheres);
+	if (scene->n_squares)
+		free(scene->squares);
+	if (scene->n_lights)
+		free(scene->lights);
+	free(scene->cameras);
+	free(scene->ambient);
 	exit(0);
 }
 
