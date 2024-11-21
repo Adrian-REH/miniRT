@@ -60,7 +60,7 @@ int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \
 			scene->triangles[id].p_triangle->normal);
-		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, 2);
+		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 2});
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, TRIANGLE);

@@ -187,6 +187,39 @@ typedef struct {
 
 } s_pos_obj;
 
+typedef struct t_sphere_isc_ctx {
+	double	a;
+	double	b;
+	double	c;
+	double	discriminant;
+	double	t1;
+	double	t2;
+}	s_sphere_isc_ctx;
+
+typedef struct t_triangle_isc_ctx {
+	Vector3	edge1;
+	Vector3	edge2;
+	Vector3	h;
+	Vector3	s;
+	Vector3	q;
+	double	a;
+	double	f;
+	double	u;
+	double	v;
+}	s_triangle_isc_ctx;
+
+typedef struct t_isc_cyl_ctx{
+	Vector3	ro;
+	Vector3	d;
+	Vector3	ca;
+	double	a;
+	double	b;
+	double	c;
+	Vector2	t;
+	Vector2	y;
+	double	th;
+} s_isc_cyl_ctx;
+
 typedef struct {
 	void		*mlx;
 	void		*win;
@@ -245,6 +278,11 @@ typedef struct t_light_ctx {
 	double	full_phong;
 } s_light_ctx;
 
+typedef struct t_nearest_ctx {
+	double	dist;
+	int		id_o;
+	int		type;
+} s_nearest_ctx;
 //------FSM-------
 void	init_intersect_fun(Scene *scene);
 char	**init_args();
@@ -336,27 +374,27 @@ double random_double();
 int		idxfind_min(double *arr, int size);
 //------scene.c------
 int		obj_solution_point(Scene scene, Vector3 point, int type, int id);
-int		find_nearest_obj(Scene scene, Ray *ray, double *t, int *id, int type);
+int		find_nearest_obj(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx);
 //------cylinder.c----
-int		find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
+int		find_nearest_cylinder(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx);
 int		intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
 int		cylinder_solution_point(Cylinder cylinder, Vector3 point);
 Vector3	normal_cylinder(Vector3 hit_point, Cylinder cylinder);
 void	rot_cylinder(Scene *scene, Vector3 dir, int ang);
 void	pos_cylinder(Scene *scene, Vector3 dir);
 //------sphere.c----
-int		find_nearest_sphere(Scene scene, Ray *ray, double *t, int id, int type);
+int		find_nearest_sphere(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx);
 int		intersect_sphere(const Ray *ray, const Sphere *sphere,  double *t);
 Vector3	*normal_sphere(Vector3 hit_point, Sphere sphere);
 int		sphere_solution_point(Sphere sphere, Vector3 point);
 void	pos_sphere(Scene *scene, Vector3 dir);
 //------triangle.c----
-int		find_nearest_triangle(Scene scene, Ray *ray, double *t, int id, int type);
+int		find_nearest_triangle(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx);
 int		intersect_triangle(const Ray *ray, const Triangle *triangle, double *t);
 void	rot_triangle(Scene *scene, Vector3 dir, int ang);
 void	pos_triangle(Scene *scene, Vector3 dir);
 //------plane.c----
-int		find_nearest_plane(Scene scene, Ray *ray, double *t, int id, int type);
+int		find_nearest_plane(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx);
 int		intersect_plane(const Ray *ray, const Plane *plane, double *t);
 int		plane_solution_point(Plane plane, Vector3 point);
 void	rot_plane(Scene *scene, Vector3 dir, int ang);

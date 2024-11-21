@@ -3,65 +3,66 @@
 /**
  * Möller–Trumbore
  */
-int intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
+int	intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
 {
-    Vector3 edge1, edge2, h, s, q;
-	double a, f, u, v;
+	s_triangle_isc_ctx	ctx;
 
-	edge1 = subtract(triangle->vertex[0], triangle->vertex[1]);
-	edge2 = subtract(triangle->vertex[0], triangle->vertex[2]);
-	h = cross_v3(ray->direction, edge2);
-	a = dot(edge1, h);
-	if (a > -EPSILON && a < EPSILON)
-        return 0;  // El rayo es paralelo al triángulo
-    f = 1.0 / a;
-    s = subtract(triangle->vertex[0], ray->origin);
-    u = f * dot(s, h);
-	if (u < 0.0 || u > 1.0)
-			return 0;
-	q = cross_v3(s, edge1);
-	v = f * dot(ray->direction, q);
-	if (v < 0.0 || (u + v) > 1.0)
-		return 0;
-	*t = f * dot(edge2, q);
-	if (*t > EPSILON) // Intersección con el triángulo
-		return *t;
-	return 0;
+	ctx.edge1 = subtract(triangle->vertex[0], triangle->vertex[1]);
+	ctx.edge2 = subtract(triangle->vertex[0], triangle->vertex[2]);
+	ctx.h = cross_v3(ray->direction, ctx.edge2);
+	ctx.a = dot(ctx.edge1, ctx.h);
+	if (ctx.a > -EPSILON && ctx.a < EPSILON)
+		return (0);
+	ctx.f = 1.0 / ctx.a;
+	ctx.s = subtract(triangle->vertex[0], ray->origin);
+	ctx.u = ctx.f * dot(ctx.s, ctx.h);
+	if (ctx.u < 0.0 || ctx.u > 1.0)
+		return (0);
+	ctx.q = cross_v3(ctx.s, ctx.edge1);
+	ctx.v = ctx.f * dot(ray->direction, ctx.q);
+	if (ctx.v < 0.0 || (ctx.u + ctx.v) > 1.0)
+		return (0);
+	*t = ctx.f * dot(ctx.edge2, ctx.q);
+	if (*t > EPSILON)
+		return (*t);
+	return (0);
 }
 
-int find_nearest_triangle(Scene scene, Ray *ray, double *t, int id, int type)
+int	find_nearest_triangle(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
 {
-	int i;
-	int j;
-	double min_dist = INT32_MAX;
+	int		i;
+	int		j;
+	double	min_dist;
 
 	i = -1;
 	j = -1;
+	min_dist = INT32_MAX;
 	while (++i < scene.n_triangles)
 	{
-		if (id == i && type == TRIANGLE)
+		if (nrst_ctx->id_o == i && nrst_ctx->type == TRIANGLE)
 			continue ;
-		if (intersect_triangle(ray, &scene.triangles[i], t) && (*t < min_dist))
+		if (intersect_triangle(ray, &scene.triangles[i], &nrst_ctx->dist) \
+		&& (nrst_ctx->dist < min_dist))
 		{
-			min_dist = *t;
+			min_dist = nrst_ctx->dist;
 			j = i;
 		}
 	}
-	*t = min_dist;
-	return j;
+	nrst_ctx->dist = min_dist;
+	return (j);
 }
 
 void	rot_triangle(Scene *scene, Vector3 dir, int ang)
 {
-	Triangle *triangle;
-	triangle = &(scene->triangles[scene->pos_obj->idx]);
-	//Por el momento no encontre un algoritmo para hacerlo
+	Triangle	*triangle;
 
+	triangle = &(scene->triangles[scene->pos_obj->idx]);
 }
 
 void	pos_triangle(Scene *scene, Vector3 dir)
 {
-	Triangle *triangle;
+	Triangle	*triangle;
+
 	triangle = &(scene->triangles[scene->pos_obj->idx]);
 	triangle->vertex[0] = add_vector3_to_vector3(dir, triangle->vertex[0]);
 	triangle->vertex[1] = add_vector3_to_vector3(dir, triangle->vertex[1]);

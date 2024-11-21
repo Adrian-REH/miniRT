@@ -60,7 +60,7 @@ int	render_cylinder(Scene *scene, Vector3 hit_pt, int id)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \
 			normal_cylinder(hit_pt, scene->cylinders[id]));
-		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, 3);
+		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 3});
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, CYLINDER);

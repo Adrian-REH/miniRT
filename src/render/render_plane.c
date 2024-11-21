@@ -60,7 +60,7 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 	if (scene->planes[id].mater_prop.reflect)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, scene->planes[id].normal);
-		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, 0);
+		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 0});
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, PLANE);

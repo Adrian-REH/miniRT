@@ -61,7 +61,7 @@ int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \
 		norm_subtract(scene->spheres[id].center, hit_pt));
-		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, 1);
+		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 1});
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, SPHERE);
