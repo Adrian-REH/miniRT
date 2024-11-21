@@ -47,24 +47,21 @@
 # define CYLINDER 3
 # define CAMERA 4
 # define LIGHT 5
+# define R 0
+# define G 1
+# define B 2
 
+typedef enum {
+	A,
+}t_valssss;
 
-typedef enum
-{
-	R,
-	G,
-	B
-} e_col;
-
-typedef struct
-{
+typedef struct t_vector3 {
 	double	x;
 	double	y;
 	double	z;
 } Vector3;
 
-typedef struct
-{
+typedef struct {
 	double	r;
 	double	g;
 	double	b;

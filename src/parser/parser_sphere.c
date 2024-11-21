@@ -12,33 +12,40 @@
 
 #include "../main.h"
 
-static double diamenter_sphere(char *data)
+static double	diamenter_sphere(char *data)
 {
-	double diameter;
+	double	diameter;
+
 	if (data == NULL)
 	{
 		printf("Error: %s not contain diameter\n", data);
 		exit(1);
 	}
-	diameter = atof(data);
+	diameter = atof(data);//FT_ATOF
 	return (diameter);
 }
 
 int	parser_sphere(Scene *scene, char **data)
 {
+	Vector3	center;
+	Color	color;
 
-	Vector3 center = {0, 0, 0};
-	Color color = {0, 0, 0};
-	scene->spheres = ft_realloc(scene->spheres, sizeof(Sphere) * scene->n_spheres, sizeof(Sphere) * (scene->n_spheres + 2));
+	color = (Color){0, 0, 0};
+	center = (Vector3){0, 0, 0};
+	scene->spheres = ft_realloc(scene->spheres, sizeof(Sphere) * \
+		scene->n_spheres, sizeof(Sphere) * (scene->n_spheres + 2));
 	center = ft_coordinate(data[1]);
 	color = ft_color(data[3]);
-	scene->spheres[scene->n_spheres].mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
-	scene->spheres[scene->n_spheres].mater_prop.absorption[R] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->r;
-	scene->spheres[scene->n_spheres].mater_prop.absorption[G] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->g;
-	scene->spheres[scene->n_spheres].mater_prop.absorption[B] = 1 - scene->spheres[scene->n_spheres].mater_prop.vColor->b;
+	scene->spheres[scene->n_spheres].mater_prop.vColor = \
+	rgb_to_color((int)color.r, (int)color.g, (int)color.b);
+	scene->spheres[scene->n_spheres].mater_prop.absorption[R] = \
+	1 - scene->spheres[scene->n_spheres].mater_prop.vColor->r;
+	scene->spheres[scene->n_spheres].mater_prop.absorption[G] = \
+	1 - scene->spheres[scene->n_spheres].mater_prop.vColor->g;
+	scene->spheres[scene->n_spheres].mater_prop.absorption[B] = \
+	1 - scene->spheres[scene->n_spheres].mater_prop.vColor->b;
 	scene->spheres[scene->n_spheres].center = center;
 	scene->spheres[scene->n_spheres].radius = diamenter_sphere(data[2]) / 2;
 	scene->n_spheres++;
 	return (1);
-
 }

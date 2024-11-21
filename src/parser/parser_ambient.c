@@ -14,10 +14,12 @@
 
 int	parser_ambient(Scene *scene, char **data)
 {
+	Color	color;
 
-	Color color = {0, 0, 0};
+	color = (Color){0, 0, 0};
 	scene->ambient = malloc(sizeof(Ambient));
 	scene->ambient->ratio = ft_limit(0, 1, ft_ratio(data[1]));
-	color = ft_color(data[2]);  
+	color = ft_color(data[2]);
 	scene->ambient->color = rgb_to_color(color.r, color.g, color.b);
+	return (0);
 }
