@@ -7,13 +7,14 @@ int	render_point(Scene *scene, int x, int y)
 	int				result;
 
 	result = 0;
-	ctx = (s_nearest_ctx){0 , 0, 10};
+	ctx = (s_nearest_ctx){0, 0, 10};
 	ray = generate_ray(x, y, scene->width, scene->height, *scene->cameras);
 	if (!ray)
 		return (0);
 	ctx.type = find_nearest_obj(*scene, ray, &ctx);
 	if (scene->render[ctx.type] && ctx.id_o >= 0)
-		result = scene->render[ctx.type](scene, resolve_hit_point(*ray, ctx.dist), ctx.id_o);
+		result = scene->render[ctx.type](scene, \
+		resolve_hit_point(*ray, ctx.dist), ctx.id_o);
 	return (free(ray), result);
 }
 
