@@ -6,16 +6,16 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 21:38:54 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/18 18:48:48 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/21 21:15:03 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../main.h"
 
-double ft_ratio(char *str)
+double	ft_ratio(char *str)
 {
 	double	ratio;
-    
+
 	if (str == NULL)
 	{
 		printf("Error: %s not contain ratio\n", str);
