@@ -48,26 +48,27 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 
 int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 {
-	int	hit_color;
-	int	result;
-	int	current_pixel;
-	Ray	rayrfc;
-	int	type;
+	int		hit_color;
+	Color	result;
+	int		current_pixel;
+	Ray		rayrfc;
+	int		type;
 
 	current_pixel = render_point_plane(*scene, hit_pt, id);
-	result = 0;
+	result = (Color){0};
 	hit_color = 0;
 	if (scene->planes[id].mater_prop.reflect)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, scene->planes[id].normal);
-		int j = -1;
-		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, PLANE);
+		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, 0);
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, PLANE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->planes[id].mater_prop)->color;
+			result = illuminate_surface(int_to_color(hit_color), \
+				int_to_color(current_pixel), 0.7, 0.9, 0, \
+					scene->planes[id].mater_prop);
 		}
-		return (result);
+		return (result.color);
 	}
 	return (current_pixel);
 }

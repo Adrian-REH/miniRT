@@ -20,24 +20,3 @@ Vector3 normal, Vector3 hit_pt)
 	}};
 	return (ctx);
 }
-
-RenderContext	build_render_ctxv2(Scene *scene, MaterialProperties mater_prop, \
-Vector3 normal, Vector3 hit_pt, Vector3 cam_dir)
-{
-	RenderContext	ctx;
-
-	ft_bzero(&ctx, sizeof(RenderContext));
-	ctx = (RenderContext){
-		.scene = scene,
-		.mater_prop = mater_prop,
-		.normal = normal,
-		.hit_pt = hit_pt,
-		.rayl = 0,
-		.cam_dir = cam_dir,
-		.funcs = {
-		.calculate_intensity = calculate_intensity,
-		.calculate_attenuation = calculate_attenuation,
-		.reflect = reflect
-	}};
-	return (ctx);
-}

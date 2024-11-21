@@ -32,7 +32,8 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 	hit_color = 0;
 	while (++j < scene->n_spheres)
 	{
-		if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md)){
+		if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md))
+		{
 			hit_rfc = hit_point(rayrfc, t);
 			if (!obj_solution_point(*scene, *hit_rfc, type, id))
 			{
@@ -48,28 +49,26 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 {
 	int		hit_color;
-	int		result;
+	Color	result;
 	int		current_pixel;
-	Vector3	*n_sphere;
 	Ray		rayrfc;
 	int		type;
 
 	hit_color = 0;
-	result = 0;
+	result = (Color){0};
 	current_pixel = render_point_sphere(*scene, hit_pt, id);
 	if (scene->spheres[id].mater_prop.reflect)
 	{
-		n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
-		rayrfc = generate_reflect_ray(scene, hit_pt, *n_sphere);
-		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, SPHERE);
+		rayrfc = generate_reflect_ray(scene, hit_pt, \
+		norm_subtract(scene->spheres[id].center, hit_pt));
+		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, 1);
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, SPHERE);
 			result = illuminate_surface(int_to_color(hit_color), \
 				int_to_color(current_pixel), 0.7, 0.9, 0, \
-					scene->spheres[id].mater_prop)->color;
+					scene->spheres[id].mater_prop);
 		}
-		free(n_sphere);
 		return (hit_color);
 	}
 	return (current_pixel);

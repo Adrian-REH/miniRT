@@ -48,6 +48,7 @@
 # define CAMERA 4
 # define LIGHT 5
 
+
 typedef enum
 {
 	R,
@@ -110,6 +111,8 @@ typedef struct t_materialProperties
 	Img		texture;
 	Color	*vColor;
 }	MaterialProperties;
+
+
 
 
 typedef struct
@@ -230,6 +233,18 @@ typedef struct {
 	LightingFunctions funcs;
 } RenderContext;
 
+
+typedef struct t_light_ctx {
+	Light	*light;
+	double	distance_light;
+	double	attenuation;
+	Vector3	*reflect_dir;
+	double	diffuse_intensity;
+	double	specular;
+	Color	*current_color;
+	double	full_phong;
+} s_light_ctx;
+
 //------FSM-------
 void	init_intersect_fun(Scene *scene);
 char	**init_args();
@@ -245,11 +260,11 @@ Vector3	rotate_y(Vector3 v, double angle);
 //CONTROL
 int		key_press(int key, void *param);
 int		mouse_press(int button, int x, int y, void *param);
-Color	*darken_surface(Color *surface_color, double darkness_intensity);
+Color	darken_surface(Color *surface_color, double darkness_intensity);
 //-----RENDER APPLY-----
-Color	*apply_lighting(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir);
-Color	*apply_shadow(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt);
-Color	*apply_ambient(const RenderContext *ctx);
+Color	apply_lighting(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir);
+Color	apply_shadow(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt);
+Color	apply_ambient(const RenderContext *ctx);
 RenderContext	build_render_ctx(Scene *scene, MaterialProperties mater_prop, Vector3 normal, Vector3 hit_pt);
 RenderContext	build_render_ctxv2(Scene *scene, MaterialProperties mater_prop, Vector3 normal, Vector3 hit_pt, Vector3 cam_dir);
 //------libsarr----
@@ -269,7 +284,7 @@ void	normalize_color(Color *color);
 Color	*rgb_to_color(int r, int g, int b);
 void	set_color(char *buffer, int endian, int color, int alpha);
 int		get_color(char *buffer, int endian, int *alpha);
-Color	*illuminate_surface(Color *surface_color, Color *light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
+Color	illuminate_surface(Color *surface_color, Color *light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 //------libvector3/------
 Vector3	resolve_hit_point(Ray ray, double t);
