@@ -350,8 +350,8 @@ int		idxpixel(int width, int x, int y);
 //------lib/libparse------
 double	ft_limit(double min, double max, double val);
 //------lib/libproject------
-void	point3D_to_pixel(Vector3 point, Camera camera, int screen_width, int screen_height, Vector2 *pxl);
-Ray		*generate_ray(double x, double y, int screen_width, int screen_height, Camera camera);
+void	point3D_to_pixel(Vector3 point, Camera camera);
+Ray		*generate_ray(Vector2 px, int screen_width, int screen_height, Camera camera);
 Ray		generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal);
 //------lib/libmapfun------
 t_map_fun map_fun_get(const t_map_fun *map_fun, int key);

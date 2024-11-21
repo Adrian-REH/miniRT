@@ -8,7 +8,7 @@ int	render_point(Scene *scene, int x, int y)
 
 	result = 0;
 	ctx = (s_nearest_ctx){0, 0, 10};
-	ray = generate_ray(x, y, scene->width, scene->height, *scene->cameras);
+	ray = generate_ray((Vector2){x, y}, scene->width, scene->height, *scene->cameras);
 	if (!ray)
 		return (0);
 	ctx.type = find_nearest_obj(*scene, ray, &ctx);

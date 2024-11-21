@@ -8,7 +8,8 @@ int	mouse_press(int button, int x, int y, void *param)
 
 	scene = (Scene *)param;
 	ctx = (s_nearest_ctx){0, 0, 10};
-	Ray *ray = generate_ray((double)x, (double)y, scene->width, scene->height, *scene->cameras);
+	Ray *ray = generate_ray((Vector2){(double)x, (double)y}, \
+	scene->width, scene->height, *scene->cameras);
 	type = find_nearest_obj(*scene, ray, &ctx);
 	if (ctx.id_o >= 0)
 	{
