@@ -3,29 +3,19 @@
 int	render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
 {
 	RenderContext	ctx;
-	Vector3			cam_dir;
-	Vector3			light_dir;
-	Color			*current_color;
-	Ray				rayslight;
-	double			d;
+	int				color;
+	int				i;
 
 	ctx = build_render_ctx(&scene, scene.cylinders[n_cyl].mater_prop, \
 		normal_cylinder(hit_pt, scene.cylinders[n_cyl]), hit_pt);
-	cam_dir = norm_subtract(scene.cameras->pos, hit_pt);
-	light_dir = norm_subtract(scene.lights->point, hit_pt);
-	rayslight = (Ray){scene.lights->point, light_dir};
-	if (intersect_cylinder(&rayslight, &scene.cylinders[n_cyl], &d))
+	i = -1;
+	while (++i < scene.n_lights)
 	{
-		d = is_in_shadow(scene, scene.lights->point, hit_pt);
-		if (d)
-			current_color = apply_shadow(&ctx, &light_dir, &cam_dir, \
-				hit_point(rayslight, d));
-		else
-			current_color = apply_lighting(&ctx, &light_dir, &cam_dir);
+		ctx.rayl = (Ray){scene.lights[i].point, 0};
+		ctx.rayl.direction = norm_subtract(scene.lights[i].point, hit_pt);
+		color = render_light(scene, ctx, &scene.cylinders[n_cyl], CYLINDER);
 	}
-	else
-		current_color = apply_ambient(&ctx);
-	return (current_color->color);
+	return (color);
 }
 
 int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
@@ -71,7 +61,7 @@ int	render_cylinder(Scene *scene, Vector3 hit_pt, int id)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \
 			normal_cylinder(hit_pt, scene->cylinders[id]));
-		type = find_nearest_obj(*scene, &rayrfc, &(int){0}, &(int){id}, 3);
+		type = find_nearest_obj(*scene, &rayrfc, &(double){0}, &(int){id}, 3);
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, CYLINDER);

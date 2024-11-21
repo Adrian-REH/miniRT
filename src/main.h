@@ -224,6 +224,8 @@ typedef struct {
 	Scene *scene;
 	Vector3 hit_pt;
 	Vector3 normal;
+	Ray rayl;
+	Vector3 cam_dir;
 	MaterialProperties mater_prop;
 	LightingFunctions funcs;
 } RenderContext;
@@ -249,6 +251,7 @@ Color	*apply_lighting(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam
 Color	*apply_shadow(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt);
 Color	*apply_ambient(const RenderContext *ctx);
 RenderContext	build_render_ctx(Scene *scene, MaterialProperties mater_prop, Vector3 normal, Vector3 hit_pt);
+RenderContext	build_render_ctxv2(Scene *scene, MaterialProperties mater_prop, Vector3 normal, Vector3 hit_pt, Vector3 cam_dir);
 //------libsarr----
 int		ft_sarrprint(char **arr);
 char	**ft_sarradd(char **arr, char *string);
@@ -358,6 +361,7 @@ int		parser_resolution(Scene *scene, char **data);
 int		parser_ambient(Scene *scene, char **data);
 int		parser_square(Scene *scene, char **data);
 //------render/------
+int		render_light(Scene scene, RenderContext ctx, void *obj, int type);
 int		render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type);
 int		render_cylinder(Scene *scene, Vector3 hit_pt, int id);
 int		render_triangle(Scene *scene, Vector3 hit_pt, int id);

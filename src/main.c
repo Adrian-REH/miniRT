@@ -144,6 +144,7 @@ void init_pos_obj_fun(Scene *scene)
 	scene->pos_obj->rot[CYLINDER] = (void (*)(void *, Vector3, int))rot_cylinder;
 	scene->pos_obj->rot[CAMERA] = (void (*)(void *, Vector3, int))rot_camera;
 }
+
 int main(int argc, char **argv)
 {
 	if (argc != 2)
@@ -159,6 +160,7 @@ int main(int argc, char **argv)
 	scene->pos_obj = malloc(sizeof(s_pos_obj));
 	ft_bzero(scene->pos_obj, sizeof(s_pos_obj));
 	init_pos_obj_fun(scene);
+	init_intersect_fun(scene);
 	scene->mlx = mlx_init();
 	scene->win = mlx_new_window(scene->mlx, scene->width, scene->height, "miniRT!");
 	scene->img = &img;
