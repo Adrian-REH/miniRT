@@ -14,9 +14,8 @@
 
 Vector3 substract(Vector3 init, Vector3 end)
 {
-	Vector3 direction;
+	Vector3	direction;
 
-	// Calcula el vector de dirección restando los puntos
 	direction.x = end.x - init.x;
 	direction.y = end.y - init.y;
 	direction.z = end.z - init.z;

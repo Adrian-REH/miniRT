@@ -57,7 +57,7 @@ int	parser_cylinder(Scene *scene, char **data)
 	scene->cylinders[scene->n_cylinders].diameter = diameter;
 	scene->cylinders[scene->n_cylinders].height = height;
 	scene->cylinders[scene->n_cylinders].mater_prop.vColor = rgb_to_color((int)color.r, (int)color.g, (int)color.b);
-	scene->cylinders[scene->n_cylinders].mater_prop.reflect = 0;
+	scene->cylinders[scene->n_cylinders].mater_prop.reflect = 1;
 	scene->cylinders[scene->n_cylinders].mater_prop.absorption[R] = 1 - scene->cylinders[scene->n_cylinders].mater_prop.vColor->r;
 	scene->cylinders[scene->n_cylinders].mater_prop.absorption[G] = 1 - scene->cylinders[scene->n_cylinders].mater_prop.vColor->g;
 	scene->cylinders[scene->n_cylinders].mater_prop.absorption[B] = 1 - scene->cylinders[scene->n_cylinders].mater_prop.vColor->b;

@@ -1,28 +1,16 @@
 #include "../main.h"
 
-
-int render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
+int	render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
 {
 	RenderContext	ctx;
-	Vector3 cam_dir;
-	Vector3 light_dir;
-	Color *current_color;
-	Ray rayslight;
-	double d;
-	Vector3 *dir_cyl;
+	Vector3			cam_dir;
+	Vector3			light_dir;
+	Color			*current_color;
+	Ray				rayslight;
+	double			d;
 
-	dir_cyl = normal_cylinder(hit_pt, scene.cylinders[n_cyl]);
-	ctx = (RenderContext){
-		.scene = &scene,
-		.mater_prop = scene.cylinders[n_cyl].mater_prop,
-		.normal = *dir_cyl,
-		.hit_pt = hit_pt,
-		.funcs = {
-			.calculate_intensity = calculate_intensity,
-			.calculate_attenuation = calculate_attenuation,
-			.reflect = reflect
-		}
-	};
+	ctx = build_render_ctx(&scene, scene.cylinders[n_cyl].mater_prop, \
+		normal_cylinder(hit_pt, scene.cylinders[n_cyl]), hit_pt);
 	cam_dir = norm_subtract(scene.cameras->pos, hit_pt);
 	light_dir = norm_subtract(scene.lights->point, hit_pt);
 	rayslight = (Ray){scene.lights->point, light_dir};
@@ -30,24 +18,28 @@ int render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
 	{
 		d = is_in_shadow(scene, scene.lights->point, hit_pt);
 		if (d)
-			current_color = apply_shadow(&ctx, &light_dir, &cam_dir, hit_point(rayslight, d));
-		else 
+			current_color = apply_shadow(&ctx, &light_dir, &cam_dir, \
+				hit_point(rayslight, d));
+		else
 			current_color = apply_lighting(&ctx, &light_dir, &cam_dir);
 	}
 	else
 		current_color = apply_ambient(&ctx);
-	free(dir_cyl);
-	return current_color->color;
+	return (current_color->color);
 }
 
 int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 {
-	double t = 0;
-	double md = 900000000;
-	int j = -1;
-	Vector3 *hit_rfc;
-	int hit_color = 0;
+	double	t;
+	double	md;
+	int		j;
+	Vector3	*hit_rfc;
+	int		hit_color;
 
+	t = 0;
+	hit_color = 0;
+	j = -1;
+	md = 900000000;
 	while (++j < scene->n_triangles)
 	{
 		if (intersect_cylinder(&rayrfc, &scene->cylinders[j], &t) && (t < md))
@@ -61,30 +53,35 @@ int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 			free(hit_rfc);
 		}
 	}
-	return hit_color;
+	return (hit_color);
 }
 
 int	render_cylinder(Scene *scene, Vector3 hit_pt, int id)
 {
-	double t = 0;
-	int idx = id;
-	int hit_color = 0;
-	int tmp[2] = {0 , 0};
-	int result = 0;
-	int current_pixel = render_point_cylinder(*scene, hit_pt, id);
-	Ray rayrfc;
+	int		hit_color;
+	int		result;
+	int		current_pixel;
+	Ray		rayrfc;
+	int		type;
+	Color *color;
 
+	current_pixel = render_point_cylinder(*scene, hit_pt, id);
+	result = ((hit_color = 0), 0);
 	if (scene->cylinders[id].mater_prop.reflect)
 	{
-		rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangles[id].p_triangle->normal);
-		int type = find_nearest_obj(*scene, &rayrfc, &t, &idx, CYLINDER);
+		rayrfc = generate_reflect_ray(scene, hit_pt, \
+			normal_cylinder(hit_pt, scene->cylinders[id]));
+		type = find_nearest_obj(*scene, &rayrfc, &(int){0}, &(int){id}, 3);
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, CYLINDER);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.6, 0.9, 0, scene->cylinders[id].mater_prop)->color;
+			color = illuminate_surface(int_to_color(hit_color), \
+				int_to_color(current_pixel), 0.7, 0.9, 0, \
+					scene->cylinders[id].mater_prop);
+			result = color->color;
+			free(color);
 		}
-		return hit_color;
+		return (result);
 	}
-	return current_pixel;
-
+	return (current_pixel);
 }

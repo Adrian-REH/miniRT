@@ -25,9 +25,6 @@ Color *illuminate_surface(Color *surface_color, Color *light_color, double inten
     result->g = light_color->g + (result->g - light_color->g) * intensity * reflectivity;
     result->b = light_color->b + (result->b - light_color->b) * intensity * reflectivity;
 
-	//result->r *= red_shift;
-	//result->b *= blue_shift;
-
 	// Asegurar que los valores estén en el rango [0, 1]
 	result->r = fmin(1.0, fmax(0.0, result->r)) * 255;
 	result->g = fmin(1.0, fmax(0.0, result->g)) * 255;

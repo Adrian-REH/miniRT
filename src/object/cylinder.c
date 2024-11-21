@@ -24,29 +24,29 @@ int cylinder_solution_point(Cylinder cylinder, Vector3 point)
     return 0;
 }
 
-Vector3 *normal_cylinder(Vector3 hit_point, Cylinder cylinder)
+Vector3 normal_cylinder(Vector3 hit_point, Cylinder cylinder)
 {
-	Vector3 *normal = malloc(sizeof(Vector3));
+	Vector3 normal;
     Vector3 cp = subtract(hit_point, cylinder.center);
 
     double dot_product = dot(cp, cylinder.axis);
-
+    normal = (Vector3){0, 0, 0};
     if (fabs(dot_product) > (cylinder.height - EPSILON)) {
         // Tapa superior
         if (dot_product > 0) {
-            *normal = scalev3(cylinder.axis, -1);
+            normal = scalev3(cylinder.axis, -1);
         } 
         // Tapa inferior
         else {
-            *normal = scalev3(cylinder.axis, 1);
+            normal = scalev3(cylinder.axis, 1);
         }
     } 
     // El punto está en la superficie lateral
     else {
         // Proyección de cp perpendicular al eje
         Vector3 axis_scaled = scalev3(cylinder.axis, dot_product);
-        *normal = subtract(cp, axis_scaled);
-        normalize(normal);
+        normal = subtract(cp, axis_scaled);
+        normalize(&normal);
     }
 	return normal;
 }

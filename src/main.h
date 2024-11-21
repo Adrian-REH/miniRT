@@ -248,6 +248,7 @@ Color	*darken_surface(Color *surface_color, double darkness_intensity);
 Color	*apply_lighting(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir);
 Color	*apply_shadow(const RenderContext *ctx, Vector3 *light_dir, Vector3 *cam_dir, Vector3 *opac_pt);
 Color	*apply_ambient(const RenderContext *ctx);
+RenderContext	build_render_ctx(Scene *scene, MaterialProperties mater_prop, Vector3 normal, Vector3 hit_pt);
 //------libsarr----
 int		ft_sarrprint(char **arr);
 char	**ft_sarradd(char **arr, char *string);
@@ -268,6 +269,7 @@ int		get_color(char *buffer, int endian, int *alpha);
 Color	*illuminate_surface(Color *surface_color, Color *light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 //------libvector3/------
+Vector3	resolve_hit_point(Ray ray, double t);
 Vector3	*hit_point(Ray ray, double t);
 Vector3	scalev3(Vector3 v, float scalar);
 double	sin_v3(Vector3 v1, Vector3 v2);
@@ -321,7 +323,7 @@ int		find_nearest_obj(Scene scene, Ray *ray, double *t, int *id, int type);
 int		find_nearest_cylinder(Scene scene, Ray *ray, double *t, int id, int type);
 int		intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t);
 int		cylinder_solution_point(Cylinder cylinder, Vector3 point);
-Vector3	*normal_cylinder(Vector3 hit_point, Cylinder cylinder);
+Vector3	normal_cylinder(Vector3 hit_point, Cylinder cylinder);
 void	rot_cylinder(Scene *scene, Vector3 dir, int ang);
 void	pos_cylinder(Scene *scene, Vector3 dir);
 //------sphere.c----
