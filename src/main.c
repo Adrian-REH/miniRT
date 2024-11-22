@@ -97,7 +97,7 @@ int init_file(char *file)
 	int len_file;
 	
 	len_file = ft_strlen(file);
-	if (file[len_file - 1] != 't' && file[len_file - 2] != 'r' && file[len_file - 3] != '.')
+	if (file[len_file - 1] != 't' || file[len_file - 2] != 'r' || file[len_file - 3] != '.')
 		(printf("Error: El archivo no es un archivo .rt\n"), exit(1));
 	fd = open(file, 0);
 	if (fd < 0)
