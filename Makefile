@@ -141,29 +141,26 @@ OBJ_DIRS := obj/src/lib/libcolor \
 			obj/src/control/control_quite
 
 
-# Definir los objetos
-OBJ := $(patsubst %.c,obj/%.o,$(SRC_FILES))
+OBJ := $(patsubst %.c, obj/%.o, $(SRC_FILES))
 
-# Regla para compilar los archivos fuente en objetos
+
+all:	makelibs
+		@$(MAKE) $(NAME)
+
 obj/%.o: %.c | $(OBJ_DIRS)
 	@echo "🍩 $(YELLOW)Compiling: $< $(DEF_COLOR)"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-# Regla para crear los directorios de objetos
 $(OBJ_DIRS):
 	@mkdir -p $@
 
 -include	${DEPS}
 -include $(OBJ:.o=.d)
-$(NAME):	$(OBJ)        
+$(NAME):	$(OBJ)
 			@$(CC) $(CFLAGS) $(FSANITIZE) $(OBJ) $(PRINTF) $(MINILIBXCC) $(FLAGSVISUAL) -o $(NAME)        
 			@echo "$(GREEN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
 
-
-all:	$(OBJ_DIRS) makelibs
-		@$(MAKE) $(NAME)
-
-makelibs:    
+makelibs:
 		@$(MAKE) -C $(PRINTF_DIR)
 		@$(MAKE) -C $(MINILIBX_DIR)
 		@$(MAKE) -C $(LIBFT_DIR)
@@ -177,7 +174,7 @@ fclean : clean
 
 clean :
 	@echo "$(CYAN) 🍩 ¡INIT CLEAN! 🍩 $(DEF_COLOR)"
-	$(RM) $(OBJ) $(OBJ_DIRS) *.gcno *.gcda *.gcov *.html *.css
+	$(RM) $(OBJ) obj/ *.gcno *.gcda *.gcov *.html *.css
 	make clean -C lib/libft
 
 re : fclean all
@@ -185,13 +182,4 @@ re : fclean all
 norm :
 	norminette | grep -i "error"
 
-cov:
-	gcov --object-directory=obj/lib lib/ft_sarrprint.c;
-	@for src in $(SRCS); do \
-		echo "Processing $$src"; \
-		dir=$$(dirname "$$src"); \
-		gcov --object-directory=obj/$$dir "$$src"; \
-	done
-	gcovr -r . --html --html-details -o coverage.html
-
-.PHONY:     all clean fclean re bonus norm cov
+.PHONY:     all makelibs clean fclean re bonus norm cov
