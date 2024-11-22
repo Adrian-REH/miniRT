@@ -59,7 +59,7 @@ int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 	* dot(ctx.ro, ctx.ca));
 	ctx.c = dot(ctx.ro, ctx.ro) - pow(dot(ctx.ro, ctx.ca), 2) - \
 		pow((cylinder->diameter / 2), 2);
-	if (!solve_quadratic(ctx.a, ctx.b, ctx.c, &(ctx.t.x), &(ctx.t.y)))
+	if (!solve_quadratic((Vector3){ctx.a, ctx.b, ctx.c}, &(ctx.t.x), &(ctx.t.y)))
 		return (0);
 	if (ctx.t.x > ctx.t.y)
 	{

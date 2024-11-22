@@ -12,20 +12,21 @@
 
 #include "../../main.h"
 
-int	solve_quadratic(double a, double b, double c, double* t0, double* t1)
+int	solve_quadratic(Vector3 val, double *t0, double *t1)
 {
 	double	discriminant;
 	double	q;
 	double	temp;
 
-	discriminant = b * b - 4 * a * c;
+	discriminant = val.y * val.y - 4 * val.x * val.z;
 	if (discriminant < 0)
 		return (0);
-
-	q = (b > 0) ? -0.5 * (b + sqrt(discriminant)) : -0.5 * \
-	(b - sqrt(discriminant));
-	*t0 = q / a;
-	*t1 = c / q;
+	if (val.y > 0)
+		q = -0.5 * (val.y + sqrt(discriminant));
+	else
+		q = -0.5 * (val.y - sqrt(discriminant));
+	*t0 = q / val.x;
+	*t1 = val.z / q;
 	if (*t0 > *t1)
 	{
 		temp = *t0;

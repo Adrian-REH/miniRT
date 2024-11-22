@@ -14,11 +14,10 @@
 
 Color	ft_color(char *str)
 {
-	Color 	color;
+	Color	color;
 	char	**args;
 
 	args = ft_split(str, ',');
-
 	if (ft_sarrsize(args) != 3)
 	{
 		printf("Error: %s not contain some color r or g or b\n", str);

@@ -287,7 +287,7 @@ void	init_parser_fun(Scene *scene);
 void	init_render_fun(Scene *scene);
 void	init_rfc_render_fun(Scene *scene);
 //------MATH-------
-int		solve_quadratic(double a, double b, double c, double* t0, double* t1);
+int		solve_quadratic(Vector3 val, double* t0, double* t1);
 int		terminate_program(void *param);
 Vector3	rotate_x(Vector3 v, double angle);
 Vector3	rotate_z(Vector3 v, double angle);
@@ -342,9 +342,7 @@ Vector3	*reflect(Vector3 L, Vector3 N);
 double	dot(Vector3 a, Vector3 b);
 void	normalize(Vector3 *v);
 Vector3	*invnormal(Vector3 *normal);
-Vector3	*normalize_withpoint(Vector3 init, Vector3 end);
 double	specular_intensity(Vector3 reflection, Vector3 view_dir, double shininess, double ks);
-Vector3	*dir_withpoint(Vector3 init, Vector3 end);
 double	ft_atof(const char *str);
 int		idxpixel(int width, int x, int y);
 //------lib/libparse------

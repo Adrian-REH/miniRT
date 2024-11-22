@@ -43,7 +43,7 @@ int is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
 {
 	Ray shadow_ray;
 	shadow_ray.origin = hit_point;
-	shadow_ray.direction = *normalize_withpoint(hit_point, light_pos); // Vector from hit_point to light
+	shadow_ray.direction = norm_subtract(hit_point, light_pos); // Vector from hit_point to light
 
 	double light_dist = distance(hit_point, light_pos);
 	double t = 0;

@@ -37,11 +37,11 @@ int screen_height, Camera camera)
 Ray	generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal)
 {
 	Ray		rayrfc;
-	Vector3	*dir_pt;
+	Vector3	dir_pt;
 	Vector3	*rfc;
 
-	dir_pt = normalize_withpoint(scene->cameras->pos, hit_pt);
-	rfc = reflect(*dir_pt, normal);//HAY UN LEAK DE MEMORIA AQUI!!
+	dir_pt = norm_subtract(scene->cameras->pos, hit_pt);
+	rfc = reflect(dir_pt, normal);//HAY UN LEAK DE MEMORIA AQUI!!
 	if (dot(normal, *rfc) < 0)
 		invnormal(rfc);
 	rayrfc.origin = hit_pt;

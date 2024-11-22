@@ -14,9 +14,12 @@
 
 Vector3	ft_coordinate(char *argv)
 {
-	Vector3 coord;
+	Vector3	coord;
+	char	**args;
 
-	char **args = ft_split(argv, ',');
+	args = ft_split(argv, ',');
+	if (!args)
+		return ((Vector3){0, 0, 0});
 	if (ft_sarrsize(args) != 3)
 	{
 		printf("Error: Not contain coor x, x ,y\n");

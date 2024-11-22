@@ -1,4 +1,5 @@
 #include "../../main.h"
+
 void	set_color(char *buffer, int endian, int color, int alpha)
 {
 	if (endian == 1)

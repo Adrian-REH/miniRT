@@ -16,9 +16,9 @@ double	ft_limit(double min, double max, double val)
 {
 	if (val < min || val > max)
 	{
-		printf(" max %f < val %f || val %f > min %f\n",max, val, val, min);
+		printf(" max %f < val %f || val %f > min %f\n", max, val, val, min);
 		printf("Error el valor no se encuentre entre los limites [%f, %f]", \
-		min, max);
+			min, max);
 		exit(1);
 	}
 	return (val);

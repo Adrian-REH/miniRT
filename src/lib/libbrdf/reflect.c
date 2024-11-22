@@ -11,18 +11,20 @@
 /* ************************************************************************** */
 
 #include "../../main.h"
-
+/**
+ * Reflection vector equation
+ */
 Vector3	*reflect(Vector3 L, Vector3 N)
 {
 	Vector3	*reflection;
 	double	dot_product;
 
-	dot_product = dot(N, L); // N dot L
+	dot_product = dot(N, L);
 	reflection = malloc(sizeof(Vector3));
 	*reflection = (Vector3){
 		2 * dot_product * N.x - L.x,
 		2 * dot_product * N.y - L.y,
 		2 * dot_product * N.z - L.z};
-	normalize(reflection); // Normalize the reflected vector
+	normalize(reflection);
 	return (reflection);
 }
