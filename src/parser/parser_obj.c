@@ -66,6 +66,8 @@ int	parser_obj(Scene *scene, int fd)
 		state = idstr(alphabet, data[0]);
 		if (scene->parser[state])
 			scene->parser[state](scene, data);
+		else
+			printf("The argument is not recognized: %s\n", data[0]);
 		(free(line), ft_free_p2(data));
 		line = get_next_line(fd);
 	}
