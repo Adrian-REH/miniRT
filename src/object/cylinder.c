@@ -67,25 +67,30 @@ int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 		ctx.t.x = ctx.t.y;
 		ctx.t.y = temp;
 	}
+	if (ctx.t.x < 0)
+	{
+		ctx.t.x = ctx.t.y;
+		if (ctx.t.x < 0)
+			return (0);
+	}
 	ctx.y.x = dot(ctx.ro, ctx.ca) + ctx.t.x * dot(ctx.d, ctx.ca);
 	ctx.y.y = dot(ctx.ro, ctx.ca) + ctx.t.y * dot(ctx.d, ctx.ca);
-	if (ctx.y.x < 0)
+	ctx.half_h = cylinder->height / 2;
+	if (ctx.y.x < -ctx.half_h)
 	{
-		if (ctx.y.y < 0)
+		if (ctx.y.y < -ctx.half_h)
 			return (0);
-		ctx.th = ctx.t.x + (ctx.t.y - ctx.t.x) * (ctx.y.x) / \
-			(ctx.y.x - ctx.y.y);
+		ctx.th = ctx.t.x + (ctx.t.y - ctx.t.x) * (ctx.y.x + ctx.half_h) / (ctx.y.x - ctx.y.y);
 		if (ctx.th <= 0)
 			return (0);
 		*t = ctx.th;
 		return (1);
 	}
-	else if (ctx.y.x >= cylinder->height)
+	else if (ctx.y.x > ctx.half_h)
 	{
-		if (ctx.y.y >= cylinder->height)
+		if (ctx.y.y > ctx.half_h)
 			return (0);
-		ctx.th = ctx.t.x + (ctx.t.y - ctx.t.x) * \
-		(ctx.y.x - cylinder->height) / (ctx.y.x - ctx.y.y);
+		ctx.th = ctx.t.x + (ctx.t.y - ctx.t.x) * (ctx.y.x - ctx.half_h) / (ctx.y.x - ctx.y.y);
 		if (ctx.th <= 0)
 			return (0);
 		*t = ctx.th;

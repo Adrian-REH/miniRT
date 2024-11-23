@@ -33,5 +33,7 @@ int	solve_quadratic(Vector3 val, double *t0, double *t1)
 		*t0 = *t1;
 		*t1 = temp;
 	}
+	if (*t0 < 0)
+		*t0 = *t1;
 	return (1);
 }

@@ -215,6 +215,7 @@ typedef struct t_isc_cyl_ctx{
 	Vector2	t;
 	Vector2	y;
 	double	th;
+	double	half_h;
 } s_isc_cyl_ctx;
 
 typedef struct {
