@@ -15,12 +15,10 @@
 int	parser_light(Scene *scene, char **data)
 {
 	Vector3		point;
-	double		ratio;
 	Color		color;
 
 	point = (Vector3){0, 0, 0};
-	ratio = 0;
-	color = (Color){0, 0, 0};
+	color = (Color){0, 0, 0, 0};
 	scene->lights = malloc(sizeof(Light));
 	if (!scene->lights)
 		return (0);

@@ -27,8 +27,8 @@ int	sampling(int x, int y, Scene *scene, int samples_per_pixel)
 	int		s;
 
 	s = -1;
-	final_color = (Color){0, 0, 0};
-	sample_color = (Color){0, 0, 0};
+	final_color = (Color){0, 0, 0, 0};
+	sample_color = (Color){0, 0, 0, 0};
 	while (++s < samples_per_pixel)
 	{
 		u = (x + random_double()) / (double)scene->width;
@@ -47,7 +47,6 @@ int	sampling(int x, int y, Scene *scene, int samples_per_pixel)
 void	render_scene(Scene *scene, int samples_per_pixel)
 {
 	time_t	start;
-	double	min_dist;
 	int		x;
 	int		y;
 	double	elapsed;

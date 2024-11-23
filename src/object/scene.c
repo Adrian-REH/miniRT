@@ -27,9 +27,7 @@ int	find_nearest_obj(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
 	double	distance[10];
 	double	idx[10];
 	int		type;
-	double	d;
 
-	d = nrst_ctx->dist;
 	type = -1;
 	idx[PLANE] = find_nearest_plane(scene, ray, nrst_ctx);
 	distance[PLANE] = nrst_ctx->dist;

@@ -1,8 +1,7 @@
 #include "../main.h"
 
-int	key_press(int key, void *param)
+int	key_press(int key, Scene *param)
 {
-	static int		n_intent = 0;
 	t_map_fun		map_fun;
 	const t_map_fun	controls[10] = {
 	{XK_a, (void (*)(void *))control_a},
@@ -17,14 +16,12 @@ int	key_press(int key, void *param)
 	{0, NULL}
 	};
 
-	if (n_intent >= 1)
+	if (param->n_interaction >= 1)
 		return (0);
+	param->n_interaction++;
 	map_fun = map_fun_get(controls, key);
 	if (map_fun.func)
-	{
-		n_intent++;
 		map_fun.func(param);
-		n_intent--;
-	}
+	param->n_interaction--;
 	return (0);
 }

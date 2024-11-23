@@ -9,10 +9,11 @@ int	render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
 	ctx = build_render_ctx(&scene, scene.planes[n_plane].mater_prop, \
 		scene.planes[n_plane].normal, hit_pt);
 	i = -1;
+	color = 0;
 	while (++i < scene.n_lights)
 	{
-		ctx.rayl = (Ray){scene.lights[i].point, 0};
-		ctx.rayl.direction = norm_subtract(scene.lights[i].point, hit_pt);
+		ctx.rayl = (Ray){scene.lights[i].point, \
+			norm_subtract(scene.lights[i].point, hit_pt)};
 		color = render_light(scene, ctx, &scene.planes[n_plane], PLANE);
 	}
 	return (color);

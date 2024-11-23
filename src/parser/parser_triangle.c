@@ -17,7 +17,7 @@ int	parser_triangle(Scene *scene, char **data)
 	Color		color;
 	Triangle	triangle;
 
-	color = (Color){0, 0, 0};
+	color = (Color){0, 0, 0, 0};
 	scene->triangles = ft_realloc(scene->triangles, sizeof(Triangle) * \
 	scene->n_triangles, sizeof(Triangle) * (scene->n_triangles + 2));
 	color = ft_color(data[4]);
@@ -37,4 +37,5 @@ int	parser_triangle(Scene *scene, char **data)
 	triangle.mater_prop.absorption[B] = 1 - triangle.mater_prop.vColor->b;
 	scene->triangles[scene->n_triangles] = triangle;
 	scene->n_triangles++;
+	return (0);
 }

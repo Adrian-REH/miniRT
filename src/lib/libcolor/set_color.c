@@ -2,6 +2,7 @@
 
 void	set_color(char *buffer, int endian, int color, int alpha)
 {
+	(void)alpha;
 	if (endian == 1)
 	{
 		buffer[0] = 0;

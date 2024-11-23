@@ -56,6 +56,9 @@ void	rot_triangle(Scene *scene, Vector3 dir, int ang)
 {
 	Triangle	*triangle;
 
+	(void)triangle;
+	(void)dir;
+	(void)ang;
 	triangle = &(scene->triangles[scene->pos_obj->idx]);
 }
 

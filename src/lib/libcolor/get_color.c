@@ -5,6 +5,7 @@ int	get_color(char *buffer, int endian, int *alpha)
 {
 	int	color;
 
+	(void)alpha;
 	if (endian == 1)
 	{
 		color |= (buffer[1] & 0xFF) << 16;

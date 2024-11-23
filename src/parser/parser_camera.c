@@ -32,4 +32,5 @@ int	parser_camera(Scene *scene, char **data)
 	right = cross_v3(tmp, scene->cameras->dir);
 	scene->cameras->horizontal = right;
 	scene->cameras->vertical = cross_v3(scene->cameras->dir, right);
+	return (0);
 }

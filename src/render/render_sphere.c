@@ -9,10 +9,11 @@ int	render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere)
 	ctx = build_render_ctx(&scene, scene.spheres[nb_sphere].mater_prop, \
 		norm_subtract(scene.spheres[nb_sphere].center, hit_pt), hit_pt);
 	i = -1;
+	color = 0;
 	while (++i < scene.n_lights)
 	{
-		ctx.rayl = (Ray){scene.lights[i].point, 0};
-		ctx.rayl.direction = norm_subtract(scene.lights[i].point, hit_pt);
+		ctx.rayl = (Ray){scene.lights[i].point, \
+			norm_subtract(scene.lights[i].point, hit_pt)};
 		color = render_light(scene, ctx, &scene.spheres[nb_sphere], SPHERE);
 	}
 	return (color);
@@ -55,7 +56,8 @@ int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 	int		type;
 
 	hit_color = 0;
-	result = (Color){0};
+	result = (Color){0, 0, 0, 0};
+	(void)result;
 	current_pixel = render_point_sphere(*scene, hit_pt, id);
 	if (scene->spheres[id].mater_prop.reflect)
 	{

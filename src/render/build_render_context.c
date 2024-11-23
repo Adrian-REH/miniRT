@@ -11,7 +11,7 @@ Vector3 normal, Vector3 hit_pt)
 		.mater_prop = mater_prop,
 		.normal = normal,
 		.hit_pt = hit_pt,
-		.rayl = 0,
+		.rayl = (Ray){{0, 0, 0}, {0, 0, 0}},
 		.cam_dir = norm_subtract(scene->cameras->pos, hit_pt),
 		.funcs = {
 		.calculate_intensity = calculate_intensity,

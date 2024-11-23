@@ -15,7 +15,7 @@ NAME		:= miniRT
 SRC_DIR		:= src/
 OBJ_DIRS	:= obj/
 CC			:= gcc
-CFLAGS		:= -g3 -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
+CFLAGS		:= -g3 -Wall -Wextra -Werror -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
 FSANITIZE	:= 
 RM			:= rm -rf
 

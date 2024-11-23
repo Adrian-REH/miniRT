@@ -7,6 +7,8 @@ Vector3 *cam_dir, Vector3 *opac_pt)
 	Color	current_color;
 
 	(void)opac_pt;
+	(void)light_dir;
+	(void)cam_dir;
 	ambient_color = int_to_color(0);
 	current_color = illuminate_surface(ambient_color, \
 		ctx->scene->ambient->color, \

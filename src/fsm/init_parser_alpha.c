@@ -1,9 +1,10 @@
 #include "../main.h"
 
-char **init_args()
+char	**init_args()
 {
-	char **alphabet;
-	alphabet = ft_sarradd(alphabet, "R"); //posicion 0 Resolution
+	char	**alphabet;
+
+	alphabet = ft_sarradd(NULL, "R"); //posicion 0 Resolution
 	alphabet = ft_sarradd(alphabet, "A");//posicion 1 Ambient
 	alphabet = ft_sarradd(alphabet, "C");//posicion 2	camara
 	alphabet = ft_sarradd(alphabet, "L");//posicion 2	Light

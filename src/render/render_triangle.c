@@ -9,10 +9,11 @@ int	render_point_triangle(Scene scene, Vector3 hit_pt, int n_triangle)
 	ctx = build_render_ctx(&scene, scene.triangles[n_triangle].mater_prop, \
 		scene.triangles[n_triangle].p_triangle->normal, hit_pt);
 	i = -1;
+	color = 0;
 	while (++i < scene.n_lights)
 	{
-		ctx.rayl = (Ray){scene.lights[i].point, 0};
-		ctx.rayl.direction = norm_subtract(scene.lights[i].point, hit_pt);
+		ctx.rayl = (Ray){scene.lights[i].point, \
+			norm_subtract(scene.lights[i].point, hit_pt)};
 		color = render_light(scene, ctx, &scene.triangles[n_triangle], 2);
 	}
 	return (color);
@@ -55,7 +56,8 @@ int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 	Color	result;
 
 	current_pixel = render_point_triangle(*scene, hit_pt, id);
-	result = ((hit_color = 0), (Color){0});
+	result = ((hit_color = 0), (Color){0, 0, 0, 0});
+	(void)result;
 	if (scene->triangles[id].mater_prop.reflect)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \

@@ -2,9 +2,6 @@
 
 void	rot_camera(Scene *scene, Vector3 dir, int ang)
 {
-	Plane	*plane;
-
-	plane = &(scene->planes[scene->pos_obj->idx]);
 	scene->cameras->dir = rotate_v3(scene->cameras->dir, dir, ang);
 	scene->cameras->horizontal = \
 		rotate_v3(scene->cameras->horizontal, dir, ang);

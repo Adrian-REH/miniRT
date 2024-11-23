@@ -44,7 +44,7 @@ int	parser_cylinder(Scene *scene, char **data)
 	Cylinder	cylinder;
 	Color		color;
 
-	color = (Color){0, 0, 0};
+	color = (Color){0, 0, 0, 0};
 	scene->cylinders = ft_realloc(scene->cylinders, sizeof(Cylinder) * \
 	scene->n_cylinders, sizeof(Cylinder) * (scene->n_cylinders + 2));
 	cylinder.center = ft_coordinate(data[1]);
@@ -60,4 +60,7 @@ int	parser_cylinder(Scene *scene, char **data)
 	cylinder.mater_prop.absorption[B] = 1 - cylinder.mater_prop.vColor->b;
 	scene->cylinders[scene->n_cylinders] = cylinder;
 	scene->n_cylinders++;
+	ft_bzero(&cylinder_null, sizeof(Cylinder));
+	scene->cylinders[scene->n_cylinders] = cylinder_null;
+	return (0);
 }

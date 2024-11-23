@@ -27,7 +27,7 @@ int	parser_square(Scene *scene, char **data)
 	Color	color;
 	Square	square;
 
-	color = (Color){0, 0, 0};
+	color = (Color){0, 0, 0, 0};
 	scene->squares = ft_realloc(scene->squares, sizeof(Square) * \
 		scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
 	color = ft_color(data[4]);
@@ -43,4 +43,5 @@ int	parser_square(Scene *scene, char **data)
 	square.mater_prop.reflect = 0;
 	scene->squares[scene->n_squares] = square;
 	scene->n_squares++;
+	return (0);
 }

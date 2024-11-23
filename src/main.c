@@ -30,10 +30,6 @@ int	terminate_program(void *param)
 static void	mlx_listen_meta(Scene *scene)
 {
  	mlx_hook(scene->win, 4, 1L << 2, mouse_press, scene);
-	/*
-	mlx_hook(meta->vars.win, 5, 1L << 3, mouse_release, meta);
-	mlx_hook(meta->vars.win, 6, 1L << 6, mouse_move, meta);
-*/
 	mlx_hook(scene->win, 2, 1, key_press, scene);
 	mlx_hook(scene->win, 17, 1, terminate_program, scene);
 	mlx_loop(scene->mlx);

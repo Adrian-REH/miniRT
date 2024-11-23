@@ -123,7 +123,7 @@ typedef struct
 
 typedef struct
 {
-	unsigned long key;
+	int key;
 	void (*func)(void *);
 }	t_map_fun;
 
@@ -237,6 +237,7 @@ typedef struct {
 	int			n_spheres;
 	int			n_squares;
 	int			n_triangles;
+	int			n_interaction;
 	s_pos_obj	*pos_obj;
 	int			(*isc[10])(const void *, const void *, double *);
 	int			(*rfc[10])(void *, Ray, int, int);
@@ -293,7 +294,7 @@ Vector3	rotate_x(Vector3 v, double angle);
 Vector3	rotate_z(Vector3 v, double angle);
 Vector3	rotate_y(Vector3 v, double angle);
 //CONTROL
-int		key_press(int key, void *param);
+int		key_press(int key, Scene *param);
 int		mouse_press(int button, int x, int y, void *param);
 Color	darken_surface(Color *surface_color, double darkness_intensity);
 //-----RENDER APPLY-----

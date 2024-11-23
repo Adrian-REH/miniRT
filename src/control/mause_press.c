@@ -8,6 +8,7 @@ int	mouse_press(int button, int x, int y, void *param)
 	Ray				*ray;
 
 	scene = (Scene *)param;
+	(void)button;
 	ctx = (s_nearest_ctx){0, 0, 10};
 	ray = generate_ray((Vector2){(double)x, (double)y}, \
 		scene->width, scene->height, *scene->cameras);
