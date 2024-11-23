@@ -17,8 +17,12 @@ int	idstr(char *alphabet[], char *str)
 	int	i;
 
 	i = -1;
+	if (ft_strlen(str) == 1)
+		str = ft_memmap(str, ft_strlen(str), ft_toupper);
+	else
+		str = ft_memmap(str, ft_strlen(str), ft_tolower);
 	while (alphabet[++i])
-		if (ft_strncmp(alphabet[i], str, ft_strlen(str)) == 0)
+		if (ft_strncmp(alphabet[i], str, 2) == 0)
 			return (i);
 	return (9);
 }
