@@ -6,7 +6,7 @@
 #    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 02:54:59 by adherrer          #+#    #+#              #
-#    Updated: 2024/11/18 19:25:59 by razamora         ###   ########.fr        #
+#    Updated: 2024/11/25 20:52:45 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME		:= miniRT
 SRC_DIR		:= src/
 OBJ_DIRS	:= obj/
 CC			:= gcc
-CFLAGS		:= -g3 -Wall -Wextra -Werror -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
+CFLAGS		:= -g3 -Wall -Wextra -Werror -O3 -ffast-math -funroll-loops -march=native -flto -MMD -fsanitize=address
 FSANITIZE	:= 
 RM			:= rm -rf
 
@@ -100,6 +100,7 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/render/apply_ambient.c \
 				src/object/camera.c \
 				src/object/cylinder.c \
+				src/object/cylinder2.c \
 				src/object/plane.c \
 				src/object/triangle.c \
 				src/object/scene.c \

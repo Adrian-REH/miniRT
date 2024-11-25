@@ -46,6 +46,7 @@ Vector3	normal_cylinder(Vector3 hit_point, Cylinder cylinder)
 	return (normal);
 }
 
+/*
 int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 {
 	s_isc_cyl_ctx	ctx;
@@ -99,7 +100,7 @@ int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 	*t = ctx.t.x;
 	return (1);
 }
-
+*/
 int	find_nearest_cylinder(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
 {
 	int		i;
