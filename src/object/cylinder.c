@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cylinder.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 09:29:23 by adherrer          #+#    #+#             */
+/*   Updated: 2024/11/26 09:29:51 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../main.h"
 
 int	cylinder_solution_point(Cylinder cylinder, Vector3 point)
@@ -81,7 +93,8 @@ int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 	{
 		if (ctx.y.y < -ctx.half_h)
 			return (0);
-		ctx.th = ctx.t.x + (ctx.t.y - ctx.t.x) * (ctx.y.x + ctx.half_h) / (ctx.y.x - ctx.y.y);
+		ctx.th = ctx.t.x + (ctx.t.y - ctx.t.x) *
+		 (ctx.y.x + ctx.half_h) / (ctx.y.x - ctx.y.y);
 		if (ctx.th <= 0)
 			return (0);
 		*t = ctx.th;
