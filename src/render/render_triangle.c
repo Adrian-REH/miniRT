@@ -1,49 +1,48 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_triangle.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 09:13:55 by adherrer          #+#    #+#             */
+/*   Updated: 2024/11/26 09:13:58 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../main.h"
 
-int render_point_triangle(Scene scene, Vector3 hit_pt, int n_triangle)
+int	render_point_triangle(Scene scene, Vector3 hit_pt, int n_triangle)
 {
 	RenderContext	ctx;
-	Vector3 cam_dir;
-	Vector3 light_dir;
-	Color *current_color;
-	Ray rayslight;
-	double d;
+	int				color;
+	int				i;
 
-	ctx = (RenderContext){
-		.scene = &scene,
-		.mater_prop = scene.triangles[n_triangle].mater_prop,
-		.normal = scene.triangles[n_triangle].p_triangle->normal,
-		.hit_pt = hit_pt,
-		.funcs = {
-			.calculate_intensity = calculate_intensity,
-			.calculate_attenuation = calculate_attenuation,
-			.reflect = reflect
-		}
-	};
-	cam_dir = norm_subtract(scene.cameras->pos, hit_pt);
-	light_dir = norm_subtract(scene.lights->point, hit_pt);
-	rayslight = (Ray){scene.lights->point, light_dir};
-	if (intersect_triangle(&rayslight, &scene.triangles[n_triangle], &d))
+	ctx = build_render_ctx(&scene, scene.triangles[n_triangle].mater_prop, \
+		scene.triangles[n_triangle].p_triangle->normal, hit_pt);
+	i = -1;
+	color = 0;
+	while (++i < scene.n_lights)
 	{
-		d = is_in_shadow(scene, scene.lights->point, hit_pt);
-		if (d){
-			current_color = apply_shadow(&ctx, &light_dir, &cam_dir, hit_point(rayslight, d));}
-		else 
-			current_color = apply_lighting(&ctx, &light_dir, &cam_dir);
+		ctx.rayl = (Ray){scene.lights[i].point, \
+			norm_subtract(scene.lights[i].point, hit_pt)};
+		color = render_light(scene, ctx, &scene.triangles[n_triangle], 2);
 	}
-	else
-		current_color = apply_ambient(&ctx);
-	return current_color->color;
+	return (color);
 }
 
 int	render_reflect_triangle(Scene *scene, Ray rayrfc, int id, int type)
 {
-	double t = 0;
-	double md = 900000000;
-	int j = -1;
-	Vector3 *hit_rfc;
-	int hit_color = 0;
+	double	t;
+	double	md;
+	int		j;
+	Vector3	*hit_rfc;
+	int		hit_color;
 
+	md = 900000000;
+	t = 0;
+	j = -1;
+	hit_color = 0;
 	while (++j < scene->n_triangles)
 	{
 		if (intersect_triangle(&rayrfc, &scene->triangles[j], &t) && (t < md))
@@ -57,30 +56,33 @@ int	render_reflect_triangle(Scene *scene, Ray rayrfc, int id, int type)
 			free(hit_rfc);
 		}
 	}
-	return hit_color;
+	return (hit_color);
 }
 
 int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 {
-	double t = 0;
-	int idx = id;
-	int hit_color = 0;
-	int tmp[2] = {0 , 0};
-	int result = 0;
-	int current_pixel = render_point_triangle(*scene, hit_pt, id);
+	Ray		rayrfc;
+	int		hit_color;
+	int		current_pixel;
+	int		type;
+	Color	result;
 
+	current_pixel = render_point_triangle(*scene, hit_pt, id);
+	result = ((hit_color = 0), (Color){0, 0, 0, 0});
+	(void)result;
 	if (scene->triangles[id].mater_prop.reflect)
 	{
-		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, scene->triangles[id].p_triangle->normal);
-		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, TRIANGLE);
+		rayrfc = generate_reflect_ray(scene, hit_pt, \
+			scene->triangles[id].p_triangle->normal);
+		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 2});
 		if (scene->rfc[type])
 		{
-			hit_color = scene->rfc[type](scene, *rayrfc, id, TRIANGLE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.6, 0.9, 0, scene->triangles[id].mater_prop)->color;
+			hit_color = scene->rfc[type](scene, rayrfc, id, TRIANGLE);
+			result = illuminate_surface(int_to_color(hit_color), \
+				int_to_color(current_pixel), 0.6, 0.9, 0, \
+					scene->triangles[id].mater_prop);
 		}
-		free(rayrfc);
-		return hit_color;
+		return (hit_color);
 	}
-	return current_pixel;
-
+	return (current_pixel);
 }

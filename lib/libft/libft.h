@@ -25,6 +25,8 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
+void		*ft_memmap(void *dst, size_t len, int (*f)(int));
+int			ft_strcmp(const char *s1, const char *s2);
 int			ft_isspaces(char str);
 char		**ft_split_space(char const *s);
 int			ft_isalnum(int c);

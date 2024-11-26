@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   random_double.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/20 23:27:36 by razamora          #+#    #+#             */
+/*   Updated: 2024/11/26 09:26:01 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../main.h"
 
-double random_double()
+double	random_double(void)
 {
-    return rand() / (double)RAND_MAX;
+	return (rand() / (double)RAND_MAX);
 }

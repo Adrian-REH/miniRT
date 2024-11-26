@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 21:37:25 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 21:46:22 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/21 21:12:11 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 Vector3	ft_coordinate(char *argv)
 {
-	Vector3 coord;
+	Vector3	coord;
+	char	**args;
 
-	char **args = ft_split(argv, ',');
+	args = ft_split(argv, ',');
+	if (!args)
+		return ((Vector3){0, 0, 0});
 	if (ft_sarrsize(args) != 3)
 	{
 		printf("Error: Not contain coor x, x ,y\n");

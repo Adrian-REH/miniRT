@@ -6,7 +6,7 @@
 #    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 02:54:59 by adherrer          #+#    #+#              #
-#    Updated: 2024/11/18 19:25:59 by razamora         ###   ########.fr        #
+#    Updated: 2024/11/25 20:52:45 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME		:= miniRT
 SRC_DIR		:= src/
 OBJ_DIRS	:= obj/
 CC			:= gcc
-CFLAGS		:= -g3 -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
+CFLAGS		:= -g3 -Wall -Wextra -Werror -O3 -ffast-math -funroll-loops -march=native -flto -MMD -fsanitize=address
 FSANITIZE	:= 
 RM			:= rm -rf
 
@@ -69,6 +69,7 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/lib/libsarr/ft_sarradd.c \
 				src/lib/libmath/ft_atof.c \
 				src/lib/libmath/substract.c \
+				src/lib/libmath/solve_quadratic.c \
 				src/lib/libparse/ft_coordinate.c \
 				src/lib/libparse/ft_limit.c \
 				src/lib/libparse/stonorm.c \
@@ -86,25 +87,30 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/render/render_plane.c \
 				src/render/render_sphere.c \
 				src/render/render_triangle.c \
+				src/render/render_light.c \
+				src/render/build_render_context.c \
 				src/parser/parser_obj.c \
 				src/parser/parser_triangle.c \
 				src/parser/parser_square.c \
-				src/parser/parser_utils.c \
 				src/parser/parser_resolution.c \
 				src/render/render_cylinder.c \
 				src/render/render_scene.c \
 				src/render/apply_shadow.c \
 				src/render/apply_light.c \
 				src/render/apply_ambient.c \
-				src/object/ambient.c \
 				src/object/camera.c \
 				src/object/cylinder.c \
-				src/object/light.c \
+				src/object/cylinder2.c \
 				src/object/plane.c \
 				src/object/triangle.c \
 				src/object/scene.c \
 				src/object/sphere.c \
 				src/object/line.c \
+				src/fsm/init_intersect_fun.c \
+				src/fsm/init_parser_alpha.c \
+				src/fsm/init_parser_fun.c \
+				src/fsm/init_render_fun.c \
+				src/fsm/init_rfc_render_fun.c \
 				src/control/key_press.c \
 				src/control/mause_press.c \
 				src/control/control_camera/control_a.c \
@@ -124,6 +130,7 @@ OBJ_DIRS := obj/src/lib/libcolor \
 			obj/src/lib/libbrdf \
 			obj/src/parser \
 			obj/src/render \
+			obj/src/fsm \
 			obj/src/object \
 			obj/src/lib/librandom \
 			obj/src/lib/libsarr \
@@ -135,29 +142,26 @@ OBJ_DIRS := obj/src/lib/libcolor \
 			obj/src/control/control_quite
 
 
-# Definir los objetos
-OBJ := $(patsubst %.c,obj/%.o,$(SRC_FILES))
+OBJ := $(patsubst %.c, obj/%.o, $(SRC_FILES))
 
-# Regla para compilar los archivos fuente en objetos
+
+all:	makelibs
+		@$(MAKE) $(NAME)
+
 obj/%.o: %.c | $(OBJ_DIRS)
 	@echo "🍩 $(YELLOW)Compiling: $< $(DEF_COLOR)"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-# Regla para crear los directorios de objetos
 $(OBJ_DIRS):
 	@mkdir -p $@
 
 -include	${DEPS}
 -include $(OBJ:.o=.d)
-$(NAME):	$(OBJ)        
+$(NAME):	$(OBJ)
 			@$(CC) $(CFLAGS) $(FSANITIZE) $(OBJ) $(PRINTF) $(MINILIBXCC) $(FLAGSVISUAL) -o $(NAME)        
 			@echo "$(GREEN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
 
-
-all:	$(OBJ_DIRS) makelibs
-		@$(MAKE) $(NAME)
-
-makelibs:    
+makelibs:
 		@$(MAKE) -C $(PRINTF_DIR)
 		@$(MAKE) -C $(MINILIBX_DIR)
 		@$(MAKE) -C $(LIBFT_DIR)
@@ -171,7 +175,7 @@ fclean : clean
 
 clean :
 	@echo "$(CYAN) 🍩 ¡INIT CLEAN! 🍩 $(DEF_COLOR)"
-	$(RM) $(OBJ) $(OBJ_DIRS) *.gcno *.gcda *.gcov *.html *.css
+	$(RM) $(OBJ) obj/ *.gcno *.gcda *.gcov *.html *.css
 	make clean -C lib/libft
 
 re : fclean all
@@ -179,13 +183,4 @@ re : fclean all
 norm :
 	norminette | grep -i "error"
 
-cov:
-	gcov --object-directory=obj/lib lib/ft_sarrprint.c;
-	@for src in $(SRCS); do \
-		echo "Processing $$src"; \
-		dir=$$(dirname "$$src"); \
-		gcov --object-directory=obj/$$dir "$$src"; \
-	done
-	gcovr -r . --html --html-details -o coverage.html
-
-.PHONY:     all clean fclean re bonus norm cov
+.PHONY:     all makelibs clean fclean re bonus norm cov

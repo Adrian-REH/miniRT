@@ -1,52 +1,52 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_sphere.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 09:13:54 by adherrer          #+#    #+#             */
+/*   Updated: 2024/11/26 09:13:55 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../main.h"
 
-int render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere)
+int	render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere)
 {
 	RenderContext	ctx;
-	Vector3 cam_dir;
-	Vector3 light_dir;
-	Color *current_color;
-	Ray rayslight;
-	double d;
+	int				color;
+	int				i;
 
-	ctx = (RenderContext){
-		.scene = &scene,
-		.mater_prop = scene.spheres[nb_sphere].mater_prop,
-		.normal = norm_subtract(scene.spheres[nb_sphere].center, hit_pt),
-		.hit_pt = hit_pt,
-		.funcs = {
-			.calculate_intensity = calculate_intensity,
-			.calculate_attenuation = calculate_attenuation,
-			.reflect = reflect
-		}
-	};
-	cam_dir = norm_subtract(scene.cameras->pos, hit_pt);
-	light_dir = norm_subtract(scene.lights->point, hit_pt);
-	rayslight = (Ray){scene.lights->point, light_dir};
-	if (intersect_sphere(&rayslight, scene.spheres, &d))
+	ctx = build_render_ctx(&scene, scene.spheres[nb_sphere].mater_prop, \
+		norm_subtract(scene.spheres[nb_sphere].center, hit_pt), hit_pt);
+	i = -1;
+	color = 0;
+	while (++i < scene.n_lights)
 	{
-		d = is_in_shadow(scene, scene.lights->point, hit_pt);
-		if (d)
-			current_color = apply_shadow(&ctx, &light_dir, &cam_dir, hit_point(rayslight, d));
-		else 
-			current_color = apply_lighting(&ctx, &light_dir, &cam_dir);
+		ctx.rayl = (Ray){scene.lights[i].point, \
+			norm_subtract(scene.lights[i].point, hit_pt)};
+		color = render_light(scene, ctx, &scene.spheres[nb_sphere], SPHERE);
 	}
-	else
-		current_color = apply_ambient(&ctx);
-	return current_color->color;
+	return (color);
 }
 
 int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 {
-	double t = 0;
-	double md = 900000000;
-	int j = -1;
-	Vector3 *hit_rfc;
-	int hit_color = 0;
+	double	t;
+	double	md;
+	int		j;
+	Vector3	*hit_rfc;
+	int		hit_color;
 
+	t = 0;
+	md = 900000000;
+	j = -1;
+	hit_color = 0;
 	while (++j < scene->n_spheres)
 	{
-		if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md)){
+		if (intersect_sphere(&rayrfc, &scene->spheres[j], &t) && (t < md))
+		{
 			hit_rfc = hit_point(rayrfc, t);
 			if (!obj_solution_point(*scene, *hit_rfc, type, id))
 			{
@@ -56,34 +56,34 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 			free(hit_rfc);
 		}
 	}
-	return hit_color;
+	return (hit_color);
 }
-
 
 int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 {
-	double t = 0;
-	int hit_color = 0;
-	int result = 0;
-	int idx = id;
-	int j = -1;
-	//Verificador de planos o objetos mas cercanos para optimizar
-	int current_pixel = render_point_sphere(*scene, hit_pt, id);
-	//Se confunde consigo mismo para buscar el mas cercano
-	//Solucion: Intentar identificar el cuerpo donde sale y hacer que no se autointersecte.
+	int		hit_color;
+	Color	result;
+	int		current_pixel;
+	Ray		rayrfc;
+	int		type;
+
+	hit_color = 0;
+	result = (Color){0, 0, 0, 0};
+	(void)result;
+	current_pixel = render_point_sphere(*scene, hit_pt, id);
 	if (scene->spheres[id].mater_prop.reflect)
 	{
-		Vector3 *n_sphere = normal_sphere(hit_pt, scene->spheres[id]);
-		Ray *rayrfc = generate_reflect_ray(scene, hit_pt, *n_sphere);
-		int type = find_nearest_obj(*scene, rayrfc, &t, &idx, SPHERE);
+		rayrfc = generate_reflect_ray(scene, hit_pt, \
+		norm_subtract(scene->spheres[id].center, hit_pt));
+		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 1});
 		if (scene->rfc[type])
 		{
-			hit_color = scene->rfc[type](scene, *rayrfc, id, SPHERE);
-			result = illuminate_surface(int_to_color(hit_color), int_to_color(current_pixel), 0.7, 0.9, 0, scene->spheres[id].mater_prop)->color;
+			hit_color = scene->rfc[type](scene, rayrfc, id, SPHERE);
+			result = illuminate_surface(int_to_color(hit_color), \
+				int_to_color(current_pixel), 0.7, 0.9, 0, \
+					scene->spheres[id].mater_prop);
 		}
-		free(rayrfc);
-		free(n_sphere);
-		return hit_color;
+		return (hit_color);
 	}
-	return current_pixel;
+	return (current_pixel);
 }

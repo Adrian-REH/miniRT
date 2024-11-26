@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   multiplyv3.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 09:26:14 by adherrer          #+#    #+#             */
+/*   Updated: 2024/11/26 09:26:14 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../main.h"
 
-Vector3 multiplyv3(Vector3 v, Vector3 u)
+Vector3	multiplyv3(Vector3 v, Vector3 u)
 {
-	return (Vector3){
+	return ((Vector3){
 		v.x * u.x,
 		v.y * u.y,
 		v.z * u.z
-	};
+	});
 }
