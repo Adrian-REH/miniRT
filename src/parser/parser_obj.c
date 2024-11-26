@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:06:04 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 16:09:16 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:23:08 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	parser_obj(Scene *scene, int fd)
 		data = ft_split_space(line);
 		if (data == NULL || *data == NULL)
 		{
-			line = (free(line), get_next_line(fd));
+			line = (free(line), ft_free_p2(data), get_next_line(fd));
 			continue ;
 		}
 		state = idstr(alphabet, data[0]);

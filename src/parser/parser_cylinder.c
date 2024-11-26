@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:06:14 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/17 12:36:25 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:53:51 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int	parser_cylinder(Scene *scene, char **data)
 	Color		color;
 
 	color = (Color){0, 0, 0, 0};
+	if (ft_sarrsize(data) != 6)
+		terminate_program(scene);
 	scene->cylinders = ft_realloc(scene->cylinders, sizeof(Cylinder) * \
 	scene->n_cylinders, sizeof(Cylinder) * (scene->n_cylinders + 2));
 	cylinder.center = ft_coordinate(data[1]);
@@ -55,9 +57,9 @@ int	parser_cylinder(Scene *scene, char **data)
 	cylinder.mater_prop.vColor = \
 	rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 	cylinder.mater_prop.reflect = 1;
-	cylinder.mater_prop.absorption[R] = 1 - cylinder.mater_prop.vColor->r;
-	cylinder.mater_prop.absorption[G] = 1 - cylinder.mater_prop.vColor->g;
-	cylinder.mater_prop.absorption[B] = 1 - cylinder.mater_prop.vColor->b;
+	cylinder.mater_prop.absorption[R] = 1 - cylinder.mater_prop.vColor.r;
+	cylinder.mater_prop.absorption[G] = 1 - cylinder.mater_prop.vColor.g;
+	cylinder.mater_prop.absorption[B] = 1 - cylinder.mater_prop.vColor.b;
 	scene->cylinders[scene->n_cylinders] = cylinder;
 	scene->n_cylinders++;
 	ft_bzero(&cylinder_null, sizeof(Cylinder));

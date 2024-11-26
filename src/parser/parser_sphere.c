@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:42 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/17 13:51:54 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 20:50:39 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static double	diamenter_sphere(char *data)
 		printf("Error: %s not contain diameter\n", data);
 		exit(1);
 	}
-	diameter = atof(data);//FT_ATOF
+	diameter = atof(data);
 	return (diameter);
 }
 
@@ -39,11 +39,11 @@ int	parser_sphere(Scene *scene, char **data)
 	scene->spheres[scene->n_spheres].mater_prop.vColor = \
 	rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 	scene->spheres[scene->n_spheres].mater_prop.absorption[R] = \
-	1 - scene->spheres[scene->n_spheres].mater_prop.vColor->r;
+	1 - scene->spheres[scene->n_spheres].mater_prop.vColor.r;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[G] = \
-	1 - scene->spheres[scene->n_spheres].mater_prop.vColor->g;
+	1 - scene->spheres[scene->n_spheres].mater_prop.vColor.g;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[B] = \
-	1 - scene->spheres[scene->n_spheres].mater_prop.vColor->b;
+	1 - scene->spheres[scene->n_spheres].mater_prop.vColor.b;
 	scene->spheres[scene->n_spheres].center = center;
 	scene->spheres[scene->n_spheres].radius = diamenter_sphere(data[2]) / 2;
 	scene->n_spheres++;

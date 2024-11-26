@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:06:10 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/16 22:54:44 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/26 20:49:50 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	parser_light(Scene *scene, char **data)
 
 	point = (Vector3){0, 0, 0};
 	color = (Color){0, 0, 0, 0};
-	scene->lights = malloc(sizeof(Light));
+	scene->lights = ft_realloc(scene->lights, sizeof(Light) * \
+		scene->n_lights, sizeof(Light) * (scene->n_lights + 2));
 	if (!scene->lights)
 		return (0);
 	point = ft_coordinate(data[1]);

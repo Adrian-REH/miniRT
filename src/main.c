@@ -3,23 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:30:51 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 09:49:54 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:55:08 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
+
+/*
+mlx_destroy_image(fract->mlx_ptr, fract->img.img_ptr);
+	mlx_destroy_window(fract->mlx_ptr, fract->win_ptr);
+	mlx_destroy_display(fract->mlx_ptr);
+	free(fract->mlx_ptr);
+	exit(EXIT_SUCCESS);
+*/
 int	terminate_program(void *param)
 {
 	Scene	*scene;
 
 	scene = (Scene *)param;
-	mlx_destroy_image(scene->mlx, scene->img->img);
-	mlx_destroy_window(scene->mlx, scene->win);
-	mlx_destroy_display(scene->mlx);
+	printf(" terminate---->%p",scene);
+	if (scene->img && scene->img->img)
+	{
+		mlx_destroy_image(scene->mlx, scene->img->img);
+		mlx_destroy_window(scene->mlx, scene->win);
+		mlx_destroy_display(scene->mlx);
+	}
 	if (scene->n_cylinders)
 		free(scene->cylinders);
 	if (scene->n_triangles)
@@ -91,12 +103,13 @@ int	init_file(char *file)
 
 static void	review_scene(Scene *scene)
 {
+	printf(" scnee---->%p",scene);
 	if (!scene->width || !scene->height)
 	{
 		scene->width = WINX;
 		scene->height = WINY;
 	}
-	if (scene->n_lights <= 0)
+	if (scene->n_lights <= 0 || scene->n_lights > 1)
 	{
 		printf("Error: No hay Luz en la escena\n");
 		exit(1);

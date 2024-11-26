@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:57 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/17 15:35:58 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:25:45 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ int	parser_plane(Scene *scene, char **data)
 	plane.mater_prop.vColor = \
 	rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 	plane.mater_prop.reflect = 1;
-	plane.mater_prop.absorption[R] = 1 - plane.mater_prop.vColor->r;
-	plane.mater_prop.absorption[G] = 1 - plane.mater_prop.vColor->g;
-	plane.mater_prop.absorption[B] = 1 - plane.mater_prop.vColor->b;
+	plane.mater_prop.absorption[R] = 1 - plane.mater_prop.vColor.r;
+	plane.mater_prop.absorption[G] = 1 - plane.mater_prop.vColor.g;
+	plane.mater_prop.absorption[B] = 1 - plane.mater_prop.vColor.b;
 	plane.normal = stonorm(data[2]);
 	plane.point = ft_coordinate(data[1]);
 	scene->planes[scene->n_planes] = plane;

@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 20:49:32 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/25 20:49:47 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 20:49:24 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@ static int	solve_quadratic_equation(s_isc_cyl_ctx *ctx)
 {
 	double	temp;
 
-	if (!solve_quadratic((Vector3){ctx->a, ctx->b, ctx->c}, &(ctx->t.x), &(ctx->t.y)))
-		return 0;
+	if (!solve_quadratic((Vector3){ctx->a, ctx->b, ctx->c}, &(ctx->t.x), \
+	&(ctx->t.y)))
+		return (0);
 	if (ctx->t.x > ctx->t.y)
 	{
 		temp = ctx->t.x;
@@ -28,10 +29,11 @@ static int	solve_quadratic_equation(s_isc_cyl_ctx *ctx)
 	{
 		ctx->t.x = ctx->t.y;
 		if (ctx->t.x < 0)
-			return 0;
+			return (0);
 	}
-	return 1;
+	return (1);
 }
+
 static int	check_intersection_within_height(s_isc_cyl_ctx *ctx, const Cylinder *cylinder, double *t)
 {
 	ctx->y.x = dot(ctx->ro, ctx->ca) + ctx->t.x * dot(ctx->d, ctx->ca);
@@ -40,25 +42,27 @@ static int	check_intersection_within_height(s_isc_cyl_ctx *ctx, const Cylinder *
 	if (ctx->y.x < -ctx->half_h)
 	{
 		if (ctx->y.y < -ctx->half_h)
-			return 0;
-		ctx->th = ctx->t.x + (ctx->t.y - ctx->t.x) * (ctx->y.x + ctx->half_h) / (ctx->y.x - ctx->y.y);
+			return (0);
+		ctx->th = ctx->t.x + (ctx->t.y - ctx->t.x) * \
+		(ctx->y.x + ctx->half_h) / (ctx->y.x - ctx->y.y);
 		if (ctx->th <= 0)
-			return 0;
+			return (0);
 		*t = ctx->th;
-		return 1;
+		return (1);
 	}
 	else if (ctx->y.x > ctx->half_h)
 	{
 		if (ctx->y.y > ctx->half_h)
-			return 0;
-		ctx->th = ctx->t.x + (ctx->t.y - ctx->t.x) * (ctx->y.x - ctx->half_h) / (ctx->y.x - ctx->y.y);
+			return (0);
+		ctx->th = ctx->t.x + (ctx->t.y - ctx->t.x) * \
+		(ctx->y.x - ctx->half_h) / (ctx->y.x - ctx->y.y);
 		if (ctx->th <= 0)
-			return 0;
+			return (0);
 		*t = ctx->th;
-		return 1;
+		return (1);
 	}
 	*t = ctx->t.x;
-	return 1;
+	return (1);
 }
 int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 {

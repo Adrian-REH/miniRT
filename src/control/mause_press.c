@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mause_press.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:59 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 09:14:01 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:45:47 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ int	mouse_press(int button, int x, int y, void *param)
 		scene->pos_obj->type = CAMERA;
 		scene->pos_obj->idx = 0;
 	}
+	free(ray);
 	return (0);
 }

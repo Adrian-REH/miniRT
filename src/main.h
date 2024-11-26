@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 10:33:16 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:25:23 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ typedef struct t_materialProperties
 	double	reflect;
 	double	absorption[3];
 	Img		texture;
-	Color	*vColor;
+	Color	vColor;
 }	MaterialProperties;
 
 
@@ -167,11 +167,11 @@ typedef struct
 {
 	Vector3	point;
 	double	ratio;
-	Color	*color;
+	Color	color;
 }	Light;
 
 typedef struct {
-	Color	*color;
+	Color	color;
 	double	ratio;
 } Ambient;
 
@@ -317,7 +317,7 @@ void	addint_to_color(Color *color, int src);
 void	fillcolor_by_int(Color *color, int src);
 Color	int_to_color(int src);
 void	normalize_color(Color *color);
-Color	*rgb_to_color(int r, int g, int b);
+Color	rgb_to_color(int r, int g, int b);
 void	set_color(char *buffer, int endian, int color, int alpha);
 int		get_color(char *buffer, int endian, int *alpha);
 Color	illuminate_surface(Color surface_color, Color light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   apply_shadow.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:47 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 10:29:56 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:26:45 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ Vector3 *cam_dir, Vector3 *opac_pt)
 	(void)cam_dir;
 	ambient_color = int_to_color(0);
 	current_color = illuminate_surface(ambient_color, \
-		*ctx->scene->ambient->color, \
+		ctx->scene->ambient->color, \
 		fmax(fmin(1 - (ctx->scene->ambient->ratio), 1.0), 0), 1, 0, \
 		ctx->mater_prop);
 	normalize_color(&current_color);
-	current_color = illuminate_surface(ambient_color, *ctx->mater_prop.vColor, \
+	current_color = illuminate_surface(ambient_color, ctx->mater_prop.vColor, \
 		fmax(fmin(1 - (ctx->scene->ambient->ratio), 1.0), 0), 1, 0, \
 		ctx->mater_prop);
 	normalize_color(&current_color);

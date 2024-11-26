@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:37 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/17 15:46:40 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 20:50:12 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static double	side_square(char *data)
 
 	if (data == NULL)
 		(printf("Error: %s not contain side\n", data), exit(1));
-	side = atof(data); // FT_ATOF
+	side = atof(data);
 	return (side);
 }
 
@@ -37,9 +37,9 @@ int	parser_square(Scene *scene, char **data)
 	square.side = side_square(data[3]);
 	square.mater_prop.vColor = \
 		rgb_to_color((int)color.r, (int)color.g, (int)color.b);
-	square.mater_prop.absorption[R] = 1 - square.mater_prop.vColor->r;
-	square.mater_prop.absorption[G] = 1 - square.mater_prop.vColor->g;
-	square.mater_prop.absorption[B] = 1 - square.mater_prop.vColor->b;
+	square.mater_prop.absorption[R] = 1 - square.mater_prop.vColor.r;
+	square.mater_prop.absorption[G] = 1 - square.mater_prop.vColor.g;
+	square.mater_prop.absorption[B] = 1 - square.mater_prop.vColor.b;
 	square.mater_prop.reflect = 0;
 	scene->squares[scene->n_squares] = square;
 	scene->n_squares++;

@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:34 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/17 15:22:41 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:26:16 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ int	parser_triangle(Scene *scene, char **data)
 	triangle.p_triangle->point = triangle.vertex[0];
 	triangle.mater_prop.vColor = rgb_to_color(color.r, color.g, color.b);
 	triangle.mater_prop.reflect = 0;
-	triangle.mater_prop.absorption[R] = 1 - triangle.mater_prop.vColor->r;
-	triangle.mater_prop.absorption[G] = 1 - triangle.mater_prop.vColor->g;
-	triangle.mater_prop.absorption[B] = 1 - triangle.mater_prop.vColor->b;
+	triangle.mater_prop.absorption[R] = 1 - triangle.mater_prop.vColor.r;
+	triangle.mater_prop.absorption[G] = 1 - triangle.mater_prop.vColor.g;
+	triangle.mater_prop.absorption[B] = 1 - triangle.mater_prop.vColor.b;
 	scene->triangles[scene->n_triangles] = triangle;
 	scene->n_triangles++;
 	return (0);
