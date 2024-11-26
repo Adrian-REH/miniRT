@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_scene.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 09:13:51 by adherrer          #+#    #+#             */
+/*   Updated: 2024/11/26 09:22:23 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../main.h"
 
 int	render_point(Scene *scene, int x, int y)
@@ -8,7 +20,8 @@ int	render_point(Scene *scene, int x, int y)
 
 	result = 0;
 	ctx = (s_nearest_ctx){0, 0, 10};
-	ray = generate_ray((Vector2){x, y}, scene->width, scene->height, *scene->cameras);
+	ray = generate_ray((Vector2){x, y}, \
+		scene->width, scene->height, *scene->cameras);
 	if (!ray)
 		return (0);
 	ctx.type = find_nearest_obj(*scene, ray, &ctx);

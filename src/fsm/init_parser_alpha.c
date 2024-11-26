@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_parser_alpha.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 09:20:35 by adherrer          #+#    #+#             */
+/*   Updated: 2024/11/26 09:22:03 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../main.h"
 
-char	**init_args()
+char	**init_args(void)
 {
 	char	**alphabet;
 
-	alphabet = ft_sarradd(NULL, "R"); //posicion 0 Resolution
-	alphabet = ft_sarradd(alphabet, "A");//posicion 1 Ambient
-	alphabet = ft_sarradd(alphabet, "C");//posicion 2	camara
-	alphabet = ft_sarradd(alphabet, "L");//posicion 2	Light
-	alphabet = ft_sarradd(alphabet, "pl");//posicion 4 Plane
-	alphabet = ft_sarradd(alphabet, "sp"); //posicion 5 Sphere
-	alphabet = ft_sarradd(alphabet, "sq");//posicion 6 Square
-	alphabet = ft_sarradd(alphabet, "cy");//posicion 7 Cylinder
-	alphabet = ft_sarradd(alphabet, "tr");//posicion 8 Triangle
+	alphabet = ft_sarradd(NULL, "R");
+	alphabet = ft_sarradd(alphabet, "A");
+	alphabet = ft_sarradd(alphabet, "C");
+	alphabet = ft_sarradd(alphabet, "L");
+	alphabet = ft_sarradd(alphabet, "pl");
+	alphabet = ft_sarradd(alphabet, "sp");
+	alphabet = ft_sarradd(alphabet, "sq");
+	alphabet = ft_sarradd(alphabet, "cy");
+	alphabet = ft_sarradd(alphabet, "tr");
 	return (alphabet);
 }
