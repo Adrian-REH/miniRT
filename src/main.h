@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/16 22:50:49 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:33:16 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ typedef struct {
 } Scene;
 typedef double (*IntensityFunc)(Vector3, Vector3);
 typedef double (*AttenuationFunc)(double, double, double, double);
-typedef Vector3* (*ReflectFunc)(Vector3, Vector3);
+typedef Vector3 (*ReflectFunc)(Vector3, Vector3);
 
 typedef struct {
 	IntensityFunc calculate_intensity;
@@ -270,7 +270,7 @@ typedef struct t_light_ctx {
 	Light	*light;
 	double	distance_light;
 	double	attenuation;
-	Vector3	*reflect_dir;
+	Vector3	reflect_dir;
 	double	diffuse_intensity;
 	double	specular;
 	Color	*current_color;
@@ -310,18 +310,17 @@ char	**ft_sarradd(char **arr, char *string);
 int		ft_sarrsize(char **arr);
 //-----libcolor/------
 double	mix(double a, double b, double t);
-Vector3	*reflect(Vector3 L, Vector3 N);
+Vector3	reflect(Vector3 L, Vector3 N);
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 int		colornormal_to_int(Color color);
 void	addint_to_color(Color *color, int src);
 void	fillcolor_by_int(Color *color, int src);
-Color	*int_to_color(int src);
-int		mix_colors(int base_color, int current_color, double intensity);
+Color	int_to_color(int src);
 void	normalize_color(Color *color);
 Color	*rgb_to_color(int r, int g, int b);
 void	set_color(char *buffer, int endian, int color, int alpha);
 int		get_color(char *buffer, int endian, int *alpha);
-Color	illuminate_surface(Color *surface_color, Color *light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
+Color	illuminate_surface(Color surface_color, Color light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 //------libvector3/------
 Vector3	resolve_hit_point(Ray ray, double t);
@@ -340,7 +339,6 @@ double	distance(Vector3 init, Vector3 end);
 int		line_solution_point(Ray ray, Vector3 point);
 double	mod(Vector3 v);
 //------lib/libbrdf/------
-Vector3	*reflect(Vector3 L, Vector3 N);
 double	dot(Vector3 a, Vector3 b);
 void	normalize(Vector3 *v);
 Vector3	*invnormal(Vector3 *normal);

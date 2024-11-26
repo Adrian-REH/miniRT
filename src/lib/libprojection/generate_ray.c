@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:31:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 09:32:52 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:32:46 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ Ray	generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal)
 {
 	Ray		rayrfc;
 	Vector3	dir_pt;
-	Vector3	*rfc;
+	Vector3	rfc;
 
 	dir_pt = norm_subtract(scene->cameras->pos, hit_pt);
-	rfc = reflect(dir_pt, normal);//HAY UN LEAK DE MEMORIA AQUI!!
-	if (dot(normal, *rfc) < 0)
-		invnormal(rfc);
+	rfc = reflect(dir_pt, normal);
+	if (dot(normal, rfc) < 0)
+		invnormal(&rfc);
 	rayrfc.origin = hit_pt;
-	rayrfc.direction = *rfc;
+	rayrfc.direction = rfc;
 	return (rayrfc);
 }

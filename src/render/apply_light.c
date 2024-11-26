@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:44 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 09:13:46 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:33:36 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Vector3 *light_dir, Vector3 *cam_dir)
 		*light_dir);
 	l_ctx.diffuse_intensity = fmax(fmin(l_ctx.diffuse_intensity, 1.0), 0);
 	l_ctx.reflect_dir = ctx->funcs.reflect(*light_dir, ctx->normal);
-	l_ctx.specular = specular_intensity(*l_ctx.reflect_dir, *cam_dir, \
+	l_ctx.specular = specular_intensity(l_ctx.reflect_dir, *cam_dir, \
 		SHININESS, KS);
 	l_ctx.specular = fmax(fmin(l_ctx.specular, 1.0), 0.0);
 	l_ctx.full_phong = l_ctx.light->ratio * l_ctx.specular * l_ctx.attenuation;
@@ -42,21 +42,20 @@ Vector3 *light_dir, Vector3 *cam_dir)
 
 	l_ctx = build_light_ctx(ctx, light_dir, cam_dir);
 	current_color = illuminate_surface(int_to_color(0), \
-		ctx->scene->ambient->color, \
+		*ctx->scene->ambient->color, \
 			fmax(fmin(1 - (ctx->scene->ambient->ratio), 1.0), 0), \
 				1, 0, ctx->mater_prop);
 	normalize_color(&current_color);
-	current_color = illuminate_surface(&current_color, l_ctx.light->color, \
+	current_color = illuminate_surface(current_color, *l_ctx.light->color, \
 		fmax(fmin(1 - (l_ctx.light->ratio * l_ctx.diffuse_intensity), 1.0), 0), \
 			1, 0, ctx->mater_prop);
 	normalize_color(&current_color);
-	current_color = illuminate_surface(&current_color, l_ctx.light->color, \
+	current_color = illuminate_surface(current_color, *l_ctx.light->color, \
 		fmax(fmin(1 - (l_ctx.light->ratio * l_ctx.specular), 1.0), 0), 1, 0, \
 			ctx->mater_prop);
 	normalize_color(&current_color);
-	current_color = illuminate_surface(&current_color, ctx->mater_prop.vColor, \
+	current_color = illuminate_surface(current_color, *ctx->mater_prop.vColor, \
 		fmax(fmin(1 - (l_ctx.full_phong), 1.0), 0), 1, 0, ctx->mater_prop);
 	normalize_color(&current_color);
-	free(l_ctx.reflect_dir);
 	return (current_color);
 }

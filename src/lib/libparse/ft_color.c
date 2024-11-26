@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_color.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 22:44:12 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/21 21:11:06 by razamora         ###   ########.fr       */
+/*   Updated: 2024/11/26 10:34:01 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ Color	ft_color(char *str)
 	color.r = ft_limit(0, 255, atof(args[0]));
 	color.g = ft_limit(0, 255, atof(args[1]));
 	color.b = atof(args[2]);
-	return (color);
+	return (free(args), color);
 }
