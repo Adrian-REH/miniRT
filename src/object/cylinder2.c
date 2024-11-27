@@ -34,7 +34,8 @@ static int	solve_quadratic_equation(s_isc_cyl_ctx *ctx)
 	return (1);
 }
 
-static int	check_intersection_within_height(s_isc_cyl_ctx *ctx, const Cylinder *cylinder, double *t)
+static int	check_intersection_within_height(s_isc_cyl_ctx *ctx, \
+	const Cylinder *cylinder, double *t)
 {
 	ctx->y.x = dot(ctx->ro, ctx->ca) + ctx->t.x * dot(ctx->d, ctx->ca);
 	ctx->y.y = dot(ctx->ro, ctx->ca) + ctx->t.y * dot(ctx->d, ctx->ca);
@@ -47,8 +48,7 @@ static int	check_intersection_within_height(s_isc_cyl_ctx *ctx, const Cylinder *
 		(ctx->y.x + ctx->half_h) / (ctx->y.x - ctx->y.y);
 		if (ctx->th <= 0)
 			return (0);
-		*t = ctx->th;
-		return (1);
+		return ((*t = ctx->th), 1);
 	}
 	else if (ctx->y.x > ctx->half_h)
 	{
@@ -58,12 +58,12 @@ static int	check_intersection_within_height(s_isc_cyl_ctx *ctx, const Cylinder *
 		(ctx->y.x - ctx->half_h) / (ctx->y.x - ctx->y.y);
 		if (ctx->th <= 0)
 			return (0);
-		*t = ctx->th;
-		return (1);
+		return ((*t = ctx->th), 1);
 	}
 	*t = ctx->t.x;
 	return (1);
 }
+
 int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 {
 	s_isc_cyl_ctx	ctx;
@@ -78,5 +78,5 @@ int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 		pow((cylinder->diameter / 2), 2);
 	if (!solve_quadratic_equation(&ctx))
 		return (0);
-	return check_intersection_within_height(&ctx, cylinder, t);
+	return (check_intersection_within_height(&ctx, cylinder, t));
 }

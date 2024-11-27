@@ -12,7 +12,6 @@
 
 #include "main.h"
 
-
 /*
 mlx_destroy_image(fract->mlx_ptr, fract->img.img_ptr);
 	mlx_destroy_window(fract->mlx_ptr, fract->win_ptr);
@@ -25,7 +24,6 @@ int	terminate_program(void *param)
 	Scene	*scene;
 
 	scene = (Scene *)param;
-	printf(" terminate---->%p",scene);
 	if (scene->img && scene->img->img)
 	{
 		mlx_destroy_image(scene->mlx, scene->img->img);
@@ -49,43 +47,6 @@ int	terminate_program(void *param)
 	exit(0);
 }
 
-static void	mlx_listen_meta(Scene *scene)
-{
-	mlx_hook(scene->win, 4, 1L << 2, mouse_press, scene);
-	mlx_hook(scene->win, 2, 1, key_press, scene);
-	mlx_hook(scene->win, 17, 1, terminate_program, scene);
-	mlx_loop(scene->mlx);
-}
-
-int	is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
-{
-	Ray				shadow_ray;
-	double			t;
-	int				i;
-	int				j;
-	const double	n_objs[5] = {
-		scene.n_planes,
-		scene.n_spheres,
-		scene.n_triangles,
-		scene.n_cylinders,
-		distance(hit_point, light_pos)
-	};
-
-	shadow_ray.origin = hit_point;
-	shadow_ray.direction = norm_subtract(hit_point, light_pos);
-	i = ((t = ((j = -1), 0)), -1);
-	while (++j < 4)
-	{
-		while (++i < n_objs[j])
-		{
-			if (scene.isc[i] && scene.isc[i](&shadow_ray, &scene.planes[i], &t))
-				if (t > 0 && t < n_objs[4])
-					return (t);
-		}
-	}
-	return (0);
-}
-
 int	init_file(char *file)
 {
 	int	fd;
@@ -103,7 +64,6 @@ int	init_file(char *file)
 
 static void	review_scene(Scene *scene)
 {
-	printf(" scnee---->%p",scene);
 	if (!scene->width || !scene->height)
 	{
 		scene->width = WINX;

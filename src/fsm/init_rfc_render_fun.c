@@ -14,9 +14,9 @@
 
 void	init_rfc_render_fun(Scene *scene)
 {
-	scene->rfc[0] = (int (*)(void *, Ray, int, int))render_reflect_plane;
-	scene->rfc[1] = (int (*)(void *, Ray, int, int))render_reflect_sphere;
-	scene->rfc[2] = (int (*)(void *, Ray, int, int))render_reflect_triangle;
-	scene->rfc[3] = (int (*)(void *, Ray, int, int))render_reflect_cylinder;
+	scene->rfc[0] = (int (*)(void *, Ray, int i, int))render_reflect_plane;
+	scene->rfc[1] = (int (*)(void *, Ray, int i, int))render_reflect_sphere;
+	scene->rfc[2] = (int (*)(void *, Ray, int i, int))render_reflect_triangle;
+	scene->rfc[3] = (int (*)(void *, Ray, int i, int))render_reflect_cylinder;
 	scene->rfc[4] = NULL;
 }

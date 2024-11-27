@@ -62,8 +62,7 @@ int	parser_cylinder(Scene *scene, char **data)
 	cylinder.mater_prop.absorption[G] = 1 - cylinder.mater_prop.vColor.g;
 	cylinder.mater_prop.absorption[B] = 1 - cylinder.mater_prop.vColor.b;
 	scene->cylinders[scene->n_cylinders] = cylinder;
-	scene->n_cylinders++;
-	ft_bzero(&cylinder_null, sizeof(Cylinder));
+	scene->n_cylinders += (ft_bzero(&cylinder_null, sizeof(Cylinder)), 1);
 	scene->cylinders[scene->n_cylinders] = cylinder_null;
 	return (0);
 }

@@ -97,6 +97,7 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/render/render_scene.c \
 				src/render/apply_shadow.c \
 				src/render/apply_light.c \
+				src/render/is_in_shadow.c \
 				src/render/apply_ambient.c \
 				src/object/camera.c \
 				src/object/cylinder.c \
@@ -113,6 +114,7 @@ SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
 				src/fsm/init_rfc_render_fun.c \
 				src/control/key_press.c \
 				src/control/mause_press.c \
+				src/control/control.c \
 				src/control/control_camera/control_a.c \
 				src/control/control_camera/control_s.c \
 				src/control/control_camera/control_d.c \

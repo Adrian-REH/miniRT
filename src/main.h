@@ -363,6 +363,7 @@ void	control_left(Scene *scene);
 void	control_right(Scene *scene);
 void	control_down(Scene *scene);
 void	control_up(Scene *scene);
+void	mlx_listen_meta(Scene *scene);
 //------CONTROL_QUITE----
 void	control_escape(Scene *scene);
 //------RANDOM------
