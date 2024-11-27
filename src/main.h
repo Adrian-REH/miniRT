@@ -104,6 +104,7 @@ typedef struct
 typedef struct t_materialProperties
 {
 	double	reflect;
+	double	glssns;
 	double	absorption[3];
 	Img		texture;
 	Color	vColor;
@@ -320,7 +321,7 @@ void	normalize_color(Color *color);
 Color	rgb_to_color(int r, int g, int b);
 void	set_color(char *buffer, int endian, int color, int alpha);
 int		get_color(char *buffer, int endian, int *alpha);
-Color	illuminate_surface(Color surface_color, Color light_color, double intensity, double reflectivity, double glossiness, MaterialProperties prop);
+Color	illuminate_surface(Color surface_color, Color light_color, double intensity, MaterialProperties prop);
 double	calculate_attenuation(double distance, double k_c, double k_l, double k_q);
 //------libvector3/------
 Vector3	resolve_hit_point(Ray ray, double t);

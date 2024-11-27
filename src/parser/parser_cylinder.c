@@ -57,6 +57,7 @@ int	parser_cylinder(Scene *scene, char **data)
 	cylinder.mater_prop.vColor = \
 	rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 	cylinder.mater_prop.reflect = 1;
+	cylinder.mater_prop.glssns = 0.95;
 	cylinder.mater_prop.absorption[R] = 1 - cylinder.mater_prop.vColor.r;
 	cylinder.mater_prop.absorption[G] = 1 - cylinder.mater_prop.vColor.g;
 	cylinder.mater_prop.absorption[B] = 1 - cylinder.mater_prop.vColor.b;

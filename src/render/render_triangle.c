@@ -79,7 +79,7 @@ int	render_triangle(Scene *scene, Vector3 hit_pt, int id)
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, TRIANGLE);
 			result = illuminate_surface(int_to_color(hit_color), \
-				int_to_color(current_pixel), 0.6, 0.9, 0, \
+				int_to_color(current_pixel), 0.6, \
 					scene->triangles[id].mater_prop);
 		}
 		return (hit_color);

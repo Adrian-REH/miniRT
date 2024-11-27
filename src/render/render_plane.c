@@ -78,7 +78,7 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, PLANE);
 			result = illuminate_surface(int_to_color(hit_color), \
-				int_to_color(current_pixel), 0.7, 0.9, 0, \
+				int_to_color(current_pixel), 0.7, \
 					scene->planes[id].mater_prop);
 		}
 		return (result.color);

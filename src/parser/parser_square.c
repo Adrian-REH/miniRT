@@ -41,6 +41,7 @@ int	parser_square(Scene *scene, char **data)
 	square.mater_prop.absorption[G] = 1 - square.mater_prop.vColor.g;
 	square.mater_prop.absorption[B] = 1 - square.mater_prop.vColor.b;
 	square.mater_prop.reflect = 0;
+	square.mater_prop.glssns = 0.95;
 	scene->squares[scene->n_squares] = square;
 	scene->n_squares++;
 	return (0);

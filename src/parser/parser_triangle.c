@@ -32,6 +32,7 @@ int	parser_triangle(Scene *scene, char **data)
 	triangle.p_triangle->point = triangle.vertex[0];
 	triangle.mater_prop.vColor = rgb_to_color(color.r, color.g, color.b);
 	triangle.mater_prop.reflect = 0;
+	triangle.mater_prop.glssns = 0.95;
 	triangle.mater_prop.absorption[R] = 1 - triangle.mater_prop.vColor.r;
 	triangle.mater_prop.absorption[G] = 1 - triangle.mater_prop.vColor.g;
 	triangle.mater_prop.absorption[B] = 1 - triangle.mater_prop.vColor.b;

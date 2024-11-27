@@ -29,6 +29,7 @@ int	parser_plane(Scene *scene, char **data)
 	plane.mater_prop.vColor = \
 	rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 	plane.mater_prop.reflect = 1;
+	plane.mater_prop.glssns = 0.95;
 	plane.mater_prop.absorption[R] = 1 - plane.mater_prop.vColor.r;
 	plane.mater_prop.absorption[G] = 1 - plane.mater_prop.vColor.g;
 	plane.mater_prop.absorption[B] = 1 - plane.mater_prop.vColor.b;

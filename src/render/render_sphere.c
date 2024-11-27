@@ -80,7 +80,7 @@ int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, SPHERE);
 			result = illuminate_surface(int_to_color(hit_color), \
-				int_to_color(current_pixel), 0.7, 0.9, 0, \
+				int_to_color(current_pixel), 0.7, \
 					scene->spheres[id].mater_prop);
 		}
 		return (hit_color);

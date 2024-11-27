@@ -45,6 +45,8 @@ int	parser_sphere(Scene *scene, char **data)
 	scene->spheres[scene->n_spheres].mater_prop.absorption[B] = \
 	1 - scene->spheres[scene->n_spheres].mater_prop.vColor.b;
 	scene->spheres[scene->n_spheres].center = center;
+	scene->spheres[scene->n_spheres].mater_prop.glssns = 0.95;
+	scene->spheres[scene->n_spheres].mater_prop.reflect = 0;
 	scene->spheres[scene->n_spheres].radius = diamenter_sphere(data[2]) / 2;
 	scene->n_spheres++;
 	return (1);
