@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-void	control_escape(Scene *scene)
+void	control_escape(t_scene *scene)
 {
 	terminate_program(scene);
 }

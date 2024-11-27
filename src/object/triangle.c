@@ -15,7 +15,7 @@
 /**
  * Möller–Trumbore
  */
-int	intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
+int	intersect_triangle(const t_ray *ray, const t_triangle *triangle, double *t)
 {
 	t_triangle_isc_ctx	ctx;
 
@@ -40,7 +40,7 @@ int	intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
 	return (0);
 }
 
-int	find_nearest_triangle(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
+int	find_nearest_triangle(t_scene scene, t_ray *ray, t_nearest_ctx *nrst_ctx)
 {
 	int		i;
 	int		j;
@@ -64,9 +64,9 @@ int	find_nearest_triangle(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
 	return (j);
 }
 
-void	rot_triangle(Scene *scene, t_vector3 dir, int ang)
+void	rot_triangle(t_scene *scene, t_vector3 dir, int ang)
 {
-	Triangle	*triangle;
+	t_triangle	*triangle;
 
 	(void)triangle;
 	(void)dir;
@@ -74,9 +74,9 @@ void	rot_triangle(Scene *scene, t_vector3 dir, int ang)
 	triangle = &(scene->triangles[scene->pos_obj->idx]);
 }
 
-void	pos_triangle(Scene *scene, t_vector3 dir)
+void	pos_triangle(t_scene *scene, t_vector3 dir)
 {
-	Triangle	*triangle;
+	t_triangle	*triangle;
 
 	triangle = &(scene->triangles[scene->pos_obj->idx]);
 	triangle->vertex[0] = add_vector3_to_vector3(dir, triangle->vertex[0]);

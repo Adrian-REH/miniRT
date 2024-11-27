@@ -38,31 +38,31 @@ static double	height_cylinder(char *data)
 	return (height);
 }
 
-int	parser_cylinder(Scene *scene, char **data)
+int	parser_cylinder(t_scene *scene, char **data)
 {
-	Cylinder	cylinder_null;
-	Cylinder	cylinder;
+	t_cylinder	cylinder_null;
+	t_cylinder	cylinder;
 	t_color		color;
 
 	color = (t_color){0, 0, 0, 0};
 	if (ft_sarrsize(data) != 6)
 		terminate_program(scene);
-	scene->cylinders = ft_realloc(scene->cylinders, sizeof(Cylinder) * \
-	scene->n_cylinders, sizeof(Cylinder) * (scene->n_cylinders + 2));
+	scene->cylinders = ft_realloc(scene->cylinders, sizeof(t_cylinder) * \
+	scene->n_cylinders, sizeof(t_cylinder) * (scene->n_cylinders + 2));
 	cylinder.center = ft_coordinate(data[1]);
 	cylinder.axis = stonorm(data[2]);
 	cylinder.diameter = diamenter_cylinder(data[3]);
 	cylinder.height = height_cylinder(data[4]);
 	color = ft_color(data[5]);
-	cylinder.mater_prop.vColor = \
+	cylinder.mater_prop.color = \
 	rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 	cylinder.mater_prop.reflect = 1;
 	cylinder.mater_prop.glssns = 0.95;
-	cylinder.mater_prop.absorption[R] = 1 - cylinder.mater_prop.vColor.r;
-	cylinder.mater_prop.absorption[G] = 1 - cylinder.mater_prop.vColor.g;
-	cylinder.mater_prop.absorption[B] = 1 - cylinder.mater_prop.vColor.b;
+	cylinder.mater_prop.absorption[R] = 1 - cylinder.mater_prop.color.r;
+	cylinder.mater_prop.absorption[G] = 1 - cylinder.mater_prop.color.g;
+	cylinder.mater_prop.absorption[B] = 1 - cylinder.mater_prop.color.b;
 	scene->cylinders[scene->n_cylinders] = cylinder;
-	scene->n_cylinders += (ft_bzero(&cylinder_null, sizeof(Cylinder)), 1);
+	scene->n_cylinders += (ft_bzero(&cylinder_null, sizeof(t_cylinder)), 1);
 	scene->cylinders[scene->n_cylinders] = cylinder_null;
 	return (0);
 }

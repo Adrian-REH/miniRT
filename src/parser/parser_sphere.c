@@ -25,25 +25,25 @@ static double	diamenter_sphere(char *data)
 	return (diameter);
 }
 
-int	parser_sphere(Scene *scene, char **data)
+int	parser_sphere(t_scene *scene, char **data)
 {
 	t_vector3	center;
 	t_color	color;
 
 	color = (t_color){0, 0, 0, 0};
 	center = (t_vector3){0, 0, 0};
-	scene->spheres = ft_realloc(scene->spheres, sizeof(Sphere) * \
-		scene->n_spheres, sizeof(Sphere) * (scene->n_spheres + 2));
+	scene->spheres = ft_realloc(scene->spheres, sizeof(t_sphere) * \
+		scene->n_spheres, sizeof(t_sphere) * (scene->n_spheres + 2));
 	center = ft_coordinate(data[1]);
 	color = ft_color(data[3]);
-	scene->spheres[scene->n_spheres].mater_prop.vColor = \
+	scene->spheres[scene->n_spheres].mater_prop.color = \
 	rgb_to_color((int)color.r, (int)color.g, (int)color.b);
 	scene->spheres[scene->n_spheres].mater_prop.absorption[R] = \
-	1 - scene->spheres[scene->n_spheres].mater_prop.vColor.r;
+	1 - scene->spheres[scene->n_spheres].mater_prop.color.r;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[G] = \
-	1 - scene->spheres[scene->n_spheres].mater_prop.vColor.g;
+	1 - scene->spheres[scene->n_spheres].mater_prop.color.g;
 	scene->spheres[scene->n_spheres].mater_prop.absorption[B] = \
-	1 - scene->spheres[scene->n_spheres].mater_prop.vColor.b;
+	1 - scene->spheres[scene->n_spheres].mater_prop.color.b;
 	scene->spheres[scene->n_spheres].center = center;
 	scene->spheres[scene->n_spheres].mater_prop.glssns = 0.95;
 	scene->spheres[scene->n_spheres].mater_prop.reflect = 0;

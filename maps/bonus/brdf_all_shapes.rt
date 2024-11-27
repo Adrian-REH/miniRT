@@ -17,7 +17,7 @@ A 0				255,255,255
 #								enable	type	aperture	focal dist
 c 0,2.5,-10		0,0,1	65		-dof 	1 			0.12		10
 
-#		Samples (Times four, AA)	Scene Bounces
+#		Samples (Times four, AA)	t_scene Bounces
 BRDF	12							3			--save
 
 #		thread count

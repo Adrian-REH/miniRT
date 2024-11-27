@@ -35,7 +35,7 @@ static int	solve_quadratic_equation(t_isc_cyl_ctx *ctx)
 }
 
 static int	check_intersection_within_height(t_isc_cyl_ctx *ctx, \
-	const Cylinder *cylinder, double *t)
+	const t_cylinder *cylinder, double *t)
 {
 	ctx->y.x = dot(ctx->ro, ctx->ca) + ctx->t.x * dot(ctx->d, ctx->ca);
 	ctx->y.y = dot(ctx->ro, ctx->ca) + ctx->t.y * dot(ctx->d, ctx->ca);
@@ -64,7 +64,7 @@ static int	check_intersection_within_height(t_isc_cyl_ctx *ctx, \
 	return (1);
 }
 
-int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
+int	intersect_cylinder(const t_ray *ray, const t_cylinder *cylinder, double *t)
 {
 	t_isc_cyl_ctx	ctx;
 

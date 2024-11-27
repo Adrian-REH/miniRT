@@ -13,7 +13,7 @@
 #include "../../main.h"
 
 t_color	illuminate_surface(t_color surface_color, t_color light_color, \
-	double ints, MaterialProperties prop)
+	double ints, t_mater_prop prop)
 {
 	t_color	result;
 

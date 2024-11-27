@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-void	control_up(Scene *scene)
+void	control_up(t_scene *scene)
 {
 	t_vector3	tmp;
 

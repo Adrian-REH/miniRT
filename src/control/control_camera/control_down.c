@@ -15,7 +15,7 @@
 /**
  * Controlo la posicion del objeto
  */
-void	control_down(Scene *scene)
+void	control_down(t_scene *scene)
 {
 	t_vector3	tmp;
 

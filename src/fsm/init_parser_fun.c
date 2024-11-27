@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-void	init_parser_fun(Scene *scene)
+void	init_parser_fun(t_scene *scene)
 {
 	scene->parser[0] = (int (*)(void *, void *))parser_resolution;
 	scene->parser[1] = (int (*)(void *, void *))parser_ambient;

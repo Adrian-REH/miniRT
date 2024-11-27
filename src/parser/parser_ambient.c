@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	parser_ambient(Scene *scene, char **data)
+int	parser_ambient(t_scene *scene, char **data)
 {
 	t_color	color;
 

@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-static t_light_ctx	build_light_ctx(const RenderContext *ctx, \
+static t_light_ctx	build_light_ctx(const t_rend_ctx *ctx, \
 t_vector3 *light_dir, t_vector3 *cam_dir)
 {
 	t_light_ctx	l_ctx;
@@ -34,7 +34,7 @@ t_vector3 *light_dir, t_vector3 *cam_dir)
 	return (l_ctx);
 }
 
-t_color	apply_lighting(const RenderContext *ctx, \
+t_color	apply_lighting(const t_rend_ctx *ctx, \
 t_vector3 *light_dir, t_vector3 *cam_dir)
 {
 	t_light_ctx	l_ctx;
@@ -54,7 +54,7 @@ t_vector3 *light_dir, t_vector3 *cam_dir)
 		fmax(fmin(1 - (l_ctx.light->ratio * l_ctx.specular), 1.0), 0), \
 			ctx->mater_prop);
 	normalize_color(&current_color);
-	current_color = illuminate_surface(current_color, ctx->mater_prop.vColor, \
+	current_color = illuminate_surface(current_color, ctx->mater_prop.color, \
 		fmax(fmin(1 - (l_ctx.full_phong), 1.0), 0), ctx->mater_prop);
 	normalize_color(&current_color);
 	return (current_color);

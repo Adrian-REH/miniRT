@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	line_solution_point(Ray ray, t_vector3 point)
+int	line_solution_point(t_ray ray, t_vector3 point)
 {
 	t_vector3	t;
 

@@ -12,13 +12,13 @@
 
 #include "../main.h"
 
-int	parser_camera(Scene *scene, char **data)
+int	parser_camera(t_scene *scene, char **data)
 {
 	double	fov;
 	t_vector3	tmp;
 	t_vector3	right;
 
-	scene->cameras = malloc(sizeof(Camera));
+	scene->cameras = malloc(sizeof(t_camera));
 	fov = ft_limit(0, 180, atof(data[3]));
 	scene->cameras->pos = ft_coordinate(data[1]);
 	scene->cameras->dir = stonorm(data[2]);

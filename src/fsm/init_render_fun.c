@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-void	init_render_fun(Scene *scene)
+void	init_render_fun(t_scene *scene)
 {
 	scene->render[0] = (int (*)(void *, t_vector3, int))render_plane;
 	scene->render[1] = (int (*)(void *, t_vector3, int))render_sphere;

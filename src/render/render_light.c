@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	render_light(Scene scene, RenderContext ctx, void *obj, int type)
+int	render_light(t_scene scene, t_rend_ctx ctx, void *obj, int type)
 {
 	double	d;
 	t_color	current_color;

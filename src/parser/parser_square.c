@@ -22,24 +22,24 @@ static double	side_square(char *data)
 	return (side);
 }
 
-int	parser_square(Scene *scene, char **data)
+int	parser_square(t_scene *scene, char **data)
 {
 	t_color	color;
-	Square	square;
+	t_square	square;
 
 	color = (t_color){0, 0, 0, 0};
-	scene->squares = ft_realloc(scene->squares, sizeof(Square) * \
-		scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
+	scene->squares = ft_realloc(scene->squares, sizeof(t_square) * \
+		scene->n_squares, sizeof(t_square) * (scene->n_squares + 2));
 	color = ft_color(data[4]);
 	square = scene->squares[scene->n_squares];
 	square.center = ft_coordinate(data[1]);
 	square.normal = stonorm(data[2]);
 	square.side = side_square(data[3]);
-	square.mater_prop.vColor = \
+	square.mater_prop.color = \
 		rgb_to_color((int)color.r, (int)color.g, (int)color.b);
-	square.mater_prop.absorption[R] = 1 - square.mater_prop.vColor.r;
-	square.mater_prop.absorption[G] = 1 - square.mater_prop.vColor.g;
-	square.mater_prop.absorption[B] = 1 - square.mater_prop.vColor.b;
+	square.mater_prop.absorption[R] = 1 - square.mater_prop.color.r;
+	square.mater_prop.absorption[G] = 1 - square.mater_prop.color.g;
+	square.mater_prop.absorption[B] = 1 - square.mater_prop.color.b;
 	square.mater_prop.reflect = 0;
 	square.mater_prop.glssns = 0.95;
 	scene->squares[scene->n_squares] = square;

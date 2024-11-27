@@ -21,9 +21,9 @@ mlx_destroy_image(fract->mlx_ptr, fract->img.img_ptr);
 */
 int	terminate_program(void *param)
 {
-	Scene	*scene;
+	t_scene	*scene;
 
-	scene = (Scene *)param;
+	scene = (t_scene *)param;
 	if (scene->img && scene->img->img)
 	{
 		mlx_destroy_image(scene->mlx, scene->img->img);
@@ -62,7 +62,7 @@ int	init_file(char *file)
 	return (fd);
 }
 
-static void	review_scene(Scene *scene)
+static void	review_scene(t_scene *scene)
 {
 	if (!scene->width || !scene->height)
 	{
@@ -86,7 +86,7 @@ static void	review_scene(Scene *scene)
 	}
 }
 
-void	init_pos_obj_fun(Scene *scene)
+void	init_pos_obj_fun(t_scene *scene)
 {
 	scene->pos_obj->type = CAMERA;
 	scene->pos_obj->idx = 0;
@@ -106,16 +106,16 @@ void	init_pos_obj_fun(Scene *scene)
 
 int	main(int argc, char **argv)
 {
-	Scene	*scene;
-	Img		img;
+	t_scene	*scene;
+	t_img		img;
 
 	if (argc != 2)
 	{
 		printf("Error: Argumentos invalidos\n");
 		exit(1);
 	}
-	scene = malloc(sizeof(Scene));
-	ft_bzero(scene, sizeof(Scene));
+	scene = malloc(sizeof(t_scene));
+	ft_bzero(scene, sizeof(t_scene));
 	parser_obj(scene, init_file(argv[1]));
 	review_scene(scene);
 	scene->pos_obj = malloc(sizeof(t_pos_obj));

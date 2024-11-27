@@ -12,9 +12,9 @@
 
 #include "../main.h"
 
-int	is_in_shadow(Scene scene, t_vector3 light_pos, t_vector3 hit_point)
+int	is_in_shadow(t_scene scene, t_vector3 light_pos, t_vector3 hit_point)
 {
-	Ray				shadow_ray;
+	t_ray				shadow_ray;
 	double			t;
 	int				i;
 	int				j;

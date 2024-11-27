@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-void	init_intersect_fun(Scene *scene)
+void	init_intersect_fun(t_scene *scene)
 {
 	scene->isc[PLANE] = \
 		(int (*)(const void *, const void *, double *))intersect_plane;

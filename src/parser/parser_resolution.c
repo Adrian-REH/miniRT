@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	parser_resolution(Scene *scene, char **data)
+int	parser_resolution(t_scene *scene, char **data)
 {
 	if (data[1] == NULL || data[2] == NULL)
 	{

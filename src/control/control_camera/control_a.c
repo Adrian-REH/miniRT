@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-void	control_a(Scene *scene)
+void	control_a(t_scene *scene)
 {
 	t_vector3	axis_of_rotation;
 

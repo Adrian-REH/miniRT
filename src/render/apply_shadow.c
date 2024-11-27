@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-t_color	apply_shadow(const RenderContext *ctx, t_vector3 *light_dir, \
+t_color	apply_shadow(const t_rend_ctx *ctx, t_vector3 *light_dir, \
 t_vector3 *cam_dir, t_vector3 *opac_pt)
 {
 	t_color	ambient_color;
@@ -27,7 +27,7 @@ t_vector3 *cam_dir, t_vector3 *opac_pt)
 		fmax(fmin(1 - (ctx->scene->ambient->ratio), 1.0), 0), \
 		ctx->mater_prop);
 	normalize_color(&current_color);
-	current_color = illuminate_surface(ambient_color, ctx->mater_prop.vColor, \
+	current_color = illuminate_surface(ambient_color, ctx->mater_prop.color, \
 		fmax(fmin(1 - (ctx->scene->ambient->ratio), 1.0), 0), \
 		ctx->mater_prop);
 	normalize_color(&current_color);

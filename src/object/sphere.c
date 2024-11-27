@@ -12,8 +12,8 @@
 
 #include "../main.h"
 
-static t_sphere_isc_ctx	build_sphere_isc_ctx(const Ray *ray, \
-const Sphere *sphere)
+static t_sphere_isc_ctx	build_sphere_isc_ctx(const t_ray *ray, \
+const t_sphere *sphere)
 {
 	t_sphere_isc_ctx	ctx;
 	const t_vector3		oc = {ray->origin.x - sphere->center.x,
@@ -33,7 +33,7 @@ const Sphere *sphere)
 	return (ctx);
 }
 
-int	intersect_sphere(const Ray *ray, const Sphere *sphere, double *t)
+int	intersect_sphere(const t_ray *ray, const t_sphere *sphere, double *t)
 {
 	t_sphere_isc_ctx	ctx;
 
@@ -57,7 +57,7 @@ int	intersect_sphere(const Ray *ray, const Sphere *sphere, double *t)
 	return (0);
 }
 
-int	sphere_solution_point(Sphere sphere, t_vector3 point)
+int	sphere_solution_point(t_sphere sphere, t_vector3 point)
 {
 	const double	dx = point.x - sphere.center.x;
 	const double	dy = point.y - sphere.center.y;
@@ -71,7 +71,7 @@ int	sphere_solution_point(Sphere sphere, t_vector3 point)
 		return (0);
 }
 
-int	find_nearest_sphere(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
+int	find_nearest_sphere(t_scene scene, t_ray *ray, t_nearest_ctx *nrst_ctx)
 {
 	int		i;
 	int		j;
@@ -95,9 +95,9 @@ int	find_nearest_sphere(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
 	return (j);
 }
 
-void	pos_sphere(Scene *scene, t_vector3 dir)
+void	pos_sphere(t_scene *scene, t_vector3 dir)
 {
-	Sphere	*sphere;
+	t_sphere	*sphere;
 
 	sphere = &(scene->spheres[scene->pos_obj->idx]);
 	sphere->center = add_vector3_to_vector3(sphere->center, dir);

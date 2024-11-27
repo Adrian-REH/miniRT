@@ -12,18 +12,18 @@
 
 #include "../main.h"
 
-RenderContext	build_render_ctx(Scene *scene, MaterialProperties mater_prop, \
+t_rend_ctx	build_render_ctx(t_scene *scene, t_mater_prop mater_prop, \
 t_vector3 normal, t_vector3 hit_pt)
 {
-	RenderContext	ctx;
+	t_rend_ctx	ctx;
 
-	ft_bzero(&ctx, sizeof(RenderContext));
-	ctx = (RenderContext){
+	ft_bzero(&ctx, sizeof(t_rend_ctx));
+	ctx = (t_rend_ctx){
 		.scene = scene,
 		.mater_prop = mater_prop,
 		.normal = normal,
 		.hit_pt = hit_pt,
-		.rayl = (Ray){{0, 0, 0}, {0, 0, 0}},
+		.rayl = (t_ray){{0, 0, 0}, {0, 0, 0}},
 		.cam_dir = norm_subtract(scene->cameras->pos, hit_pt),
 		.funcs = {
 		.calculate_intensity = calculate_intensity,

@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-t_color	apply_ambient(const RenderContext *ctx)
+t_color	apply_ambient(const t_rend_ctx *ctx)
 {
 	t_color	current_color;
 
@@ -21,7 +21,7 @@ t_color	apply_ambient(const RenderContext *ctx)
 		fmax(fmin(1 - (ctx->scene->ambient->ratio), 1.0), 0), \
 		ctx->mater_prop);
 	normalize_color(&current_color);
-	current_color = illuminate_surface(current_color, ctx->mater_prop.vColor, \
+	current_color = illuminate_surface(current_color, ctx->mater_prop.color, \
 		fmax(fmin(1 - (ctx->scene->ambient->ratio), 1.0), 0), ctx->mater_prop);
 	normalize_color(&current_color);
 	return (current_color);

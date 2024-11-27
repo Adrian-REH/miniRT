@@ -12,15 +12,15 @@
 
 #include "../main.h"
 
-int	render_point(Scene *scene, int x, int y)
+int	render_point(t_scene *scene, int x, int y)
 {
-	Ray				*ray;
+	t_ray				*ray;
 	t_nearest_ctx	ctx;
 	int				result;
 
 	result = 0;
 	ctx = (t_nearest_ctx){0, 0, 10};
-	ray = generate_ray((Vector2){x, y}, \
+	ray = generate_ray((t_vector2){x, y}, \
 		scene->width, scene->height, *scene->cameras);
 	if (!ray)
 		return (0);
@@ -31,7 +31,7 @@ int	render_point(Scene *scene, int x, int y)
 	return (free(ray), result);
 }
 
-int	sampling(int x, int y, Scene *scene, int samples_per_pixel)
+int	sampling(int x, int y, t_scene *scene, int samples_per_pixel)
 {
 	t_color	final_color;
 	t_color	sample_color;
@@ -57,7 +57,7 @@ int	sampling(int x, int y, Scene *scene, int samples_per_pixel)
 	return (colornormal_to_int(final_color));
 }
 
-void	render_scene(Scene *scene, int samples_per_pixel)
+void	render_scene(t_scene *scene, int samples_per_pixel)
 {
 	time_t	start;
 	int		x;

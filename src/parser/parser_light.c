@@ -12,15 +12,15 @@
 
 #include "../main.h"
 
-int	parser_light(Scene *scene, char **data)
+int	parser_light(t_scene *scene, char **data)
 {
 	t_vector3		point;
 	t_color		color;
 
 	point = (t_vector3){0, 0, 0};
 	color = (t_color){0, 0, 0, 0};
-	scene->lights = ft_realloc(scene->lights, sizeof(Light) * \
-		scene->n_lights, sizeof(Light) * (scene->n_lights + 2));
+	scene->lights = ft_realloc(scene->lights, sizeof(t_light) * \
+		scene->n_lights, sizeof(t_light) * (scene->n_lights + 2));
 	if (!scene->lights)
 		return (0);
 	point = ft_coordinate(data[1]);

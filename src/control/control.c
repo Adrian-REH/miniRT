@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-void	mlx_listen_meta(Scene *scene)
+void	mlx_listen_meta(t_scene *scene)
 {
 	mlx_hook(scene->win, 4, 1L << 2, mouse_press, scene);
 	mlx_hook(scene->win, 2, 1, key_press, scene);

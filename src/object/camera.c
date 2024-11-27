@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-void	rot_camera(Scene *scene, t_vector3 dir, int ang)
+void	rot_camera(t_scene *scene, t_vector3 dir, int ang)
 {
 	scene->cameras->dir = rotate_v3(scene->cameras->dir, dir, ang);
 	scene->cameras->horizontal = \
@@ -23,9 +23,9 @@ void	rot_camera(Scene *scene, t_vector3 dir, int ang)
 	normalize(&scene->cameras->horizontal);
 }
 
-void	pos_camera(Scene *scene, t_vector3 dir)
+void	pos_camera(t_scene *scene, t_vector3 dir)
 {
-	Camera	*camera;
+	t_camera	*camera;
 
 	camera = scene->cameras;
 	camera->pos = add_vector3_to_vector3(camera->pos, dir);

@@ -12,9 +12,9 @@
 
 #include "../main.h"
 
-int	render_point_cylinder(Scene scene, t_vector3 hit_pt, int n_cyl)
+int	render_point_cylinder(t_scene scene, t_vector3 hit_pt, int n_cyl)
 {
-	RenderContext	ctx;
+	t_rend_ctx	ctx;
 	int				color;
 	int				i;
 
@@ -24,14 +24,14 @@ int	render_point_cylinder(Scene scene, t_vector3 hit_pt, int n_cyl)
 	color = 0;
 	while (++i < scene.n_lights)
 	{
-		ctx.rayl = (Ray){scene.lights[i].point, {0, 0, 0}};
+		ctx.rayl = (t_ray){scene.lights[i].point, {0, 0, 0}};
 		ctx.rayl.direction = norm_subtract(scene.lights[i].point, hit_pt);
 		color = render_light(scene, ctx, &scene.cylinders[n_cyl], CYLINDER);
 	}
 	return (color);
 }
 
-int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
+int	render_reflect_cylinder(t_scene *scene, t_ray rayrfc, int id, int type)
 {
 	double	t;
 	double	md;
@@ -59,12 +59,12 @@ int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 	return (hit_color);
 }
 
-int	render_cylinder(Scene *scene, t_vector3 hit_pt, int id)
+int	render_cylinder(t_scene *scene, t_vector3 hit_pt, int id)
 {
 	int			hit_color;
 	t_color		result;
 	int			current_pixel;
-	Ray			rayrfc;
+	t_ray			rayrfc;
 	int			type;
 
 	current_pixel = render_point_cylinder(*scene, hit_pt, id);

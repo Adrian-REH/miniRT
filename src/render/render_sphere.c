@@ -12,9 +12,9 @@
 
 #include "../main.h"
 
-int	render_point_sphere(Scene scene, t_vector3 hit_pt, int nb_sphere)
+int	render_point_sphere(t_scene scene, t_vector3 hit_pt, int nb_sphere)
 {
-	RenderContext	ctx;
+	t_rend_ctx	ctx;
 	int				color;
 	int				i;
 
@@ -24,14 +24,14 @@ int	render_point_sphere(Scene scene, t_vector3 hit_pt, int nb_sphere)
 	color = 0;
 	while (++i < scene.n_lights)
 	{
-		ctx.rayl = (Ray){scene.lights[i].point, \
+		ctx.rayl = (t_ray){scene.lights[i].point, \
 			norm_subtract(scene.lights[i].point, hit_pt)};
 		color = render_light(scene, ctx, &scene.spheres[nb_sphere], SPHERE);
 	}
 	return (color);
 }
 
-int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
+int	render_reflect_sphere(t_scene *scene, t_ray rayrfc, int id, int type)
 {
 	double	t;
 	double	md;
@@ -59,12 +59,12 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 	return (hit_color);
 }
 
-int	render_sphere(Scene *scene, t_vector3 hit_pt, int id)
+int	render_sphere(t_scene *scene, t_vector3 hit_pt, int id)
 {
 	int		hit_color;
 	t_color	result;
 	int		current_pixel;
-	Ray		rayrfc;
+	t_ray		rayrfc;
 	int		type;
 
 	hit_color = 0;

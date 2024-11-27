@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	key_press(int key, Scene *param)
+int	key_press(int key, t_scene *param)
 {
 	t_map_fun		map_fun;
 	const t_map_fun	controls[10] = {

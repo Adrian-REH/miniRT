@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-t_vector3	*hit_point(Ray ray, double t)
+t_vector3	*hit_point(t_ray ray, double t)
 {
 	t_vector3	*hit_point;
 
@@ -23,7 +23,7 @@ t_vector3	*hit_point(Ray ray, double t)
 	return (hit_point);
 }
 
-t_vector3	resolve_hit_point(Ray ray, double t)
+t_vector3	resolve_hit_point(t_ray ray, double t)
 {
 	t_vector3	hit_point;
 

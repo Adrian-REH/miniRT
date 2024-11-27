@@ -75,7 +75,7 @@ typedef struct s_vector2
 {
 	double	x;
 	double	y;
-}	Vector2;
+}	t_vector2;
 
 typedef struct s_camera
 {
@@ -83,18 +83,18 @@ typedef struct s_camera
 	t_vector3	dir;
 	t_vector3	horizontal;
 	t_vector3	vertical;
-	double	fov;
-	double	aspect_ratio;
-	double	plane_distance;
-	double	plane_half_width;
-	double	plane_half_height;
-}	Camera;
+	double		fov;
+	double		aspect_ratio;
+	double		plane_distance;
+	double		plane_half_width;
+	double		plane_half_height;
+}	t_camera;
 
 typedef struct s_ray
 {
 	t_vector3	origin;
 	t_vector3	direction;
-}	Ray;
+}	t_ray;
 
 typedef struct s_img
 {
@@ -103,24 +103,24 @@ typedef struct s_img
 	int		bitxpixel;
 	int		lines;
 	int		endian;
-}	Img;
+}	t_img;
 
-typedef struct s_materialProperties
+typedef struct s_mater_prop
 {
 	double	reflect;
 	double	glssns;
 	double	absorption[3];
-	Img		texture;
-	t_color	vColor;
-}	MaterialProperties;
+	t_img	texture;
+	t_color	color;
+}	t_mater_prop;
 
 typedef struct s_sphere
 {
-	t_vector3				center;
+	t_vector3			center;
 	double				radius;
 	int					color;
-	MaterialProperties	mater_prop;
-}	Sphere;
+	t_mater_prop		mater_prop;
+}	t_sphere;
 
 typedef struct s_map_fun
 {
@@ -130,42 +130,42 @@ typedef struct s_map_fun
 
 typedef struct s_cylinder
 {
-	t_vector3				center;
-	t_vector3				axis;
+	t_vector3			center;
+	t_vector3			axis;
 	double				diameter;
 	double				height;
-	MaterialProperties	mater_prop;
-}	Cylinder;
+	t_mater_prop		mater_prop;
+}	t_cylinder;
 
 typedef struct s_plane
 {
-	t_vector3				normal;
-	t_vector3				point;
-	MaterialProperties	mater_prop;
-}	Plane;
+	t_vector3			normal;
+	t_vector3			point;
+	t_mater_prop		mater_prop;
+}	t_plane;
 
 typedef struct s_triangle
 {
-	t_vector3				vertex[3];
+	t_vector3			vertex[3];
 	int					n_vertex;
-	Plane				*p_triangle;
-	MaterialProperties	mater_prop;
-}	Triangle;
+	t_plane				*p_triangle;
+	t_mater_prop		mater_prop;
+}	t_triangle;
 
 typedef struct s_square
 {
-	t_vector3				center;
-	t_vector3				normal;
+	t_vector3			center;
+	t_vector3			normal;
 	double				side;
-	MaterialProperties	mater_prop;
-}	Square;
+	t_mater_prop		mater_prop;
+}	t_square;
 
 typedef struct s_light
 {
 	t_vector3	point;
-	double	ratio;
-	t_color	color;
-}	Light;
+	double		ratio;
+	t_color		color;
+}	t_light;
 
 typedef struct s_ambient
 {
@@ -199,10 +199,10 @@ typedef struct s_triangle_isc_ctx
 	t_vector3	h;
 	t_vector3	s;
 	t_vector3	q;
-	double	a;
-	double	f;
-	double	u;
-	double	v;
+	double		a;
+	double		f;
+	double		u;
+	double		v;
 }	t_triangle_isc_ctx;
 
 typedef struct s_isc_cyl_ctx
@@ -210,13 +210,13 @@ typedef struct s_isc_cyl_ctx
 	t_vector3	ro;
 	t_vector3	d;
 	t_vector3	ca;
-	double	a;
-	double	b;
-	double	c;
-	Vector2	t;
-	Vector2	y;
-	double	th;
-	double	half_h;
+	double		a;
+	double		b;
+	double		c;
+	t_vector2	t;
+	t_vector2	y;
+	double		th;
+	double		half_h;
 }	t_isc_cyl_ctx;
 
 typedef struct s_scene
@@ -225,15 +225,15 @@ typedef struct s_scene
 	void		*win;
 	int			width;
 	int			height;
-	Img			*img;
-	Camera		*cameras;
-	t_mbient		*ambient;
-	Sphere		*spheres;
-	Square		*squares;
-	Triangle	*triangles;
-	Cylinder	*cylinders;
-	Plane		*planes;
-	Light		*lights;
+	t_img		*img;
+	t_camera	*cameras;
+	t_mbient	*ambient;
+	t_sphere	*spheres;
+	t_square	*squares;
+	t_triangle	*triangles;
+	t_cylinder	*cylinders;
+	t_plane		*planes;
+	t_light		*lights;
 	int			n_lights;
 	int			n_planes;
 	int			n_cylinders;
@@ -243,43 +243,43 @@ typedef struct s_scene
 	int			n_interaction;
 	t_pos_obj	*pos_obj;
 	int			(*isc[10])(const void *, const void *, double *);
-	int			(*rfc[10])(void *, Ray, int, int);
+	int			(*rfc[10])(void *, t_ray, int, int);
 	int			(*render[10])(void *, t_vector3, int);
 	int			(*parser[10])(void *, void *);
-}	Scene;
+}	t_scene;
 
-typedef double	(*IntensityFunc)(t_vector3, t_vector3);
-typedef double	(*AttenuationFunc)(double, double, double, double);
-typedef t_vector3	(*ReflectFunc)(t_vector3, t_vector3);
+typedef double		(*t_intensity_func)(t_vector3, t_vector3);
+typedef double		(*t_attenuation_func)(double, double, double, double);
+typedef t_vector3	(*t_reflect_func)(t_vector3, t_vector3);
 
 typedef struct s_lighting_fun
 {
-	IntensityFunc	calculate_intensity;
-	AttenuationFunc	calculate_attenuation;
-	ReflectFunc		reflect;
-}	LightingFunctions;
+	t_intensity_func	calculate_intensity;
+	t_attenuation_func	calculate_attenuation;
+	t_reflect_func		reflect;
+}	t_lighting_fun;
 
 typedef struct s_rend_ctx
 {
-	Scene				*scene;
-	t_vector3				hit_pt;
-	t_vector3				normal;
-	Ray					rayl;
-	t_vector3				cam_dir;
-	MaterialProperties	mater_prop;
-	LightingFunctions	funcs;
-}	RenderContext;
+	t_scene				*scene;
+	t_vector3			hit_pt;
+	t_vector3			normal;
+	t_ray				rayl;
+	t_vector3			cam_dir;
+	t_mater_prop		mater_prop;
+	t_lighting_fun		funcs;
+}	t_rend_ctx;
 
 typedef struct s_light_ctx
 {
-	Light	*light;
-	double	distance_light;
-	double	attenuation;
+	t_light		*light;
+	double		distance_light;
+	double		attenuation;
 	t_vector3	reflect_dir;
-	double	diffuse_intensity;
-	double	specular;
-	t_color	*current_color;
-	double	full_phong;
+	double		diffuse_intensity;
+	double		specular;
+	t_color		*current_color;
+	double		full_phong;
 }	t_light_ctx;
 
 typedef struct s_nearest_ctx
@@ -290,28 +290,28 @@ typedef struct s_nearest_ctx
 }	t_nearest_ctx;
 
 //------FSM-------
-void			init_intersect_fun(Scene *scene);
+void			init_intersect_fun(t_scene *scene);
 char			**init_args(void);
-void			init_parser_fun(Scene *scene);
-void			init_render_fun(Scene *scene);
-void			init_rfc_render_fun(Scene *scene);
+void			init_parser_fun(t_scene *scene);
+void			init_render_fun(t_scene *scene);
+void			init_rfc_render_fun(t_scene *scene);
 //------MATH-------
 int				solve_quadratic(t_vector3 val, double *t0, double *t1);
 int				terminate_program(void *param);
-t_vector3			rotate_x(t_vector3 v, double angle);
-t_vector3			rotate_z(t_vector3 v, double angle);
-t_vector3			rotate_y(t_vector3 v, double angle);
+t_vector3		rotate_x(t_vector3 v, double angle);
+t_vector3		rotate_z(t_vector3 v, double angle);
+t_vector3		rotate_y(t_vector3 v, double angle);
 //CONTROL
-int				key_press(int key, Scene *param);
+int				key_press(int key, t_scene *param);
 int				mouse_press(int button, int x, int y, void *param);
-t_color			darken_surface(t_color *surface_color, double darkness_intensity);
+t_color			darken_surface(t_color *surface_color, double drk_int);
 //-----RENDER APPLY-----
-t_color			apply_lighting(const RenderContext *ctx, \
+t_color			apply_lighting(const t_rend_ctx *ctx, \
 	t_vector3 *light_dir, t_vector3 *cam_dir);
-t_color			apply_shadow(const RenderContext *ctx, \
+t_color			apply_shadow(const t_rend_ctx *ctx, \
 	t_vector3 *light_dir, t_vector3 *cam_dir, t_vector3 *opac_pt);
-t_color			apply_ambient(const RenderContext *ctx);
-RenderContext	build_render_ctx(Scene *scene, MaterialProperties mater_prop, \
+t_color			apply_ambient(const t_rend_ctx *ctx);
+t_rend_ctx		build_render_ctx(t_scene *scene, t_mater_prop mater_prop, \
 	t_vector3 normal, t_vector3 hit_pt);
 //------libsarr----
 int				ft_sarrprint(char **arr);
@@ -319,7 +319,7 @@ char			**ft_sarradd(char **arr, char *string);
 int				ft_sarrsize(char **arr);
 //-----libcolor/------
 double			mix(double a, double b, double t);
-t_vector3			reflect(t_vector3 L, t_vector3 N);
+t_vector3		reflect(t_vector3 L, t_vector3 N);
 double			calculate_attenuation(double distance, double k_c, double k_l, \
 double k_q);
 int				colornormal_to_int(t_color color);
@@ -331,29 +331,29 @@ t_color			rgb_to_color(int r, int g, int b);
 void			set_color(char *buffer, int endian, int color, int alpha);
 int				get_color(char *buffer, int endian, int *alpha);
 t_color			illuminate_surface(t_color surface_color, t_color light_color, \
-	double intensity, MaterialProperties prop);
+	double intensity, t_mater_prop prop);
 double			calculate_attenuation(double distance, double k_c, double k_l, \
 	double k_q);
 //------libvector3/------
-t_vector3			resolve_hit_point(Ray ray, double t);
-t_vector3			*hit_point(Ray ray, double t);
-t_vector3			scalev3(t_vector3 v, float scalar);
+t_vector3		resolve_hit_point(t_ray ray, double t);
+t_vector3		*hit_point(t_ray ray, double t);
+t_vector3		scalev3(t_vector3 v, float scalar);
 double			sin_v3(t_vector3 v1, t_vector3 v2);
-t_vector3			cross_v3(t_vector3 v1, t_vector3 v2);
-t_vector3			rotate_v3(t_vector3 v, t_vector3 axis, double angle);
-t_vector3			add_scalar_to_vector3(t_vector3 init, double scale);
-t_vector3			add_vector3_to_vector3(t_vector3 init, t_vector3 end);
-t_vector3			multiplyv3(t_vector3 v, t_vector3 u);
-t_vector3			norm_subtract(t_vector3 init, t_vector3 end);
-t_vector3			subtract(t_vector3 init, t_vector3 end);
+t_vector3		cross_v3(t_vector3 v1, t_vector3 v2);
+t_vector3		rotate_v3(t_vector3 v, t_vector3 axis, double angle);
+t_vector3		add_scalar_to_vector3(t_vector3 init, double scale);
+t_vector3		add_vector3_to_vector3(t_vector3 init, t_vector3 end);
+t_vector3		multiplyv3(t_vector3 v, t_vector3 u);
+t_vector3		norm_subtract(t_vector3 init, t_vector3 end);
+t_vector3		subtract(t_vector3 init, t_vector3 end);
 double			calculate_intensity(t_vector3 normal, t_vector3 light_dir);
 double			distance(t_vector3 init, t_vector3 end);
-int				line_solution_point(Ray ray, t_vector3 point);
+int				line_solution_point(t_ray ray, t_vector3 point);
 double			mod(t_vector3 v);
 //------lib/libbrdf/------
 double			dot(t_vector3 a, t_vector3 b);
 void			normalize(t_vector3 *v);
-t_vector3			*invnormal(t_vector3 *normal);
+t_vector3		*invnormal(t_vector3 *normal);
 double			specular_intensity(t_vector3 reflection, t_vector3 view_dir, \
 	double shininess, double ks);
 double			ft_atof(const char *str);
@@ -361,99 +361,100 @@ int				idxpixel(int width, int x, int y);
 //------lib/libparse------
 double			ft_limit(double min, double max, double val);
 //------lib/libproject------
-Ray				*generate_ray(Vector2 px, int screen_width, \
-	int screen_height, Camera camera);
-Ray				generate_reflect_ray(Scene *scene, t_vector3 hit_pt, \
+t_ray			*generate_ray(t_vector2 px, int screen_width, \
+	int screen_height, t_camera camera);
+t_ray			generate_reflect_ray(t_scene *scene, t_vector3 hit_pt, \
 	t_vector3 normal);
 //------lib/libmapfun------
 t_map_fun		map_fun_get(const t_map_fun *map_fun, int key);
 //------control_camera/----
-void			control_a(Scene *scene);
-void			control_s(Scene *scene);
-void			control_d(Scene *scene);
-void			control_w(Scene *scene);
-void			control_left(Scene *scene);
-void			control_right(Scene *scene);
-void			control_down(Scene *scene);
-void			control_up(Scene *scene);
-void			mlx_listen_meta(Scene *scene);
+void			control_a(t_scene *scene);
+void			control_s(t_scene *scene);
+void			control_d(t_scene *scene);
+void			control_w(t_scene *scene);
+void			control_left(t_scene *scene);
+void			control_right(t_scene *scene);
+void			control_down(t_scene *scene);
+void			control_up(t_scene *scene);
+void			mlx_listen_meta(t_scene *scene);
 //------CONTROL_QUITE----
-void			control_escape(Scene *scene);
+void			control_escape(t_scene *scene);
 //------RANDOM------
 double			random_double(void);
 int				idxfind_min(double *arr, int size);
 //------scene.c------
-int				obj_solution_point(Scene scene, t_vector3 point, int type, \
+int				obj_solution_point(t_scene scene, t_vector3 point, int type, \
 	int id);
-int				find_nearest_obj(Scene scene, Ray *ray, \
+int				find_nearest_obj(t_scene scene, t_ray *ray, \
 	t_nearest_ctx *nrst_ctx);
 //------cylinder.c----
-int				find_nearest_cylinder(Scene scene, Ray *ray, \
+int				find_nearest_cylinder(t_scene scene, t_ray *ray, \
 	t_nearest_ctx *nrst_ctx);
-int				intersect_cylinder(const Ray *ray, const Cylinder *cylinder, \
+int				intersect_cylinder(const t_ray *ray, const t_cylinder *cy, \
 	double *t);
-int				cylinder_solution_point(Cylinder cylinder, t_vector3 point);
-t_vector3			normal_cylinder(t_vector3 hit_point, Cylinder cylinder);
-void			rot_cylinder(Scene *scene, t_vector3 dir, int ang);
-void			pos_cylinder(Scene *scene, t_vector3 dir);
+int				cylinder_solution_point(t_cylinder cylinder, t_vector3 point);
+t_vector3		normal_cylinder(t_vector3 hit_point, t_cylinder cylinder);
+void			rot_cylinder(t_scene *scene, t_vector3 dir, int ang);
+void			pos_cylinder(t_scene *scene, t_vector3 dir);
 //------sphere.c----
-int				find_nearest_sphere(Scene scene, Ray *ray, \
+int				find_nearest_sphere(t_scene scene, t_ray *ray, \
 	t_nearest_ctx *nrst_ctx);
-int				intersect_sphere(const Ray *ray, const Sphere *sphere, \
+int				intersect_sphere(const t_ray *ray, const t_sphere *sphere, \
 	double *t);
-int				sphere_solution_point(Sphere sphere, t_vector3 point);
-void			pos_sphere(Scene *scene, t_vector3 dir);
+int				sphere_solution_point(t_sphere sphere, t_vector3 point);
+void			pos_sphere(t_scene *scene, t_vector3 dir);
 //------triangle.c----
-int				find_nearest_triangle(Scene scene, Ray *ray, \
+int				find_nearest_triangle(t_scene scene, t_ray *ray, \
 	t_nearest_ctx *nrst_ctx);
-int				intersect_triangle(const Ray *ray, const Triangle *triangle, \
+int				intersect_triangle(const t_ray *ray, const t_triangle *tr, \
 	double *t);
-void			rot_triangle(Scene *scene, t_vector3 dir, int ang);
-void			pos_triangle(Scene *scene, t_vector3 dir);
+void			rot_triangle(t_scene *scene, t_vector3 dir, int ang);
+void			pos_triangle(t_scene *scene, t_vector3 dir);
 //------plane.c----
-int				find_nearest_plane(Scene scene, Ray *ray, \
+int				find_nearest_plane(t_scene scene, t_ray *ray, \
 	t_nearest_ctx *nrst_ctx);
-int				intersect_plane(const Ray *ray, const Plane *plane, double *t);
-int				plane_solution_point(Plane plane, t_vector3 point);
-void			rot_plane(Scene *scene, t_vector3 dir, int ang);
-void			pos_plane(Scene *scene, t_vector3 dir);
+int				intersect_plane(const t_ray *ray, const t_plane *pn, double *t);
+int				plane_solution_point(t_plane plane, t_vector3 point);
+void			rot_plane(t_scene *scene, t_vector3 dir, int ang);
+void			pos_plane(t_scene *scene, t_vector3 dir);
 //------camera.c----
-void			rot_camera(Scene *scene, t_vector3 dir, int ang);
-void			pos_camera(Scene *scene, t_vector3 dir);
+void			rot_camera(t_scene *scene, t_vector3 dir, int ang);
+void			pos_camera(t_scene *scene, t_vector3 dir);
 //------PARSER------
-int				parser_cylinder(Scene *scene, char **data);
-int				parser_triangle(Scene *scene, char **data);
-int				parser_obj(Scene *scene, int fd);
-int				parser_camera(Scene *scene, char **data);
-int				parser_plane(Scene *scene, char **data);
-int				parser_light(Scene *scene, char **data);
-int				parser_sphere(Scene *scene, char **data);
-int				parser_resolution(Scene *scene, char **data);
-int				parser_ambient(Scene *scene, char **data);
-int				parser_square(Scene *scene, char **data);
+int				parser_cylinder(t_scene *scene, char **data);
+int				parser_triangle(t_scene *scene, char **data);
+int				parser_obj(t_scene *scene, int fd);
+int				parser_camera(t_scene *scene, char **data);
+int				parser_plane(t_scene *scene, char **data);
+int				parser_light(t_scene *scene, char **data);
+int				parser_sphere(t_scene *scene, char **data);
+int				parser_resolution(t_scene *scene, char **data);
+int				parser_ambient(t_scene *scene, char **data);
+int				parser_square(t_scene *scene, char **data);
 //------render/------
-int				render_light(Scene scn, RenderContext ctx, void *obj, int tp);
-int				render_reflect_cylinder(Scene *scn, Ray rayrfc, int id, int tp);
-int				render_cylinder(Scene *scene, t_vector3 hit_pt, int id);
-int				render_triangle(Scene *scene, t_vector3 hit_pt, int id);
-int				render_plane(Scene *scene, t_vector3 hit_pt, int id);
-int				render_sphere(Scene *scene, t_vector3 hit_pt, int id);
-int				sampling(int x, int y, Scene *scene, int samples_per_pixel);
-int				render_point_sphere(Scene scene, t_vector3 hit_pt, int nb_sphere);
-int				render_point_plane(Scene scene, t_vector3 hit_pt, int n_plane);
-void			render_scene(Scene *scene, int samples_per_pixel);
-int				render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int tp);
-int				render_reflect_plane(Scene *scene, Ray rayrfc, int id, int tp);
-int				render_reflect_triangle(Scene *scn, Ray rayrfc, int id, int tp);
+int				render_light(t_scene scn, t_rend_ctx ctx, void *obj, int tp);
+int				render_reflect_cylinder(t_scene *scn, t_ray rfc, int i, int tp);
+int				render_cylinder(t_scene *scn, t_vector3 hit_pt, int id);
+int				render_triangle(t_scene *scn, t_vector3 hit_pt, int id);
+int				render_plane(t_scene *scn, t_vector3 hit_pt, int id);
+int				render_sphere(t_scene *scn, t_vector3 hit_pt, int id);
+int				sampling(int x, int y, t_scene *scn, int samples_per_pixel);
+int				render_point_sphere(t_scene scn, t_vector3 hit_pt, int nb_sph);
+int				render_point_plane(t_scene scn, t_vector3 hit_pt, int n_plane);
+void			render_scene(t_scene *scn, int samples_per_pixel);
+int				render_reflect_sphere(t_scene *scn, t_ray rrfc, int id, int tp);
+int				render_reflect_plane(t_scene *scn, t_ray rrfc, int id, int tp);
+int				render_reflect_triangle(t_scene *scn, t_ray rfc, int i, int tp);
 // UTILS
 void			ft_free_p2(char **dst);
 void			*ft_realloc(void *ptr, size_t size_old, size_t size);
-t_vector3			ft_coordinate(char *argv);
+t_vector3		ft_coordinate(char *argv);
 double			ft_ratio(char *str);
 t_color			ft_color(char *str);
-t_vector3			stonorm(char *argv);
-t_vector3			substract(t_vector3 init, t_vector3 end);
+t_vector3		stonorm(char *argv);
+t_vector3		substract(t_vector3 init, t_vector3 end);
 int				init_file(char *file);
-int				is_in_shadow(Scene scene, t_vector3 light_pos, t_vector3 hit_point);
+int				is_in_shadow(t_scene scene, t_vector3 light_pos, \
+	t_vector3 hit_point);
 
 #endif

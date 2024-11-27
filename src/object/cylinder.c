@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	cylinder_solution_point(Cylinder cylinder, t_vector3 point)
+int	cylinder_solution_point(t_cylinder cylinder, t_vector3 point)
 {
 	t_vector3	cp;
 	t_vector3	radial;
@@ -32,7 +32,7 @@ int	cylinder_solution_point(Cylinder cylinder, t_vector3 point)
 	return (0);
 }
 
-t_vector3	normal_cylinder(t_vector3 hit_point, Cylinder cylinder)
+t_vector3	normal_cylinder(t_vector3 hit_point, t_cylinder cylinder)
 {
 	t_vector3	normal;
 	t_vector3	cp;
@@ -58,7 +58,7 @@ t_vector3	normal_cylinder(t_vector3 hit_point, Cylinder cylinder)
 	return (normal);
 }
 
-int	find_nearest_cylinder(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
+int	find_nearest_cylinder(t_scene scene, t_ray *ray, t_nearest_ctx *nrst_ctx)
 {
 	int		i;
 	int		j;
@@ -82,18 +82,18 @@ int	find_nearest_cylinder(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
 	return (j);
 }
 
-void	rot_cylinder(Scene *scene, t_vector3 dir, int ang)
+void	rot_cylinder(t_scene *scene, t_vector3 dir, int ang)
 {
-	Cylinder	*cylinder;
+	t_cylinder	*cylinder;
 
 	cylinder = &(scene->cylinders[scene->pos_obj->idx]);
 	cylinder->axis = rotate_v3(cylinder->axis, dir, ang);
 	normalize(&cylinder->axis);
 }
 
-void	pos_cylinder(Scene *scene, t_vector3 dir)
+void	pos_cylinder(t_scene *scene, t_vector3 dir)
 {
-	Cylinder	*cylinder;
+	t_cylinder	*cylinder;
 
 	cylinder = &(scene->cylinders[scene->pos_obj->idx]);
 	cylinder->center = add_vector3_to_vector3(cylinder->center, dir);

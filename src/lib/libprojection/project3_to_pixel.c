@@ -15,12 +15,12 @@
 /**
  * Esto solo funciona para cuando miro a Z
  */
-Vector2	point3d_to_pixel(t_vector3 point, Camera camera)
+t_vector2	point3d_to_pixel(t_vector3 point, t_camera camera)
 {
 	t_vector3	dir_ray;
 	double	t;
-	Vector2	pxl;
-	Vector2	p;
+	t_vector2	pxl;
+	t_vector2	p;
 
 	dir_ray = substract(camera.pos, point);
 	t = camera.dir.z / dir_ray.z;

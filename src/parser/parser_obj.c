@@ -45,7 +45,7 @@ int	ft_countword(const char *s, int c)
 	return (count);
 }
 
-int	parser_obj(Scene *scene, int fd)
+int	parser_obj(t_scene *scene, int fd)
 {
 	char	**data;
 	char	**alphabet;

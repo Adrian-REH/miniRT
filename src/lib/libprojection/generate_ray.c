@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-static t_vector3	pxtopy(Camera cam, t_vector3 v)
+static t_vector3	pxtopy(t_camera cam, t_vector3 v)
 {
 	t_vector3	dst;
 
@@ -22,10 +22,10 @@ static t_vector3	pxtopy(Camera cam, t_vector3 v)
 	return (dst);
 }
 
-Ray	*generate_ray(Vector2 px, int screen_width, \
-int screen_height, Camera camera)
+t_ray	*generate_ray(t_vector2 px, int screen_width, \
+int screen_height, t_camera camera)
 {
-	Ray				*ray;
+	t_ray				*ray;
 	t_vector3			point_on_plane;
 	const t_vector3	p = {
 		.x = ((2.0 * px.x / (double)screen_width) - 1.0) * \
@@ -34,7 +34,7 @@ int screen_height, Camera camera)
 		.z = 0.5
 	};
 
-	ray = malloc(sizeof(Ray));
+	ray = malloc(sizeof(t_ray));
 	if (!ray)
 		return (NULL);
 	ray->origin = camera.pos;
@@ -46,9 +46,9 @@ int screen_height, Camera camera)
 	return (ray);
 }
 
-Ray	generate_reflect_ray(Scene *scene, t_vector3 hit_pt, t_vector3 normal)
+t_ray	generate_reflect_ray(t_scene *scene, t_vector3 hit_pt, t_vector3 normal)
 {
-	Ray		rayrfc;
+	t_ray		rayrfc;
 	t_vector3	dir_pt;
 	t_vector3	rfc;
 
