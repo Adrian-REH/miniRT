@@ -107,7 +107,7 @@ void	init_pos_obj_fun(t_scene *scene)
 int	main(int argc, char **argv)
 {
 	t_scene	*scene;
-	t_img		img;
+	t_img	img;
 
 	if (argc != 2)
 	{

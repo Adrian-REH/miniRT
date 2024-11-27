@@ -15,8 +15,8 @@
 int	render_point_cylinder(t_scene scene, t_vector3 hit_pt, int n_cyl)
 {
 	t_rend_ctx	ctx;
-	int				color;
-	int				i;
+	int			color;
+	int			i;
 
 	ctx = build_render_ctx(&scene, scene.cylinders[n_cyl].mater_prop, \
 		normal_cylinder(hit_pt, scene.cylinders[n_cyl]), hit_pt);
@@ -33,11 +33,11 @@ int	render_point_cylinder(t_scene scene, t_vector3 hit_pt, int n_cyl)
 
 int	render_reflect_cylinder(t_scene *scene, t_ray rayrfc, int id, int type)
 {
-	double	t;
-	double	md;
-	int		j;
+	double		t;
+	double		md;
+	int			j;
 	t_vector3	*hit_rfc;
-	int		hit_color;
+	int			hit_color;
 
 	t = 0;
 	hit_color = 0;
@@ -64,7 +64,7 @@ int	render_cylinder(t_scene *scene, t_vector3 hit_pt, int id)
 	int			hit_color;
 	t_color		result;
 	int			current_pixel;
-	t_ray			rayrfc;
+	t_ray		rayrfc;
 	int			type;
 
 	current_pixel = render_point_cylinder(*scene, hit_pt, id);

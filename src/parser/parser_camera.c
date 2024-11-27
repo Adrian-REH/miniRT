@@ -14,7 +14,7 @@
 
 int	parser_camera(t_scene *scene, char **data)
 {
-	double	fov;
+	double		fov;
 	t_vector3	tmp;
 	t_vector3	right;
 

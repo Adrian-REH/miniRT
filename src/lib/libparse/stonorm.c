@@ -15,7 +15,7 @@
 t_vector3	stonorm(char *argv)
 {
 	t_vector3	norm;
-	char	**args;
+	char		**args;
 
 	args = ft_split(argv, ',');
 	if (ft_sarrsize(args) != 3)

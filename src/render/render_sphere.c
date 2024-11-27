@@ -15,8 +15,8 @@
 int	render_point_sphere(t_scene scene, t_vector3 hit_pt, int nb_sphere)
 {
 	t_rend_ctx	ctx;
-	int				color;
-	int				i;
+	int			color;
+	int			i;
 
 	ctx = build_render_ctx(&scene, scene.spheres[nb_sphere].mater_prop, \
 		norm_subtract(scene.spheres[nb_sphere].center, hit_pt), hit_pt);
@@ -33,11 +33,11 @@ int	render_point_sphere(t_scene scene, t_vector3 hit_pt, int nb_sphere)
 
 int	render_reflect_sphere(t_scene *scene, t_ray rayrfc, int id, int type)
 {
-	double	t;
-	double	md;
-	int		j;
+	double		t;
+	double		md;
+	int			j;
 	t_vector3	*hit_rfc;
-	int		hit_color;
+	int			hit_color;
 
 	t = 0;
 	md = 900000000;
@@ -64,7 +64,7 @@ int	render_sphere(t_scene *scene, t_vector3 hit_pt, int id)
 	int		hit_color;
 	t_color	result;
 	int		current_pixel;
-	t_ray		rayrfc;
+	t_ray	rayrfc;
 	int		type;
 
 	hit_color = 0;

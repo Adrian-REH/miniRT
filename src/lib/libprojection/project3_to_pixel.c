@@ -18,7 +18,7 @@
 t_vector2	point3d_to_pixel(t_vector3 point, t_camera camera)
 {
 	t_vector3	dir_ray;
-	double	t;
+	double		t;
 	t_vector2	pxl;
 	t_vector2	p;
 

@@ -14,7 +14,7 @@
 
 int	parser_light(t_scene *scene, char **data)
 {
-	t_vector3		point;
+	t_vector3	point;
 	t_color		color;
 
 	point = (t_vector3){0, 0, 0};

@@ -17,7 +17,7 @@ int	mouse_press(int button, int x, int y, void *param)
 	t_scene			*scene;
 	int				type;
 	t_nearest_ctx	ctx;
-	t_ray				*ray;
+	t_ray			*ray;
 
 	scene = (t_scene *)param;
 	(void)button;

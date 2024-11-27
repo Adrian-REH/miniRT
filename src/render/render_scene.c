@@ -14,7 +14,7 @@
 
 int	render_point(t_scene *scene, int x, int y)
 {
-	t_ray				*ray;
+	t_ray			*ray;
 	t_nearest_ctx	ctx;
 	int				result;
 

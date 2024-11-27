@@ -17,7 +17,7 @@
 t_vector3	reflect(t_vector3 L, t_vector3 N)
 {
 	t_vector3	reflection;
-	double	dot_product;
+	double		dot_product;
 
 	dot_product = dot(N, L);
 	reflection = (t_vector3){

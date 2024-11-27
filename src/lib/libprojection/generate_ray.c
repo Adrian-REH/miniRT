@@ -25,8 +25,8 @@ static t_vector3	pxtopy(t_camera cam, t_vector3 v)
 t_ray	*generate_ray(t_vector2 px, int screen_width, \
 int screen_height, t_camera camera)
 {
-	t_ray				*ray;
-	t_vector3			point_on_plane;
+	t_ray			*ray;
+	t_vector3		point_on_plane;
 	const t_vector3	p = {
 		.x = ((2.0 * px.x / (double)screen_width) - 1.0) * \
 		camera.aspect_ratio * camera.plane_distance,

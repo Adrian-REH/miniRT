@@ -15,8 +15,8 @@
 int	render_point_triangle(t_scene scene, t_vector3 hit_pt, int n_triangle)
 {
 	t_rend_ctx	ctx;
-	int				color;
-	int				i;
+	int			color;
+	int			i;
 
 	ctx = build_render_ctx(&scene, scene.triangles[n_triangle].mater_prop, \
 		scene.triangles[n_triangle].p_triangle->normal, hit_pt);
@@ -33,11 +33,11 @@ int	render_point_triangle(t_scene scene, t_vector3 hit_pt, int n_triangle)
 
 int	render_reflect_triangle(t_scene *scene, t_ray rayrfc, int id, int type)
 {
-	double	t;
-	double	md;
-	int		j;
+	double		t;
+	double		md;
+	int			j;
 	t_vector3	*hit_rfc;
-	int		hit_color;
+	int			hit_color;
 
 	md = 900000000;
 	t = 0;
@@ -61,7 +61,7 @@ int	render_reflect_triangle(t_scene *scene, t_ray rayrfc, int id, int type)
 
 int	render_triangle(t_scene *scene, t_vector3 hit_pt, int id)
 {
-	t_ray		rayrfc;
+	t_ray	rayrfc;
 	int		hit_color;
 	int		current_pixel;
 	int		type;

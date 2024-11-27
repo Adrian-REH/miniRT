@@ -24,7 +24,7 @@ static double	side_square(char *data)
 
 int	parser_square(t_scene *scene, char **data)
 {
-	t_color	color;
+	t_color		color;
 	t_square	square;
 
 	color = (t_color){0, 0, 0, 0};

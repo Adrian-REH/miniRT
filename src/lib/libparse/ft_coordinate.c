@@ -15,7 +15,7 @@
 t_vector3	ft_coordinate(char *argv)
 {
 	t_vector3	coord;
-	char	**args;
+	char		**args;
 
 	args = ft_split(argv, ',');
 	if (!args)

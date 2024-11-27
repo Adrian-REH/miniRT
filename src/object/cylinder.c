@@ -16,9 +16,9 @@ int	cylinder_solution_point(t_cylinder cylinder, t_vector3 point)
 {
 	t_vector3	cp;
 	t_vector3	radial;
-	double	projection;
-	double	radial_distance_squared;
-	double	radius_squared;
+	double		projection;
+	double		radial_distance_squared;
+	double		radius_squared;
 
 	radius_squared = pow(cylinder.diameter / 2, 2);
 	cp = subtract(point, cylinder.center);
@@ -36,7 +36,7 @@ t_vector3	normal_cylinder(t_vector3 hit_point, t_cylinder cylinder)
 {
 	t_vector3	normal;
 	t_vector3	cp;
-	double	dot_product;
+	double		dot_product;
 	t_vector3	axis_scaled;
 
 	cp = subtract(hit_point, cylinder.center);

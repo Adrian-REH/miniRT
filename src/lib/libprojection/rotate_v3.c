@@ -21,7 +21,7 @@ t_vector3	rotate_v3(t_vector3 v, t_vector3 axis, double angle)
 	const double	cos_theta = cos(radians);
 	const double	sin_theta = sin(radians);
 	const double	dt = dot(v, axis);
-	t_vector3			result;
+	t_vector3		result;
 
 	result.x = v.x * cos_theta + cross_v3(axis, v).x * \
 	sin_theta + axis.x * dt * (1 - cos_theta);

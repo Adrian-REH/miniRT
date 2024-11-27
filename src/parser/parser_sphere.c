@@ -28,7 +28,7 @@ static double	diamenter_sphere(char *data)
 int	parser_sphere(t_scene *scene, char **data)
 {
 	t_vector3	center;
-	t_color	color;
+	t_color		color;
 
 	color = (t_color){0, 0, 0, 0};
 	center = (t_vector3){0, 0, 0};
