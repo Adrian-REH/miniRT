@@ -14,7 +14,7 @@
 
 void	control_w(Scene *scene)
 {
-	Vector3	axis_of_rotation;
+	t_vector3	axis_of_rotation;
 
 	axis_of_rotation = \
 		cross_v3(scene->cameras->dir, scene->cameras->vertical);

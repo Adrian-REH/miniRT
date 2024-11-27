@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	render_point_sphere(Scene scene, Vector3 hit_pt, int nb_sphere)
+int	render_point_sphere(Scene scene, t_vector3 hit_pt, int nb_sphere)
 {
 	RenderContext	ctx;
 	int				color;
@@ -36,7 +36,7 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 	double	t;
 	double	md;
 	int		j;
-	Vector3	*hit_rfc;
+	t_vector3	*hit_rfc;
 	int		hit_color;
 
 	t = 0;
@@ -59,7 +59,7 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 	return (hit_color);
 }
 
-int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
+int	render_sphere(Scene *scene, t_vector3 hit_pt, int id)
 {
 	int		hit_color;
 	Color	result;
@@ -75,7 +75,7 @@ int	render_sphere(Scene *scene, Vector3 hit_pt, int id)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \
 		norm_subtract(scene->spheres[id].center, hit_pt));
-		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 1});
+		type = find_nearest_obj(*scene, &rayrfc, &(t_nearest_ctx){0, id, 1});
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, SPHERE);

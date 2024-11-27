@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-int	solve_quadratic(Vector3 val, double *t0, double *t1)
+int	solve_quadratic(t_vector3 val, double *t0, double *t1)
 {
 	double	discriminant;
 	double	q;

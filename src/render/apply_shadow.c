@@ -12,8 +12,8 @@
 
 #include "../main.h"
 
-Color	apply_shadow(const RenderContext *ctx, Vector3 *light_dir, \
-Vector3 *cam_dir, Vector3 *opac_pt)
+Color	apply_shadow(const RenderContext *ctx, t_vector3 *light_dir, \
+t_vector3 *cam_dir, t_vector3 *opac_pt)
 {
 	Color	ambient_color;
 	Color	current_color;

@@ -15,9 +15,9 @@
 /**
  * Esto solo funciona para cuando miro a Z
  */
-Vector2	point3d_to_pixel(Vector3 point, Camera camera)
+Vector2	point3d_to_pixel(t_vector3 point, Camera camera)
 {
-	Vector3	dir_ray;
+	t_vector3	dir_ray;
 	double	t;
 	Vector2	pxl;
 	Vector2	p;

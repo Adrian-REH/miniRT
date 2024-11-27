@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-void	normalize(Vector3 *v)
+void	normalize(t_vector3 *v)
 {
 	const double	magnitude = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
 
@@ -24,7 +24,7 @@ void	normalize(Vector3 *v)
 	}
 }
 
-Vector3	*invnormal(Vector3 *normal)
+t_vector3	*invnormal(t_vector3 *normal)
 {
 	normal->x = -normal->x;
 	normal->y = -normal->y;
@@ -32,9 +32,9 @@ Vector3	*invnormal(Vector3 *normal)
 	return (normal);
 }
 
-Vector3	subtract(Vector3 init, Vector3 end)
+t_vector3	subtract(t_vector3 init, t_vector3 end)
 {
-	Vector3	direction;
+	t_vector3	direction;
 
 	direction.x = end.x - init.x;
 	direction.y = end.y - init.y;
@@ -42,9 +42,9 @@ Vector3	subtract(Vector3 init, Vector3 end)
 	return (direction);
 }
 
-Vector3	norm_subtract(Vector3 init, Vector3 end)
+t_vector3	norm_subtract(t_vector3 init, t_vector3 end)
 {
-	Vector3	direction;
+	t_vector3	direction;
 
 	direction.x = end.x - init.x;
 	direction.y = end.y - init.y;

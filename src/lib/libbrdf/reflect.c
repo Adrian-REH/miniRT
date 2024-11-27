@@ -14,13 +14,13 @@
 /**
  * Reflection vector equation
  */
-Vector3	reflect(Vector3 L, Vector3 N)
+t_vector3	reflect(t_vector3 L, t_vector3 N)
 {
-	Vector3	reflection;
+	t_vector3	reflection;
 	double	dot_product;
 
 	dot_product = dot(N, L);
-	reflection = (Vector3){
+	reflection = (t_vector3){
 		2 * dot_product * N.x - L.x,
 		2 * dot_product * N.y - L.y,
 		2 * dot_product * N.z - L.z};

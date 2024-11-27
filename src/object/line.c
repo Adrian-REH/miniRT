@@ -12,11 +12,11 @@
 
 #include "../main.h"
 
-int	line_solution_point(Ray ray, Vector3 point)
+int	line_solution_point(Ray ray, t_vector3 point)
 {
-	Vector3	t;
+	t_vector3	t;
 
-	ft_bzero(&t, sizeof(Vector3));
+	ft_bzero(&t, sizeof(t_vector3));
 	if (!ray.direction.x && point.x != ray.origin.x)
 		return (0);
 	if (!ray.direction.y && point.y != ray.origin.y)

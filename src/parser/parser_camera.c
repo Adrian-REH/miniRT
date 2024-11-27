@@ -15,8 +15,8 @@
 int	parser_camera(Scene *scene, char **data)
 {
 	double	fov;
-	Vector3	tmp;
-	Vector3	right;
+	t_vector3	tmp;
+	t_vector3	right;
 
 	scene->cameras = malloc(sizeof(Camera));
 	fov = ft_limit(0, 180, atof(data[3]));
@@ -28,7 +28,7 @@ int	parser_camera(Scene *scene, char **data)
 	scene->cameras->plane_half_width = scene->cameras->aspect_ratio * \
 		scene->cameras->plane_distance;
 	scene->cameras->plane_half_height = 1.0 * scene->cameras->plane_distance;
-	tmp = (Vector3){0, 1, 0};
+	tmp = (t_vector3){0, 1, 0};
 	right = cross_v3(tmp, scene->cameras->dir);
 	scene->cameras->horizontal = right;
 	scene->cameras->vertical = cross_v3(scene->cameras->dir, right);

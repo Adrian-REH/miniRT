@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "../main.h"
 
-int	is_in_shadow(Scene scene, Vector3 light_pos, Vector3 hit_point)
+int	is_in_shadow(Scene scene, t_vector3 light_pos, t_vector3 hit_point)
 {
 	Ray				shadow_ray;
 	double			t;

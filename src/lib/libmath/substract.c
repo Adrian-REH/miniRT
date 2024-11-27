@@ -12,9 +12,9 @@
 
 #include "../../main.h"
 
-Vector3	substract(Vector3 init, Vector3 end)
+t_vector3	substract(t_vector3 init, t_vector3 end)
 {
-	Vector3	direction;
+	t_vector3	direction;
 
 	direction.x = end.x - init.x;
 	direction.y = end.y - init.y;

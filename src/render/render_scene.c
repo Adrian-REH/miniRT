@@ -15,11 +15,11 @@
 int	render_point(Scene *scene, int x, int y)
 {
 	Ray				*ray;
-	s_nearest_ctx	ctx;
+	t_nearest_ctx	ctx;
 	int				result;
 
 	result = 0;
-	ctx = (s_nearest_ctx){0, 0, 10};
+	ctx = (t_nearest_ctx){0, 0, 10};
 	ray = generate_ray((Vector2){x, y}, \
 		scene->width, scene->height, *scene->cameras);
 	if (!ray)

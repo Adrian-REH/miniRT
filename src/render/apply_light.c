@@ -12,12 +12,12 @@
 
 #include "../main.h"
 
-static s_light_ctx	build_light_ctx(const RenderContext *ctx, \
-Vector3 *light_dir, Vector3 *cam_dir)
+static t_light_ctx	build_light_ctx(const RenderContext *ctx, \
+t_vector3 *light_dir, t_vector3 *cam_dir)
 {
-	s_light_ctx	l_ctx;
+	t_light_ctx	l_ctx;
 
-	ft_bzero(&l_ctx, sizeof(s_light_ctx));
+	ft_bzero(&l_ctx, sizeof(t_light_ctx));
 	l_ctx.light = ctx->scene->lights;
 	l_ctx.distance_light = distance(l_ctx.light->point, ctx->hit_pt);
 	l_ctx.attenuation = ctx->funcs.calculate_attenuation(l_ctx.distance_light, \
@@ -35,9 +35,9 @@ Vector3 *light_dir, Vector3 *cam_dir)
 }
 
 Color	apply_lighting(const RenderContext *ctx, \
-Vector3 *light_dir, Vector3 *cam_dir)
+t_vector3 *light_dir, t_vector3 *cam_dir)
 {
-	s_light_ctx	l_ctx;
+	t_light_ctx	l_ctx;
 	Color		current_color;
 
 	l_ctx = build_light_ctx(ctx, light_dir, cam_dir);

@@ -34,7 +34,7 @@ int	idxfind_min(double *arr, int size)
 	return (idx);
 }
 
-int	find_nearest_obj(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
+int	find_nearest_obj(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
 {
 	double	distance[10];
 	double	idx[10];
@@ -55,7 +55,7 @@ int	find_nearest_obj(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
 	return (type);
 }
 
-int	obj_solution_point(Scene scene, Vector3 point, int type, int id)
+int	obj_solution_point(Scene scene, t_vector3 point, int type, int id)
 {
 	if (type == PLANE && !plane_solution_point(scene.planes[id], point))
 		return (0);

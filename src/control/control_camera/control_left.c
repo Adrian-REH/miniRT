@@ -14,7 +14,7 @@
 
 void	control_left(Scene *scene)
 {
-	Vector3	tmp;
+	t_vector3	tmp;
 
 	tmp = scalev3(scene->cameras->horizontal, -1);
 	if (scene->pos_obj->pos[scene->pos_obj->type])

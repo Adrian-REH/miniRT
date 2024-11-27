@@ -12,14 +12,14 @@
 
 #include "../../main.h"
 
-Vector3	ft_coordinate(char *argv)
+t_vector3	ft_coordinate(char *argv)
 {
-	Vector3	coord;
+	t_vector3	coord;
 	char	**args;
 
 	args = ft_split(argv, ',');
 	if (!args)
-		return ((Vector3){0, 0, 0});
+		return ((t_vector3){0, 0, 0});
 	if (ft_sarrsize(args) != 3)
 	{
 		printf("Error: Not contain coor x, x ,y\n");

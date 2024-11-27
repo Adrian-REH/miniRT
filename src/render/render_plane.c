@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	render_point_plane(Scene scene, Vector3 hit_pt, int n_plane)
+int	render_point_plane(Scene scene, t_vector3 hit_pt, int n_plane)
 {
 	RenderContext	ctx;
 	int				color;
@@ -36,7 +36,7 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 	double	t;
 	double	md;
 	int		j;
-	Vector3	*hit_rfc;
+	t_vector3	*hit_rfc;
 	int		hit_color;
 
 	md = 900000000;
@@ -59,7 +59,7 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 	return (hit_color);
 }
 
-int	render_plane(Scene *scene, Vector3 hit_pt, int id)
+int	render_plane(Scene *scene, t_vector3 hit_pt, int id)
 {
 	int		hit_color;
 	Color	result;
@@ -73,7 +73,7 @@ int	render_plane(Scene *scene, Vector3 hit_pt, int id)
 	if (scene->planes[id].mater_prop.reflect)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, scene->planes[id].normal);
-		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 0});
+		type = find_nearest_obj(*scene, &rayrfc, &(t_nearest_ctx){0, id, 0});
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, PLANE);

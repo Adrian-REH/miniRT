@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	plane_solution_point(Plane plane, Vector3 point)
+int	plane_solution_point(Plane plane, t_vector3 point)
 {
 	const double	d = -(plane.normal.x * plane.point.x + \
 		plane.normal.y * plane.point.y + \
@@ -32,7 +32,7 @@ int	intersect_plane(const Ray *ray, const Plane *plane, double *t)
 	const double	denom = plane->normal.x * ray->direction.x + \
 		plane->normal.y * ray->direction.y + \
 		plane->normal.z * ray->direction.z;
-	const Vector3	p0l0 = {
+	const t_vector3	p0l0 = {
 		plane->point.x - ray->origin.x,
 		plane->point.y - ray->origin.y,
 		plane->point.z - ray->origin.z
@@ -46,7 +46,7 @@ int	intersect_plane(const Ray *ray, const Plane *plane, double *t)
 	return (*t > 0);
 }
 
-int	find_nearest_plane(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
+int	find_nearest_plane(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
 {
 	int		i;
 	int		j;
@@ -70,7 +70,7 @@ int	find_nearest_plane(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
 	return (j);
 }
 
-void	rot_plane(Scene *scene, Vector3 dir, int ang)
+void	rot_plane(Scene *scene, t_vector3 dir, int ang)
 {
 	Plane	*plane;
 
@@ -79,7 +79,7 @@ void	rot_plane(Scene *scene, Vector3 dir, int ang)
 	normalize(&plane->normal);
 }
 
-void	pos_plane(Scene *scene, Vector3 dir)
+void	pos_plane(Scene *scene, t_vector3 dir)
 {
 	Plane	*plane;
 

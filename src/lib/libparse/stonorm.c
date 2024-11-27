@@ -12,9 +12,9 @@
 
 #include "../../main.h"
 
-Vector3	stonorm(char *argv)
+t_vector3	stonorm(char *argv)
 {
-	Vector3	norm;
+	t_vector3	norm;
 	char	**args;
 
 	args = ft_split(argv, ',');

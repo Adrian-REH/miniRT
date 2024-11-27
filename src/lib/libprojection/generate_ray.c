@@ -12,9 +12,9 @@
 
 #include "../../main.h"
 
-static Vector3	pxtopy(Camera cam, Vector3 v)
+static t_vector3	pxtopy(Camera cam, t_vector3 v)
 {
-	Vector3	dst;
+	t_vector3	dst;
 
 	dst.x = v.x * cam.horizontal.x + v.y * cam.vertical.x + v.z * cam.dir.x;
 	dst.y = v.x * cam.horizontal.y + v.y * cam.vertical.y + v.z * cam.dir.y;
@@ -26,8 +26,8 @@ Ray	*generate_ray(Vector2 px, int screen_width, \
 int screen_height, Camera camera)
 {
 	Ray				*ray;
-	Vector3			point_on_plane;
-	const Vector3	p = {
+	t_vector3			point_on_plane;
+	const t_vector3	p = {
 		.x = ((2.0 * px.x / (double)screen_width) - 1.0) * \
 		camera.aspect_ratio * camera.plane_distance,
 		.y = (1.0 - 2.0 * px.y / (double)screen_height) * camera.plane_distance,
@@ -46,11 +46,11 @@ int screen_height, Camera camera)
 	return (ray);
 }
 
-Ray	generate_reflect_ray(Scene *scene, Vector3 hit_pt, Vector3 normal)
+Ray	generate_reflect_ray(Scene *scene, t_vector3 hit_pt, t_vector3 normal)
 {
 	Ray		rayrfc;
-	Vector3	dir_pt;
-	Vector3	rfc;
+	t_vector3	dir_pt;
+	t_vector3	rfc;
 
 	dir_pt = norm_subtract(scene->cameras->pos, hit_pt);
 	rfc = reflect(dir_pt, normal);

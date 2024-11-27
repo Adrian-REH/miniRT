@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-double	specular_intensity(Vector3 reflection, Vector3 view_dir, \
+double	specular_intensity(t_vector3 reflection, t_vector3 view_dir, \
 	double shininess, double ks)
 {
 	const double	dot_product = dot(reflection, view_dir);

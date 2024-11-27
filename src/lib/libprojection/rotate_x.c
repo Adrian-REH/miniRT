@@ -12,12 +12,12 @@
 
 #include "../../main.h"
 
-Vector3	rotate_x(Vector3 v, double angle)
+t_vector3	rotate_x(t_vector3 v, double angle)
 {
 	const double	radians = angle * M_PI / 180.0;
 	const double	cos_theta = cos(radians);
 	const double	sin_theta = sin(radians);
-	Vector3			result;
+	t_vector3			result;
 
 	result.x = v.x;
 	result.y = v.y * cos_theta - v.z * sin_theta;

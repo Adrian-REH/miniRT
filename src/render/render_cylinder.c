@@ -12,7 +12,7 @@
 
 #include "../main.h"
 
-int	render_point_cylinder(Scene scene, Vector3 hit_pt, int n_cyl)
+int	render_point_cylinder(Scene scene, t_vector3 hit_pt, int n_cyl)
 {
 	RenderContext	ctx;
 	int				color;
@@ -36,7 +36,7 @@ int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 	double	t;
 	double	md;
 	int		j;
-	Vector3	*hit_rfc;
+	t_vector3	*hit_rfc;
 	int		hit_color;
 
 	t = 0;
@@ -59,7 +59,7 @@ int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 	return (hit_color);
 }
 
-int	render_cylinder(Scene *scene, Vector3 hit_pt, int id)
+int	render_cylinder(Scene *scene, t_vector3 hit_pt, int id)
 {
 	int			hit_color;
 	Color		result;
@@ -73,7 +73,7 @@ int	render_cylinder(Scene *scene, Vector3 hit_pt, int id)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \
 			normal_cylinder(hit_pt, scene->cylinders[id]));
-		type = find_nearest_obj(*scene, &rayrfc, &(s_nearest_ctx){0, id, 3});
+		type = find_nearest_obj(*scene, &rayrfc, &(t_nearest_ctx){0, id, 3});
 		if (scene->rfc[type])
 		{
 			hit_color = scene->rfc[type](scene, rayrfc, id, CYLINDER);

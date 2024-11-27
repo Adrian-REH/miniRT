@@ -16,12 +16,12 @@ int	mouse_press(int button, int x, int y, void *param)
 {
 	Scene			*scene;
 	int				type;
-	s_nearest_ctx	ctx;
+	t_nearest_ctx	ctx;
 	Ray				*ray;
 
 	scene = (Scene *)param;
 	(void)button;
-	ctx = (s_nearest_ctx){0, 0, 10};
+	ctx = (t_nearest_ctx){0, 0, 10};
 	ray = generate_ray((Vector2){(double)x, (double)y}, \
 		scene->width, scene->height, *scene->cameras);
 	type = find_nearest_obj(*scene, ray, &ctx);

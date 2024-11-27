@@ -12,9 +12,9 @@
 
 #include "../../main.h"
 
-Vector3	multiplyv3(Vector3 v, Vector3 u)
+t_vector3	multiplyv3(t_vector3 v, t_vector3 u)
 {
-	return ((Vector3){
+	return ((t_vector3){
 		v.x * u.x,
 		v.y * u.y,
 		v.z * u.z

@@ -17,7 +17,7 @@
  */
 int	intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
 {
-	s_triangle_isc_ctx	ctx;
+	t_triangle_isc_ctx	ctx;
 
 	ctx.edge1 = subtract(triangle->vertex[0], triangle->vertex[1]);
 	ctx.edge2 = subtract(triangle->vertex[0], triangle->vertex[2]);
@@ -40,7 +40,7 @@ int	intersect_triangle(const Ray *ray, const Triangle *triangle, double *t)
 	return (0);
 }
 
-int	find_nearest_triangle(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
+int	find_nearest_triangle(Scene scene, Ray *ray, t_nearest_ctx *nrst_ctx)
 {
 	int		i;
 	int		j;
@@ -64,7 +64,7 @@ int	find_nearest_triangle(Scene scene, Ray *ray, s_nearest_ctx *nrst_ctx)
 	return (j);
 }
 
-void	rot_triangle(Scene *scene, Vector3 dir, int ang)
+void	rot_triangle(Scene *scene, t_vector3 dir, int ang)
 {
 	Triangle	*triangle;
 
@@ -74,7 +74,7 @@ void	rot_triangle(Scene *scene, Vector3 dir, int ang)
 	triangle = &(scene->triangles[scene->pos_obj->idx]);
 }
 
-void	pos_triangle(Scene *scene, Vector3 dir)
+void	pos_triangle(Scene *scene, t_vector3 dir)
 {
 	Triangle	*triangle;
 

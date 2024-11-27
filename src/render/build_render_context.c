@@ -13,7 +13,7 @@
 #include "../main.h"
 
 RenderContext	build_render_ctx(Scene *scene, MaterialProperties mater_prop, \
-Vector3 normal, Vector3 hit_pt)
+t_vector3 normal, t_vector3 hit_pt)
 {
 	RenderContext	ctx;
 

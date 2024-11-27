@@ -14,10 +14,10 @@
 
 int	parser_light(Scene *scene, char **data)
 {
-	Vector3		point;
+	t_vector3		point;
 	Color		color;
 
-	point = (Vector3){0, 0, 0};
+	point = (t_vector3){0, 0, 0};
 	color = (Color){0, 0, 0, 0};
 	scene->lights = ft_realloc(scene->lights, sizeof(Light) * \
 		scene->n_lights, sizeof(Light) * (scene->n_lights + 2));

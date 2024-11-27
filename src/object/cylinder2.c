@@ -12,11 +12,11 @@
 
 #include "../main.h"
 
-static int	solve_quadratic_equation(s_isc_cyl_ctx *ctx)
+static int	solve_quadratic_equation(t_isc_cyl_ctx *ctx)
 {
 	double	temp;
 
-	if (!solve_quadratic((Vector3){ctx->a, ctx->b, ctx->c}, &(ctx->t.x), \
+	if (!solve_quadratic((t_vector3){ctx->a, ctx->b, ctx->c}, &(ctx->t.x), \
 	&(ctx->t.y)))
 		return (0);
 	if (ctx->t.x > ctx->t.y)
@@ -34,7 +34,7 @@ static int	solve_quadratic_equation(s_isc_cyl_ctx *ctx)
 	return (1);
 }
 
-static int	check_intersection_within_height(s_isc_cyl_ctx *ctx, \
+static int	check_intersection_within_height(t_isc_cyl_ctx *ctx, \
 	const Cylinder *cylinder, double *t)
 {
 	ctx->y.x = dot(ctx->ro, ctx->ca) + ctx->t.x * dot(ctx->d, ctx->ca);
@@ -66,7 +66,7 @@ static int	check_intersection_within_height(s_isc_cyl_ctx *ctx, \
 
 int	intersect_cylinder(const Ray *ray, const Cylinder *cylinder, double *t)
 {
-	s_isc_cyl_ctx	ctx;
+	t_isc_cyl_ctx	ctx;
 
 	ctx.ro = subtract(cylinder->center, ray->origin);
 	ctx.d = ray->direction;

@@ -27,11 +27,11 @@ static double	diamenter_sphere(char *data)
 
 int	parser_sphere(Scene *scene, char **data)
 {
-	Vector3	center;
+	t_vector3	center;
 	Color	color;
 
 	color = (Color){0, 0, 0, 0};
-	center = (Vector3){0, 0, 0};
+	center = (t_vector3){0, 0, 0};
 	scene->spheres = ft_realloc(scene->spheres, sizeof(Sphere) * \
 		scene->n_spheres, sizeof(Sphere) * (scene->n_spheres + 2));
 	center = ft_coordinate(data[1]);

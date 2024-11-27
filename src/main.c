@@ -90,18 +90,18 @@ void	init_pos_obj_fun(Scene *scene)
 {
 	scene->pos_obj->type = CAMERA;
 	scene->pos_obj->idx = 0;
-	scene->pos_obj->pos[PLANE] = (void (*)(void *, Vector3))pos_plane;
-	scene->pos_obj->pos[SPHERE] = (void (*)(void *, Vector3))pos_sphere;
-	scene->pos_obj->pos[TRIANGLE] = (void (*)(void *, Vector3))pos_triangle;
-	scene->pos_obj->pos[CYLINDER] = (void (*)(void *, Vector3))pos_cylinder;
-	scene->pos_obj->pos[CAMERA] = (void (*)(void *, Vector3))pos_camera;
-	scene->pos_obj->rot[PLANE] = (void (*)(void *, Vector3, int))rot_plane;
-	scene->pos_obj->rot[SPHERE] = (void (*)(void *, Vector3, int))0;
+	scene->pos_obj->pos[PLANE] = (void (*)(void *, t_vector3))pos_plane;
+	scene->pos_obj->pos[SPHERE] = (void (*)(void *, t_vector3))pos_sphere;
+	scene->pos_obj->pos[TRIANGLE] = (void (*)(void *, t_vector3))pos_triangle;
+	scene->pos_obj->pos[CYLINDER] = (void (*)(void *, t_vector3))pos_cylinder;
+	scene->pos_obj->pos[CAMERA] = (void (*)(void *, t_vector3))pos_camera;
+	scene->pos_obj->rot[PLANE] = (void (*)(void *, t_vector3, int))rot_plane;
+	scene->pos_obj->rot[SPHERE] = (void (*)(void *, t_vector3, int))0;
 	scene->pos_obj->rot[TRIANGLE] = \
-		(void (*)(void *, Vector3, int))rot_triangle;
+		(void (*)(void *, t_vector3, int))rot_triangle;
 	scene->pos_obj->rot[CYLINDER] = \
-		(void (*)(void *, Vector3, int))rot_cylinder;
-	scene->pos_obj->rot[CAMERA] = (void (*)(void *, Vector3, int))rot_camera;
+		(void (*)(void *, t_vector3, int))rot_cylinder;
+	scene->pos_obj->rot[CAMERA] = (void (*)(void *, t_vector3, int))rot_camera;
 }
 
 int	main(int argc, char **argv)
@@ -118,8 +118,8 @@ int	main(int argc, char **argv)
 	ft_bzero(scene, sizeof(Scene));
 	parser_obj(scene, init_file(argv[1]));
 	review_scene(scene);
-	scene->pos_obj = malloc(sizeof(s_pos_obj));
-	ft_bzero(scene->pos_obj, sizeof(s_pos_obj));
+	scene->pos_obj = malloc(sizeof(t_pos_obj));
+	ft_bzero(scene->pos_obj, sizeof(t_pos_obj));
 	init_pos_obj_fun(scene);
 	init_intersect_fun(scene);
 	scene->mlx = mlx_init();
