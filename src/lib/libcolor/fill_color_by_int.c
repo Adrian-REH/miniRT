@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-void	addint_to_color(Color *color, int src)
+void	addint_to_color(t_color *color, int src)
 {
 	if (color == NULL)
 		return ;
@@ -22,7 +22,7 @@ void	addint_to_color(Color *color, int src)
 	color->color = src;
 }
 
-void	fillcolor_by_int(Color *color, int src)
+void	fillcolor_by_int(t_color *color, int src)
 {
 	if (color == NULL)
 		return ;

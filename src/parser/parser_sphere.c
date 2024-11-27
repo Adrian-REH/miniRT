@@ -28,9 +28,9 @@ static double	diamenter_sphere(char *data)
 int	parser_sphere(Scene *scene, char **data)
 {
 	t_vector3	center;
-	Color	color;
+	t_color	color;
 
-	color = (Color){0, 0, 0, 0};
+	color = (t_color){0, 0, 0, 0};
 	center = (t_vector3){0, 0, 0};
 	scene->spheres = ft_realloc(scene->spheres, sizeof(Sphere) * \
 		scene->n_spheres, sizeof(Sphere) * (scene->n_spheres + 2));

@@ -12,10 +12,10 @@
 
 #include "../../main.h"
 
-Color	illuminate_surface(Color surface_color, Color light_color, \
+t_color	illuminate_surface(t_color surface_color, t_color light_color, \
 	double ints, MaterialProperties prop)
 {
-	Color	result;
+	t_color	result;
 
 	result.r = surface_color.r * light_color.r * (1.0 - prop.absorption[R]);
 	result.g = surface_color.g * light_color.g * (1.0 - prop.absorption[G]);
@@ -31,9 +31,9 @@ Color	illuminate_surface(Color surface_color, Color light_color, \
 	return (result);
 }
 
-Color	darken_surface(Color *surface_color, double darkness_intensity)
+t_color	darken_surface(t_color *surface_color, double darkness_intensity)
 {
-	Color	result;
+	t_color	result;
 
 	result.r = surface_color->r * (1.0 - darkness_intensity);
 	result.g = surface_color->g * (1.0 - darkness_intensity);

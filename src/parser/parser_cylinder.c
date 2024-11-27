@@ -42,9 +42,9 @@ int	parser_cylinder(Scene *scene, char **data)
 {
 	Cylinder	cylinder_null;
 	Cylinder	cylinder;
-	Color		color;
+	t_color		color;
 
-	color = (Color){0, 0, 0, 0};
+	color = (t_color){0, 0, 0, 0};
 	if (ft_sarrsize(data) != 6)
 		terminate_program(scene);
 	scene->cylinders = ft_realloc(scene->cylinders, sizeof(Cylinder) * \

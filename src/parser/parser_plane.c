@@ -19,9 +19,9 @@ int	parser_plane(Scene *scene, char **data)
 {
 	Plane	plane_null;
 	Plane	plane;
-	Color	color;
+	t_color	color;
 
-	color = (Color){0, 0, 0, 0};
+	color = (t_color){0, 0, 0, 0};
 	scene->planes = ft_realloc(scene->planes, sizeof(Plane) * \
 		scene->n_planes, sizeof(Plane) * (scene->n_planes + 2));
 	color = ft_color(data[3]);

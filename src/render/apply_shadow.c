@@ -12,11 +12,11 @@
 
 #include "../main.h"
 
-Color	apply_shadow(const RenderContext *ctx, t_vector3 *light_dir, \
+t_color	apply_shadow(const RenderContext *ctx, t_vector3 *light_dir, \
 t_vector3 *cam_dir, t_vector3 *opac_pt)
 {
-	Color	ambient_color;
-	Color	current_color;
+	t_color	ambient_color;
+	t_color	current_color;
 
 	(void)opac_pt;
 	(void)light_dir;

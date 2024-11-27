@@ -12,9 +12,9 @@
 
 #include "../../main.h"
 
-Color	int_to_color(int src)
+t_color	int_to_color(int src)
 {
-	Color	color;
+	t_color	color;
 
 	color.r = ((src >> 16) & 0xFF) / 255.0;
 	color.g = ((src >> 8) & 0xFF) / 255.0;

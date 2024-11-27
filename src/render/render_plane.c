@@ -62,13 +62,13 @@ int	render_reflect_plane(Scene *scene, Ray rayrfc, int id, int type)
 int	render_plane(Scene *scene, t_vector3 hit_pt, int id)
 {
 	int		hit_color;
-	Color	result;
+	t_color	result;
 	int		current_pixel;
 	Ray		rayrfc;
 	int		type;
 
 	current_pixel = render_point_plane(*scene, hit_pt, id);
-	result = (Color){0};
+	result = (t_color){0};
 	hit_color = 0;
 	if (scene->planes[id].mater_prop.reflect)
 	{

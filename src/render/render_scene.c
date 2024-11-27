@@ -33,15 +33,15 @@ int	render_point(Scene *scene, int x, int y)
 
 int	sampling(int x, int y, Scene *scene, int samples_per_pixel)
 {
-	Color	final_color;
-	Color	sample_color;
+	t_color	final_color;
+	t_color	sample_color;
 	double	u;
 	double	v;
 	int		s;
 
 	s = -1;
-	final_color = (Color){0, 0, 0, 0};
-	sample_color = (Color){0, 0, 0, 0};
+	final_color = (t_color){0, 0, 0, 0};
+	sample_color = (t_color){0, 0, 0, 0};
 	while (++s < samples_per_pixel)
 	{
 		u = (x + random_double()) / (double)scene->width;

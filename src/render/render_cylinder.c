@@ -62,13 +62,13 @@ int	render_reflect_cylinder(Scene *scene, Ray rayrfc, int id, int type)
 int	render_cylinder(Scene *scene, t_vector3 hit_pt, int id)
 {
 	int			hit_color;
-	Color		result;
+	t_color		result;
 	int			current_pixel;
 	Ray			rayrfc;
 	int			type;
 
 	current_pixel = render_point_cylinder(*scene, hit_pt, id);
-	result = ((hit_color = 0), (Color){0});
+	result = ((hit_color = 0), (t_color){0});
 	if (scene->cylinders[id].mater_prop.reflect)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \

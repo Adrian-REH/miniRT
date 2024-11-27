@@ -12,7 +12,7 @@
 
 #include "../../main.h"
 
-int	colornormal_to_int(Color color)
+int	colornormal_to_int(t_color color)
 {
 	const int	r = (int)(color.r * 255.0);
 	const int	g = (int)(color.g * 255.0);

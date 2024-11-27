@@ -65,10 +65,10 @@ int	render_triangle(Scene *scene, t_vector3 hit_pt, int id)
 	int		hit_color;
 	int		current_pixel;
 	int		type;
-	Color	result;
+	t_color	result;
 
 	current_pixel = render_point_triangle(*scene, hit_pt, id);
-	result = ((hit_color = 0), (Color){0, 0, 0, 0});
+	result = ((hit_color = 0), (t_color){0, 0, 0, 0});
 	(void)result;
 	if (scene->triangles[id].mater_prop.reflect)
 	{

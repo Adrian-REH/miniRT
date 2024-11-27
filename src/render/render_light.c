@@ -15,7 +15,7 @@
 int	render_light(Scene scene, RenderContext ctx, void *obj, int type)
 {
 	double	d;
-	Color	current_color;
+	t_color	current_color;
 
 	d = 0;
 	if (scene.isc[type](&ctx.rayl, obj, &d))

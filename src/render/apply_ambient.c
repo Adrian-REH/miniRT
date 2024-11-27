@@ -12,9 +12,9 @@
 
 #include "../main.h"
 
-Color	apply_ambient(const RenderContext *ctx)
+t_color	apply_ambient(const RenderContext *ctx)
 {
-	Color	current_color;
+	t_color	current_color;
 
 	current_color = illuminate_surface(int_to_color(0), \
 		ctx->scene->ambient->color, \

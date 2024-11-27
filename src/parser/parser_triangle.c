@@ -14,10 +14,10 @@
 
 int	parser_triangle(Scene *scene, char **data)
 {
-	Color		color;
+	t_color		color;
 	Triangle	triangle;
 
-	color = (Color){0, 0, 0, 0};
+	color = (t_color){0, 0, 0, 0};
 	scene->triangles = ft_realloc(scene->triangles, sizeof(Triangle) * \
 	scene->n_triangles, sizeof(Triangle) * (scene->n_triangles + 2));
 	color = ft_color(data[4]);

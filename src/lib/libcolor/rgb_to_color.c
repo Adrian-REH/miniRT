@@ -12,9 +12,9 @@
 
 #include "../../main.h"
 
-Color	rgb_to_color(int r, int g, int b)
+t_color	rgb_to_color(int r, int g, int b)
 {
-	Color	color;
+	t_color	color;
 
 	color.r = (double)(r / 255.0);
 	color.g = (double)(g / 255.0);

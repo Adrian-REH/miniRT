@@ -24,10 +24,10 @@ static double	side_square(char *data)
 
 int	parser_square(Scene *scene, char **data)
 {
-	Color	color;
+	t_color	color;
 	Square	square;
 
-	color = (Color){0, 0, 0, 0};
+	color = (t_color){0, 0, 0, 0};
 	scene->squares = ft_realloc(scene->squares, sizeof(Square) * \
 		scene->n_squares, sizeof(Square) * (scene->n_squares + 2));
 	color = ft_color(data[4]);

@@ -34,11 +34,11 @@ t_vector3 *light_dir, t_vector3 *cam_dir)
 	return (l_ctx);
 }
 
-Color	apply_lighting(const RenderContext *ctx, \
+t_color	apply_lighting(const RenderContext *ctx, \
 t_vector3 *light_dir, t_vector3 *cam_dir)
 {
 	t_light_ctx	l_ctx;
-	Color		current_color;
+	t_color		current_color;
 
 	l_ctx = build_light_ctx(ctx, light_dir, cam_dir);
 	current_color = illuminate_surface(int_to_color(0), \

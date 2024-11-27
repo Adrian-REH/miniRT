@@ -69,7 +69,7 @@ typedef struct s_color
 	double	g;
 	double	b;
 	int		color;
-}	Color;
+}	t_color;
 
 typedef struct s_vector2
 {
@@ -111,7 +111,7 @@ typedef struct s_materialProperties
 	double	glssns;
 	double	absorption[3];
 	Img		texture;
-	Color	vColor;
+	t_color	vColor;
 }	MaterialProperties;
 
 typedef struct s_sphere
@@ -164,14 +164,14 @@ typedef struct s_light
 {
 	t_vector3	point;
 	double	ratio;
-	Color	color;
+	t_color	color;
 }	Light;
 
 typedef struct s_ambient
 {
-	Color	color;
+	t_color	color;
 	double	ratio;
-}	Ambient;
+}	t_mbient;
 
 typedef struct s_pos_obj
 {
@@ -227,7 +227,7 @@ typedef struct s_scene
 	int			height;
 	Img			*img;
 	Camera		*cameras;
-	Ambient		*ambient;
+	t_mbient		*ambient;
 	Sphere		*spheres;
 	Square		*squares;
 	Triangle	*triangles;
@@ -278,7 +278,7 @@ typedef struct s_light_ctx
 	t_vector3	reflect_dir;
 	double	diffuse_intensity;
 	double	specular;
-	Color	*current_color;
+	t_color	*current_color;
 	double	full_phong;
 }	t_light_ctx;
 
@@ -304,13 +304,13 @@ t_vector3			rotate_y(t_vector3 v, double angle);
 //CONTROL
 int				key_press(int key, Scene *param);
 int				mouse_press(int button, int x, int y, void *param);
-Color			darken_surface(Color *surface_color, double darkness_intensity);
+t_color			darken_surface(t_color *surface_color, double darkness_intensity);
 //-----RENDER APPLY-----
-Color			apply_lighting(const RenderContext *ctx, \
+t_color			apply_lighting(const RenderContext *ctx, \
 	t_vector3 *light_dir, t_vector3 *cam_dir);
-Color			apply_shadow(const RenderContext *ctx, \
+t_color			apply_shadow(const RenderContext *ctx, \
 	t_vector3 *light_dir, t_vector3 *cam_dir, t_vector3 *opac_pt);
-Color			apply_ambient(const RenderContext *ctx);
+t_color			apply_ambient(const RenderContext *ctx);
 RenderContext	build_render_ctx(Scene *scene, MaterialProperties mater_prop, \
 	t_vector3 normal, t_vector3 hit_pt);
 //------libsarr----
@@ -322,15 +322,15 @@ double			mix(double a, double b, double t);
 t_vector3			reflect(t_vector3 L, t_vector3 N);
 double			calculate_attenuation(double distance, double k_c, double k_l, \
 double k_q);
-int				colornormal_to_int(Color color);
-void			addint_to_color(Color *color, int src);
-void			fillcolor_by_int(Color *color, int src);
-Color			int_to_color(int src);
-void			normalize_color(Color *color);
-Color			rgb_to_color(int r, int g, int b);
+int				colornormal_to_int(t_color color);
+void			addint_to_color(t_color *color, int src);
+void			fillcolor_by_int(t_color *color, int src);
+t_color			int_to_color(int src);
+void			normalize_color(t_color *color);
+t_color			rgb_to_color(int r, int g, int b);
 void			set_color(char *buffer, int endian, int color, int alpha);
 int				get_color(char *buffer, int endian, int *alpha);
-Color			illuminate_surface(Color surface_color, Color light_color, \
+t_color			illuminate_surface(t_color surface_color, t_color light_color, \
 	double intensity, MaterialProperties prop);
 double			calculate_attenuation(double distance, double k_c, double k_l, \
 	double k_q);
@@ -450,7 +450,7 @@ void			ft_free_p2(char **dst);
 void			*ft_realloc(void *ptr, size_t size_old, size_t size);
 t_vector3			ft_coordinate(char *argv);
 double			ft_ratio(char *str);
-Color			ft_color(char *str);
+t_color			ft_color(char *str);
 t_vector3			stonorm(char *argv);
 t_vector3			substract(t_vector3 init, t_vector3 end);
 int				init_file(char *file);

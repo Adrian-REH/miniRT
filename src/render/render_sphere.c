@@ -62,13 +62,13 @@ int	render_reflect_sphere(Scene *scene, Ray rayrfc, int id, int type)
 int	render_sphere(Scene *scene, t_vector3 hit_pt, int id)
 {
 	int		hit_color;
-	Color	result;
+	t_color	result;
 	int		current_pixel;
 	Ray		rayrfc;
 	int		type;
 
 	hit_color = 0;
-	result = (Color){0, 0, 0, 0};
+	result = (t_color){0, 0, 0, 0};
 	(void)result;
 	current_pixel = render_point_sphere(*scene, hit_pt, id);
 	if (scene->spheres[id].mater_prop.reflect)
