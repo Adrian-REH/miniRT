@@ -148,7 +148,7 @@ typedef struct s_triangle
 {
 	t_vector3			vertex[3];
 	int					n_vertex;
-	t_plane				*p_triangle;
+	t_plane				p_triangle;
 	t_mater_prop		mater_prop;
 }	t_triangle;
 

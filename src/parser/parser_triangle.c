@@ -25,11 +25,10 @@ int	parser_triangle(t_scene *scene, char **data)
 	triangle.vertex[0] = ft_coordinate(data[1]);
 	triangle.vertex[1] = ft_coordinate(data[2]);
 	triangle.vertex[2] = ft_coordinate(data[3]);
-	triangle.p_triangle = malloc(sizeof(t_plane));
-	triangle.p_triangle->normal = cross_v3(\
+	triangle.p_triangle.normal = cross_v3(\
 	norm_subtract(triangle.vertex[0], triangle.vertex[1]), \
 	norm_subtract(triangle.vertex[0], triangle.vertex[2]));
-	triangle.p_triangle->point = triangle.vertex[0];
+	triangle.p_triangle.point = triangle.vertex[0];
 	triangle.mater_prop.color = rgb_to_color(color.r, color.g, color.b);
 	triangle.mater_prop.reflect = 0;
 	triangle.mater_prop.glssns = 0.95;

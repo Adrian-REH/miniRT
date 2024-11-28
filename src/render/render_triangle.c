@@ -19,7 +19,7 @@ int	render_point_triangle(t_scene scene, t_vector3 hit_pt, int n_triangle)
 	int			i;
 
 	ctx = build_render_ctx(&scene, scene.triangles[n_triangle].mater_prop, \
-		scene.triangles[n_triangle].p_triangle->normal, hit_pt);
+		scene.triangles[n_triangle].p_triangle.normal, hit_pt);
 	i = -1;
 	color = 0;
 	while (++i < scene.n_lights)
@@ -73,7 +73,7 @@ int	render_triangle(t_scene *scene, t_vector3 hit_pt, int id)
 	if (scene->triangles[id].mater_prop.reflect)
 	{
 		rayrfc = generate_reflect_ray(scene, hit_pt, \
-			scene->triangles[id].p_triangle->normal);
+			scene->triangles[id].p_triangle.normal);
 		type = find_nearest_obj(*scene, &rayrfc, &(t_nearest_ctx){0, id, 2});
 		if (scene->rfc[type])
 		{

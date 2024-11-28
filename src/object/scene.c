@@ -62,7 +62,7 @@ int	obj_solution_point(t_scene scene, t_vector3 point, int type, int id)
 	if (type == SPHERE && !sphere_solution_point(scene.spheres[id], point))
 		return (0);
 	if (type == TRIANGLE && \
-	!plane_solution_point(scene.triangles[id].p_triangle[0], point))
+	!plane_solution_point(scene.triangles[id].p_triangle, point))
 		return (0);
 	if (type == CYLINDER && \
 		!cylinder_solution_point(scene.cylinders[id], point))
