@@ -6,7 +6,7 @@
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:13:51 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 09:22:23 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/30 16:46:51 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	render_scene(t_scene *scene, int samples_per_pixel)
 
 	init_rfc_render_fun(scene);
 	init_render_fun(scene);
-	init_intersect_fun(scene);
 	start = clock();
 	y = -1;
 	while (++y < scene->height)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render_cylinder.c                                  :+:      :+:    :+:   */
+/*   is_in_shadow.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:23:47 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 09:23:48 by adherrer         ###   ########.fr       */
+/*   Updated: 2024/11/30 18:35:41 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ int	is_in_shadow(t_scene scene, t_vector3 light_pos, t_vector3 hit_point)
 	double			t;
 	int				i;
 	int				j;
-	const double	n_objs[5] = {
-		scene.n_planes,
-		scene.n_spheres,
-		scene.n_triangles,
-		scene.n_cylinders,
-		distance(hit_point, light_pos)
+	const void		*obj_data[5][2] = {
+		{(const void *)&scene.n_planes, scene.planes},
+		{(const void *)&scene.n_spheres, scene.spheres},
+		{(const void *)&scene.n_triangles, scene.triangles},
+		{(const void *)&scene.n_cylinders, scene.cylinders},
+		{(const void *)&(double){distance(hit_point, light_pos)}, NULL}
 	};
 
 	shadow_ray.origin = hit_point;
@@ -31,10 +31,10 @@ int	is_in_shadow(t_scene scene, t_vector3 light_pos, t_vector3 hit_point)
 	i = ((t = ((j = -1), 0)), -1);
 	while (++j < 4)
 	{
-		while (++i < n_objs[j])
+		while (++i < *((int *)obj_data[j][0]))
 		{
-			if (scene.isc[i] && scene.isc[i](&shadow_ray, &scene.planes[i], &t))
-				if (t > 0 && t < n_objs[4])
+			if (scene.isc[i] && scene.isc[i](&shadow_ray, &obj_data[i][1], &t))
+				if (t > 0 && t < *((double *)obj_data[4][0]))
 					return (t);
 		}
 	}
