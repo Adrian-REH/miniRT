@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:06:14 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/26 19:53:51 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:37:02 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,15 @@ static double	height_cylinder(char *data)
 	return (height);
 }
 
+static void	validate_params(char **data)
+{
+	if (!data[1] || !data[2] || !data[3] || !data[4] || !data[5])
+	{
+		printf("Error: Parametros incompletos en el cilindro\n");
+		exit(1);
+	}
+}
+
 int	parser_cylinder(t_scene *scene, char **data)
 {
 	t_cylinder	cylinder_null;
@@ -45,8 +54,7 @@ int	parser_cylinder(t_scene *scene, char **data)
 	t_color		color;
 
 	color = (t_color){0, 0, 0, 0};
-	if (ft_sarrsize(data) != 6)
-		terminate_program(scene);
+	validate_params(data);
 	scene->cylinders = ft_realloc(scene->cylinders, sizeof(t_cylinder) * \
 	scene->n_cylinders, sizeof(t_cylinder) * (scene->n_cylinders + 2));
 	cylinder.center = ft_coordinate(data[1]);

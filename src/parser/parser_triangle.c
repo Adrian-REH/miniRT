@@ -6,11 +6,20 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:34 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/26 19:26:16 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:33:19 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
+
+static void	validar_params(char **data)
+{
+	if (!data[1] || !data[2] || !data[3] || !data[4])
+	{
+		printf("Error: Parametros incompletos en el triangulo\n");
+		exit(1);
+	}
+}
 
 int	parser_triangle(t_scene *scene, char **data)
 {
@@ -18,6 +27,7 @@ int	parser_triangle(t_scene *scene, char **data)
 	t_triangle	triangle;
 
 	color = (t_color){0, 0, 0, 0};
+	validar_params(data);
 	scene->triangles = ft_realloc(scene->triangles, sizeof(t_triangle) * \
 	scene->n_triangles, sizeof(t_triangle) * (scene->n_triangles + 2));
 	color = ft_color(data[4]);

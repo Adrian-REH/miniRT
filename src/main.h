@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/06 13:06:31 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 19:25:23 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:13:09 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # define EPSILON 1e-8 // Margen de tolerancia para precisión flotante
-# define WINX 1280 
-# define WINY 720
+# define WINX 800 
+# define WINY 800
 # define N_SAMPLING 1
 # define X 0
 # define Y 1

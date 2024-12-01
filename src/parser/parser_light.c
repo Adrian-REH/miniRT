@@ -6,11 +6,20 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:06:10 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/26 20:49:50 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:31:29 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../main.h"
+
+static void	validar_params(char **data)
+{
+	if (!data[1] || !data[2] || !data[3])
+	{
+		printf("Error: Parametros incompletos en la luz\n");
+		exit(1);
+	}
+}
 
 int	parser_light(t_scene *scene, char **data)
 {
@@ -19,6 +28,7 @@ int	parser_light(t_scene *scene, char **data)
 
 	point = (t_vector3){0, 0, 0};
 	color = (t_color){0, 0, 0, 0};
+	validar_params(data);
 	scene->lights = ft_realloc(scene->lights, sizeof(t_light) * \
 		scene->n_lights, sizeof(t_light) * (scene->n_lights + 2));
 	if (!scene->lights)

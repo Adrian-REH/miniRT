@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 22:44:12 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/26 19:20:18 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 16:27:01 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@ t_color	ft_color(char *str)
 	t_color	color;
 	char	**args;
 
+	if (!str)
+	{
+		printf("Error: %s not contain some color r or g or b\n", str);
+		exit(1);
+	}
 	args = ft_split(str, ',');
 	if (ft_sarrsize(args) != 3)
 	{

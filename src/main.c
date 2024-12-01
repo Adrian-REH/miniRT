@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:30:51 by adherrer          #+#    #+#             */
-/*   Updated: 2024/11/26 19:55:08 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:14:53 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,17 @@ static void	review_scene(t_scene *scene)
 {
 	if (!scene->width || !scene->height)
 	{
-		scene->width = WINX;
-		scene->height = WINY;
+		scene->width = 800;
+		scene->height = 800;
 	}
-	if (scene->n_lights <= 0 || scene->n_lights > 1)
+	if (scene->n_lights <= 0)
 	{
 		printf("Error: No hay Luz en la escena\n");
+		exit(1);
+	}
+	if (scene->n_lights > 1)
+	{
+		printf("Error: Hay mas de una luz en la escena\n");
 		exit(1);
 	}
 	if (!scene->cameras)

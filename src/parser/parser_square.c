@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:37 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/26 20:50:12 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:32:05 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,22 @@ static double	side_square(char *data)
 	return (side);
 }
 
+static void	validate_params(char **data)
+{
+	if (!data[1] || !data[2] || !data[3] || !data[4])
+	{
+		printf("Error: Parametros incompletos en el cuadrado\n");
+		exit(1);
+	}
+}
+
 int	parser_square(t_scene *scene, char **data)
 {
 	t_color		color;
 	t_square	square;
 
 	color = (t_color){0, 0, 0, 0};
+	validate_params(data);
 	scene->squares = ft_realloc(scene->squares, sizeof(t_square) * \
 		scene->n_squares, sizeof(t_square) * (scene->n_squares + 2));
 	color = ft_color(data[4]);

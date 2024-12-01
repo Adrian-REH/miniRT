@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:05:42 by razamora          #+#    #+#             */
-/*   Updated: 2024/11/26 20:50:39 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 17:38:19 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,15 @@ static double	diamenter_sphere(char *data)
 	return (diameter);
 }
 
+static void	validate_params(char **data)
+{
+	if (!data[1] || !data[2] || !data[3])
+	{
+		printf("Error: Parametros incompletos en la esfera\n");
+		exit(1);
+	}
+}
+
 int	parser_sphere(t_scene *scene, char **data)
 {
 	t_vector3	center;
@@ -32,6 +41,7 @@ int	parser_sphere(t_scene *scene, char **data)
 
 	color = (t_color){0, 0, 0, 0};
 	center = (t_vector3){0, 0, 0};
+	validate_params(data);
 	scene->spheres = ft_realloc(scene->spheres, sizeof(t_sphere) * \
 		scene->n_spheres, sizeof(t_sphere) * (scene->n_spheres + 2));
 	center = ft_coordinate(data[1]);
