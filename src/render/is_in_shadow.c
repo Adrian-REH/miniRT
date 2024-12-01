@@ -31,6 +31,7 @@ int	is_in_shadow(t_scene scene, t_vector3 light_pos, t_vector3 hit_point)
 	i = ((t = ((j = -1), 0)), -1);
 	while (++j < 4)
 	{
+		i = -1;
 		while (++i < *((int *)obj_data[j][0]))
 		{
 			if (scene.isc[i] && scene.isc[i](&shadow_ray, ((void *)obj_data[j][1] + i), &t))
