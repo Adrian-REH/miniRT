@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   is_in_shadow.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:23:47 by adherrer          #+#    #+#             */
-/*   Updated: 2024/12/01 17:51:25 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:11:34 by adherrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,16 @@ int	is_in_shadow(t_scene scene, t_vector3 l_pos, t_vector3 hit_pt)
 		i = -1;
 		while (++i < *((int *)obj[j][0]))
 		{
-			if (scene.isc[j] && scene.isc[j](&sr, ((void *)obj[j][1] + i), &t))
+			if (j==0 && scene.isc[j](&sr, ((t_plane *)obj[j][1] + i), &t))
+				if (t > 0 && t < *((double *)obj[4][0]))
+					return (t);
+			if (j==1 && scene.isc[j](&sr, ((t_sphere *)obj[j][1] + i), &t))
+				if (t > 0 && t < *((double *)obj[4][0]))
+					return (t);
+			if (j==2 && scene.isc[j](&sr, ((t_triangle *)obj[j][1] + i), &t))
+				if (t > 0 && t < *((double *)obj[4][0]))
+					return (t);
+			if (j==3 && scene.isc[j](&sr, ((t_cylinder *)obj[j][1] + i), &t))
 				if (t > 0 && t < *((double *)obj[4][0]))
 					return (t);
 		}
