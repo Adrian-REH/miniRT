@@ -3,99 +3,186 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
+#    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 02:54:59 by adherrer          #+#    #+#              #
-#    Updated: 2024/11/02 00:24:44 by adherrer         ###   ########.fr        #
+#    Updated: 2024/12/01 18:55:25 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-NAME        := miniRT
-SRC_DIR     := src/
-OBJ_DIR     := obj/
-CC          := gcc
-CFLAGS      := -g -O3 -ffast-math -funroll-loops -march=native -flto -fsanitize=address,leak
-FSANITIZE   := 
-RM          := rm -f
+NAME		:= miniRT
+SRC_DIR		:= src/
+OBJ_DIRS	:= obj/
+CC			:= gcc
+CFLAGS		:= -g3 -Wall -Wextra -Werror -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
+FSANITIZE	:= 
+RM			:= rm -rf
 
-INC         := inc/
-LIB         := lib/
-PRINTF_DIR  := $(LIB)ft_printf/
-PRINTF      := $(PRINTF_DIR)libftprintf.a
-MINILIBX_DIR := $(LIB)minilibx-linux/
-MINILIBX    := $(MINILIBX_DIR)libmlx.a
-LIBFT_DIR   := $(LIB)libft/
-LIBFT       := $(LIBFT_DIR)libft.a
+INC			:= inc/
+LIB			:= lib/
+PRINTF_DIR	:= $(LIB)ft_printf/
+PRINTF		:= $(PRINTF_DIR)libftprintf.a
+MINILIBX_DIR:= $(LIB)minilibx-linux/
+MINILIBX	:= $(MINILIBX_DIR)libmlx.a
+LIBFT_DIR	:= $(LIB)libft/
+LIBFT		:= $(LIBFT_DIR)libft.a
 
-MINILIBXCC  := -I $(MINILIBX_DIR) -L $(MINILIBX_DIR) -lmlx
-HEADER      := -I$(INC) -I$(LIBFT_DIR) -I$(MINILIBX_DIR)
-FLAGSVISUAL := -L$(LIBFT_DIR) -lft -lm -lX11 -lXext  -lXt
+CYAN		:= \033[0;96m
+DEF_COLOR	:= \033[0;49m
+MINILIBXCC	:= -I $(MINILIBX_DIR) -L $(MINILIBX_DIR) -lmlx
+HEADER		:= -I$(LIBFT_DIR) -I$(MINILIBX_DIR)
+FLAGSVISUAL	:= -L$(LIBFT_DIR) -lft -lm -lX11 -lXext  -lXt
 
-SRC_FILES   =   main
+SRC_FILES	=	src/lib/libcolor/calculate_attenuation.c \
+				src/lib/libcolor/color_to_int.c \
+				src/lib/libcolor/fill_color_by_int.c \
+				src/lib/libcolor/get_color.c \
+				src/lib/libcolor/illuminate_surface.c \
+				src/lib/libcolor/int_to_color.c \
+				src/lib/libcolor/mix_colors.c \
+				src/lib/libcolor/normalize_color.c \
+				src/lib/libcolor/rgb_to_color.c \
+				src/lib/libcolor/set_color.c \
+				src/lib/libcolor/specular_intensity.c \
+				src/lib/libprojection/generate_ray.c \
+				src/lib/libprojection/idxpixel.c \
+				src/lib/libprojection/project3_to_pixel.c \
+				src/lib/libprojection/rotate_x.c \
+				src/lib/libprojection/rotate_y.c \
+				src/lib/libprojection/rotate_z.c \
+				src/lib/libprojection/rotate_v3.c \
+				src/lib/libvector3/calculate_intensity.c \
+				src/lib/libvector3/distancev3.c \
+				src/lib/libvector3/dotv3.c \
+				src/lib/libvector3/hit_point.c \
+				src/lib/libvector3/normalizev3.c \
+				src/lib/libvector3/crossv3.c \
+				src/lib/libvector3/scalev3.c \
+				src/lib/libvector3/mod.c \
+				src/lib/libvector3/addv3.c \
+				src/lib/libvector3/multiplyv3.c \
+				src/lib/libbrdf/reflect.c \
+				src/lib/librandom/random_double.c \
+				src/lib/libsarr/ft_sarrsize.c \
+				src/lib/libsarr/ft_sarrprint.c \
+				src/lib/libsarr/ft_sarradd.c \
+				src/lib/libmath/ft_atof.c \
+				src/lib/libmath/substract.c \
+				src/lib/libmath/solve_quadratic.c \
+				src/lib/libparse/ft_coordinate.c \
+				src/lib/libparse/ft_limit.c \
+				src/lib/libparse/stonorm.c \
+				src/lib/libparse/ft_ratio.c \
+				src/lib/libparse/ft_color.c \
+				src/lib/libutils/ft_free_p2.c \
+				src/lib/libutils/ft_realloc.c \
+				src/lib/libmapfun/map_fun_get.c \
+				src/parser/parser_ambient.c \
+				src/parser/parser_camera.c \
+				src/parser/parser_light.c \
+				src/parser/parser_cylinder.c \
+				src/parser/parser_plane.c \
+				src/parser/parser_sphere.c \
+				src/render/render_plane.c \
+				src/render/render_sphere.c \
+				src/render/render_triangle.c \
+				src/render/render_light.c \
+				src/render/build_render_context.c \
+				src/parser/parser_obj.c \
+				src/parser/parser_triangle.c \
+				src/parser/parser_square.c \
+				src/parser/parser_resolution.c \
+				src/render/render_cylinder.c \
+				src/render/render_scene.c \
+				src/render/apply_shadow.c \
+				src/render/apply_light.c \
+				src/render/is_in_shadow.c \
+				src/render/apply_ambient.c \
+				src/object/camera.c \
+				src/object/cylinder.c \
+				src/object/cylinder2.c \
+				src/object/plane.c \
+				src/object/triangle.c \
+				src/object/scene.c \
+				src/object/sphere.c \
+				src/object/line.c \
+				src/fsm/init_intersect_fun.c \
+				src/fsm/init_parser_alpha.c \
+				src/fsm/init_parser_fun.c \
+				src/fsm/init_render_fun.c \
+				src/fsm/init_rfc_render_fun.c \
+				src/control/key_press.c \
+				src/control/mause_press.c \
+				src/control/control.c \
+				src/control/control_camera/control_a.c \
+				src/control/control_camera/control_s.c \
+				src/control/control_camera/control_d.c \
+				src/control/control_camera/control_w.c \
+				src/control/control_camera/control_left.c \
+				src/control/control_camera/control_right.c \
+				src/control/control_camera/control_up.c \
+				src/control/control_camera/control_down.c \
+				src/control/control_quite/control_escape.c \
+				src/main.c \
 
-SRC         =   $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
-OBJ         =   $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
-DEPS        =   $(addprefix $(OBJ_DIR), $(addsuffix .d, $(SRC_FILES)))
+OBJ_DIRS := obj/src/lib/libcolor \
+			obj/src/lib/libprojection \
+			obj/src/lib/libvector3 \
+			obj/src/lib/libbrdf \
+			obj/src/parser \
+			obj/src/render \
+			obj/src/fsm \
+			obj/src/object \
+			obj/src/lib/librandom \
+			obj/src/lib/libsarr \
+			obj/src/lib/libmapfun \
+			obj/src/lib/libmath \
+			obj/src/lib/libutils \
+			obj/src/lib/libparse \
+			obj/src/control/control_camera \
+			obj/src/control/control_quite
 
-OBJF        =   .cache_exists
+
+OBJ := $(patsubst %.c, obj/%.o, $(SRC_FILES))
 
 
 all:	makelibs
 		@$(MAKE) $(NAME)
 
-makelibs:    
+obj/%.o: %.c | $(OBJ_DIRS)
+	@echo "🍩 $(YELLOW)Compiling: $< $(DEF_COLOR)"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIRS):
+	@mkdir -p $@
+
+-include	${DEPS}
+-include $(OBJ:.o=.d)
+$(NAME):	$(OBJ)
+			@$(CC) $(CFLAGS) $(FSANITIZE) $(OBJ) $(PRINTF) $(MINILIBXCC) $(FLAGSVISUAL) -o $(NAME)        
+			@echo "$(GREEN) ✨ ¡SUCCESS! ✨ $(DEF_COLOR)"
+
+makelibs:
 		@$(MAKE) -C $(PRINTF_DIR)
 		@$(MAKE) -C $(MINILIBX_DIR)
 		@$(MAKE) -C $(LIBFT_DIR)
 
--include	${DEPS}
-$(NAME):	$(OBJ)        
-			@$(CC) $(CFLAGS) $(FSANITIZE) $(OBJ) $(PRINTF) $(MINILIBXCC) $(FLAGSVISUAL) -o $(NAME)        
-			@echo "👉 $(BLUE)$(CC) $(CFLAGS) $(FSANITIZE) $(OBJ) $(PRINTF) $(MINILIBXCC) $(FLAGSVISUAL) -o $(NAME)$(DEF_COLOR)"
-			@echo "$(GREEN)✨ FDF compiled!$(DEF_COLOR)"
+bonus :$(OBJ_DIR)
 
-bonus:      
-			@$(MAKE) all
-            
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJF)
-			@echo "🍩 $(YELLOW)Compiling: $< $(DEF_COLOR)"
-			$(CC) $(CFLAGS) -MMD -c $< -o $@
+fclean : clean
+	$(RM) $(NAME)
+	make fclean -C lib/libft
+	@echo "$(CYAN) ✨ ¡CLEANED! ✨ $(DEF_COLOR)"
 
-$(OBJF):
-			@mkdir -p $(OBJ_DIR)
+clean :
+	@echo "$(CYAN) 🍩 ¡INIT CLEAN! 🍩 $(DEF_COLOR)"
+	$(RM) $(OBJ) obj/ *.gcno *.gcda *.gcov *.html *.css
+	make clean -C lib/libft
 
-$(PRINTF):
-	@make -C $(PRINTF_DIR)
-	@echo "$(GREEN)ft_printf compiled!$(DEF_COLOR)"    
+re : fclean all
 
-$(MINILIBX):
-	@make -C $(MINILIBX_DIR)
-	@echo "$(GREEN)Minilibx compiled!$(DEF_COLOR)"            
+norm :
+	norminette | grep -i "error"
 
-clean:
-			@make clean -sC $(PRINTF_DIR)
-			@echo "$(CYAN)ft_printf object and dependency files cleaned.$(DEF_COLOR)"
-			@make clean -C $(MINILIBX_DIR)
-			@echo "$(CYAN)Minilibx object files cleaned.$(DEF_COLOR)"    
-			@make clean -C $(LIBFT_DIR)
-			@echo "$(CYAN)Libft object files cleaned.$(DEF_COLOR)"
-			$(RM) -rf $(OBJ_DIR)
-			@echo "$(CYAN)Fdf object files cleaned!$(DEF_COLOR)"
-
-fclean:		clean
-			$(RM) -f $(NAME)
-			@echo "$(CYAN)Fdf executable files cleaned!$(DEF_COLOR)"
-			$(RM) -f $(MINILIBX_DIR)libmlx.a
-			@echo "$(CYAN)libmlx.a lib cleaned!$(DEF_COLOR)"            
-			$(RM) -f $(LIBFT_DIR)libft.a
-			@echo "$(CYAN)libft.a lib cleaned!$(DEF_COLOR)"
-
-re:			fclean 
-			@$(MAKE)    
-			@echo "$(GREEN)Cleaned and rebuilt everything for Fdf!$(DEF_COLOR)"
-
-norm:
-			@norminette $(SRC) $(INC) | grep -v Norme -B1 || true
-
-.PHONY:     all clean fclean re
+.PHONY:     all makelibs clean fclean re bonus norm cov

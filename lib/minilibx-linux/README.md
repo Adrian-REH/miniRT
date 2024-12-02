@@ -32,7 +32,7 @@ Requirements for MacOS
 ➜  ~ xeyes # run an hello world X11 app
 ```
 
-MlX Color Opacity / Transparency / Alpha (32 bits depth)
+MlX t_color Opacity / Transparency / Alpha (32 bits depth)
  - 0xFF (fully transparent) or 0x00 (fully opaque)
 
 Compile MinilibX

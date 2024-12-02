@@ -1,0 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   crossv3.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/26 09:25:29 by adherrer          #+#    #+#             */
+/*   Updated: 2024/11/26 09:25:31 by adherrer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../main.h"
+
+double	sin_v3(t_vector3 v1, t_vector3 v2)
+{
+	const double	u = mod(v1);
+	const double	v = mod(v2);
+	const double	uv = mod(cross_v3(v1, v2));
+
+	if (u && v)
+		return (uv / (u * v));
+	return (0);
+}
+
+t_vector3	cross_v3(t_vector3 v1, t_vector3 v2)
+{
+	return ((t_vector3){
+		v1.y * v2.z - v1.z * v2.y,
+		v1.z * v2.x - v1.x * v2.z,
+		v1.x * v2.y - v1.y * v2.x
+	});
+}

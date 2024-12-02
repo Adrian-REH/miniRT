@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: adherrer <adherrer@student.42.fr>          +#+  +:+       +#+         #
+#    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/28 08:06:16 by decerrit          #+#    #+#              #
-#    Updated: 2024/03/25 21:08:52 by adherrer         ###   ########.fr        #
+#    Updated: 2024/11/13 20:38:00 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,11 @@ PACK = ar rcs
 CFLAGS = -Wall -Wextra -Werror -g
 FRM = rm -rf
 CORE_FILES = \
+	ft_isspaces.c	\
+	ft_split_space.c\
+	ft_strcmp.c		\
 	ft_memset.c		\
+	ft_memmap.c		\
 	ft_bzero.c		\
 	ft_memcpy.c		\
 	ft_memmove.c	\
@@ -39,6 +43,8 @@ CORE_FILES = \
 	ft_calloc.c		\
 	ft_strlcpy.c	\
 	ft_strlcat.c	\
+	get_next_line.c	\
+	get_next_line_utils.c
 
 UTILS_FILES = \
 	ft_itoa.c		\
