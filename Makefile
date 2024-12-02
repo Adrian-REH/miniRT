@@ -6,7 +6,7 @@
 #    By: razamora <razamora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/27 02:54:59 by adherrer          #+#    #+#              #
-#    Updated: 2024/11/30 19:13:41 by razamora         ###   ########.fr        #
+#    Updated: 2024/12/01 18:55:25 by razamora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME		:= miniRT
 SRC_DIR		:= src/
 OBJ_DIRS	:= obj/
 CC			:= gcc
-CFLAGS		:= -g3 -Wall -Wextra -Werror -O3 -ffast-math -funroll-loops -march=native -flto -MMD -fsanitize=address
+CFLAGS		:= -g3 -Wall -Wextra -Werror -O3 -ffast-math -funroll-loops -march=native -flto -MMD #-fsanitize=address
 FSANITIZE	:= 
 RM			:= rm -rf
 

@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 16:06:18 by razamora          #+#    #+#             */
-/*   Updated: 2024/12/01 17:33:35 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 18:36:33 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@ static void	validar_params(char **data)
 	}
 }
 
+static void	there_are_camera(t_scene *scene)
+{
+	if (scene->cameras)
+	{
+		printf("Hay varias camaras en la escena\n");
+		terminate_program(scene);
+	}
+}
+
 int	parser_camera(t_scene *scene, char **data)
 {
 	double		fov;
@@ -28,7 +37,7 @@ int	parser_camera(t_scene *scene, char **data)
 	t_vector3	right;
 
 	if (scene->cameras)
-		terminate_program(scene);
+		there_are_camera(scene);
 	if (!scene->width || !scene->height)
 		scene->height = ((scene->width = 800), 800);
 	validar_params(data);

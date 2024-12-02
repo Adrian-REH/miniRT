@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 22:44:12 by razamora          #+#    #+#             */
-/*   Updated: 2024/12/01 16:27:01 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 18:17:06 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ t_color	ft_color(char *str)
 		printf("Error: %s not contain some color r or g or b\n", str);
 		exit(1);
 	}
-	printf("t_color: 0|%s| 1|%s| 2|%s| \n", args[0], args[1], args[2]);
 	color.r = ft_limit(0, 255, atof(args[0]));
 	color.g = ft_limit(0, 255, atof(args[1]));
 	color.b = atof(args[2]);

@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 09:30:51 by adherrer          #+#    #+#             */
-/*   Updated: 2024/12/01 17:14:53 by razamora         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:03:29 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ int	init_file(char *file)
 	int	fd;
 	int	len_file;
 
+	fd = open(file, 0);
+	if (fd < 0)
+		(printf("Error al abrir el archivo\n"), exit(1));
 	len_file = ft_strlen(file);
 	if (file[len_file - 1] != 't' || file[len_file - 2] != 'r' || \
 		file[len_file - 3] != '.')
 		(printf("Error: El archivo no es un archivo .rt\n"), exit(1));
-	fd = open(file, 0);
-	if (fd < 0)
-		(printf("Error al abrir el archivo\n"), exit(1));
 	return (fd);
 }
 
@@ -81,7 +81,7 @@ static void	review_scene(t_scene *scene)
 	}
 	if (!scene->cameras)
 	{
-		printf("Error: No hay camaras en la escena\n");
+		printf("Error: No hay camara en la escena\n");
 		exit(1);
 	}
 	if (!scene->ambient)
